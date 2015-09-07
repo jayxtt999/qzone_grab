@@ -1,0 +1,103 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="keywords" content="统计说说" />
+<meta name="description" content="统计说说" />
+<meta name="generator" content="naix" />
+<title>Hello Mr. Memory </title>
+<head>
+<script src="/shuoshuo/Public/amcharts/amcharts.js" type="text/javascript"></script>
+    <script src="/shuoshuo/Public/amcharts/serial.js" type="text/javascript"></script>
+    <script src="/shuoshuo/Public/amcharts/amstock.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="/shuoshuo/Public/css/sidebar.css" />
+    <script src="/shuoshuo/Public/js/jquery.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.8.13/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/shuoshuo/Public/js/jquery.sidebar.js"></script>
+    <script type="text/javascript">
+        var chart;
+        var chartData = [
+            <?php echo ($chartData); ?>
+        ];
+        AmCharts.ready(function () {
+            // SERIAL CHART
+            chart = new AmCharts.AmSerialChart();
+            chart.dataProvider = chartData;
+            chart.categoryField = "data";
+            chart.startDuration = 0.5;
+            chart.balloon.color = "#000000";
+            // AXES
+            // category
+            var categoryAxis = chart.categoryAxis;
+            categoryAxis.fillAlpha = 1;
+            categoryAxis.fillColor = "#FAFAFA";
+            categoryAxis.gridAlpha = 0;
+            categoryAxis.axisAlpha = 0;
+            categoryAxis.gridPosition = "start";
+            categoryAxis.position = "top";
+            // value
+            var valueAxis = new AmCharts.ValueAxis();
+            valueAxis.title = "用于统计评论数与点赞数，不包括转发及全部为0的记录";
+            valueAxis.dashLength = 5;
+            valueAxis.axisAlpha = 0;
+            valueAxis.minimum = 0;
+            valueAxis.maximum = <?php echo ($maxVal); ?>;
+            valueAxis.integersOnly = true;
+            valueAxis.gridCount = 10;
+            valueAxis.reversed = true; // this line makes the value axis reversed
+            chart.addValueAxis(valueAxis);
+            // comment graph
+            var graph = new AmCharts.AmGraph();
+            graph.title = "评论";
+            graph.valueField = "comment";
+            graph.balloonText = "发布于-[[category]]-的评论条数: [[value]]";
+            graph.bullet = "round";
+            chart.addGraph(graph);
+            // United Kingdom graph
+            var graph = new AmCharts.AmGraph();
+            graph.title = "赞";
+            graph.valueField = "like";
+            graph.balloonText = "发布于-[[category]]-的赞数: [[value]]";
+            graph.bullet = "round";
+            chart.addGraph(graph);
+            // CURSOR
+            var chartCursor = new AmCharts.ChartCursor();
+            chartCursor.cursorPosition = "mouse";
+            chartCursor.zoomable = false;
+            chartCursor.cursorAlpha = 0;
+            chart.addChartCursor(chartCursor);
+            // LEGEND
+            var legend = new AmCharts.AmLegend();
+            legend.useGraphSettings = true;
+            chart.addLegend(legend);
+
+            // WRITE
+            chart.write("chartdiv");
+        });
+    </script>
+</head>
+<body>
+<ul id="demo_menu1" >
+    <?php foreach($top as $k=>$topchild){?>
+    <?php $topchild=explode("$$$",$topchild); ?>
+    <li>
+        <a href="<?=$topchild[1]?>" target="_Blank" >
+        <?php echo mb_substr($topchild[0],0,30,'utf-8').".."?>
+        </a>
+    </li>
+    <?php }?>
+
+</ul>
+
+<script type="text/javascript">
+    $("ul#demo_menu1").sidebar();
+</script>
+
+<div class="rightCol">
+    <h4 style="color:gray">好友 <span class="height"><?=$shuoshuoAll[0]['userinfo']['user']['nickname']?></span> 从  <?=$shuoshuoOne?> 至今一共发布了 <span class="height"><?=$shuoshuoNum?></span>条 被评论 <span class="height"><?=$numAll ?></span>次 被赞 <span class="height"><?=$likeAll ?></span>次</h4>
+
+    <div id="chartdiv" style="width:100%; height:500px;"></div>
+
+</div>
+
+</body>
+</html>
