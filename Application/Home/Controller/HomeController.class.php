@@ -48,7 +48,7 @@ class HomeController extends Controller
         $snoopy = new  \Snoopy;
         $snoopy->referer = "client.show.qq.com";
         $snoopy->expandlinks = true;
-        $snoopy->rawheaders["X_FORWARDED_FOR"] = $this->getIp(); //伪装ip
+        $snoopy->rawheaders["X_FORWARDED_FOR"] = get_client_ip(); //伪装ip
         $url = "http://client.show.qq.com/cgi-bin/qqshow_client_showcommand?g_tk=1163951217&omode=4";
         $cookie = tempnam('./temp', 'cookie' . $qq);
         print_r($cookie);
@@ -74,25 +74,7 @@ class HomeController extends Controller
         exit;
     }
 
-    /**
-     * 获取ip
-     * @return string
-     */
-    public function getIp()
-    {
 
-        if (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown"))
-            $ip = getenv("HTTP_CLIENT_IP");
-        else if (getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "unknown"))
-            $ip = getenv("HTTP_X_FORWARDED_FOR");
-        else if (getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "unknown"))
-            $ip = getenv("REMOTE_ADDR");
-        else if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], "unknown"))
-            $ip = $_SERVER['REMOTE_ADDR'];
-        else
-            $ip = "unknown";
-        return ($ip);
-    }
 
     /**
      * Show
@@ -106,7 +88,8 @@ class HomeController extends Controller
             $uqq = I('post.uqq');
             session('uqq', $uqq);
             $qq = I('post.qq');
-            if (empty($qq)) {
+            session('qq', $qq);
+            if (empty($uqq)) {
                 $this->jsonElement(404, "请先选择一个QQ好友");
             }
             $sid = I('post.sid');
@@ -114,7 +97,7 @@ class HomeController extends Controller
                 $this->jsonElement(404, "sid错误");
             }
             $res = array();
-            if (I('cookie.' . $qq) == "isPass") {
+            if (I('cookie.' . $uqq) == "isPass") {
                 $shuoshuoAll = unserialize(F($qq));
                 $msg = "获取到说说一共" . count($shuoshuoAll) . "条<br/>";
                 //print_r($this->jsonElement(1,$msg));exit;
@@ -122,10 +105,10 @@ class HomeController extends Controller
                 exit;
             }
             //$this->getData(array("qq"=>$qq, "sid"=>$sid,"count"=>10));exit;
-            $shuoshuoAll = $this->trampoline("getData",array("qq"=>$qq, "sid"=>$sid,"count"=>10));
+            $shuoshuoAll = $this->trampoline("getData",array("uqq"=>$uqq, "sid"=>$sid,"count"=>10));
             if ($shuoshuoAll) {
-                F($qq, serialize($shuoshuoAll));
-                setcookie($qq, "isPass", time() + 3600);
+                F($uqq, serialize($shuoshuoAll));
+                setcookie($uqq, "isPass", time() + 3600);
                 $msg = "获取到说说一共" . count($shuoshuoAll) . "条<br/>";
                 $this->jsonElement(1, $msg);
             } else {
@@ -161,13 +144,13 @@ class HomeController extends Controller
     function getData($params)
     {
 
-        $qq = $params['qq'];
+        $uqq = $params['uqq'];
         $sid = $params['sid'];
         $count = $params['count'];
-        $url = "http://m.qzone.com/list?g_tk=938730696&format=json&list_type=shuoshuo&action=0&res_uin=" . $qq . "&count=".$count."&sid=" . $sid . "";
-        /*$h = fopen("log222.txt","a");
+        $url = "http://m.qzone.com/list?g_tk=938730696&format=json&list_type=shuoshuo&action=0&res_uin=" . $uqq . "&count=".$count."&sid=" . $sid . "";
+        $h = fopen("log222.txt","a");
         fwrite($h,$url."\r\n");
-        fclose($h);*/
+        fclose($h);
         $info = file_get_contents($url);
         $result = json_decode($info, true);
         if (!empty($result['message'])) {
@@ -238,7 +221,7 @@ class HomeController extends Controller
 
                 $snoopy->referer = "http://m.qzone.com/praise/like";
                 $snoopy->expandlinks = true;
-                $snoopy->rawheaders["X_FORWARDED_FOR"] = $this->getIp(); //αװip
+                $snoopy->rawheaders["X_FORWARDED_FOR"] = get_client_ip(); //αװip
                 $url = "http://m.qzone.com/praise/like";
                 $cookie = tempnam('./temp', 'cookie');
                 $curl = curl_init($url);

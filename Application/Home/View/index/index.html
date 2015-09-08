@@ -24,7 +24,7 @@
         </p>
     </header>
 
-    <form xmlns="http://www.w3.org/1999/xhtml" id="qq_loginform" action="/index.php/home/home/index" method="post">
+    <form xmlns="http://www.w3.org/1999/xhtml" id="qq_loginform" action="/home/index/login" method="post">
         <div class="control-group">
             <div class="controls">
                 <div class="input-append">

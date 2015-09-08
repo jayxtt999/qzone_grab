@@ -29,7 +29,7 @@ class IndexController extends Controller {
         curl_setopt($curl, CURLOPT_COOKIEJAR, $cookie); //    存储cookie
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt ($curl,CURLOPT_REFERER,"pt.3g.qq.com");
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getIp());
+        curl_setopt($curl, CURLOPT_HTTPHEADER,get_client_ip());
         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($_POST));
         $result = curl_exec($curl);
         curl_close($curl);

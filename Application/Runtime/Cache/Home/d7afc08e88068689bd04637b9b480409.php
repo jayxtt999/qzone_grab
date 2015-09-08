@@ -36,7 +36,7 @@
     </header>
     <form class="form-horizontal">
         <input type="hidden" name="sid" id="sid" value="<?=$sid?>">
-        <input type="hidden" name="uqq" id="uqq" value="<?=$qq?>">
+        <input type="hidden" name="qq" id="qq" value="<?=$qq?>">
         <div class="control-group">
             <div class="controls">
                 <div class="input-append" style="float: left;">
@@ -155,7 +155,7 @@
                 fix : false,
                 area: ['1024px', 500],
                 iframe: {
-                    src : '/index.php/Home/show/table'
+                    src : '/index.php/home/show/table'
                 }
             });
         })
@@ -168,7 +168,7 @@
                 fix : false,
                 area: ['1024px', 500],
                 iframe: {
-                    src : '/index.php/Home/show/keyitem'
+                    src : '/index.php/home/show/keyitem'
                 }
             });
         })
@@ -213,7 +213,7 @@
             type:'POST',
             url:'/index.php/home/home/show',
             dataType:'json',
-            data: {sid:$("#sid").val(), uqq:$("#uqq").val(),qq:$("#disabledInput").val(),program:"one"},
+            data: {sid:$("#sid").val(), qq:$("#qq").val(),uqq:$("#disabledInput").val(),program:"one"},
             beforeSend:function(){
                 $(".msgInfo").hide(1000)
                 $(".timeInfo").show(1000)

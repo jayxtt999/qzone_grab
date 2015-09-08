@@ -6,13 +6,16 @@
 <meta name="generator" content="naix" />
 <title>Hello Mr. Memory </title>
 <head>
-<script src="/shuoshuo/Public/amcharts/amcharts.js" type="text/javascript"></script>
-    <script src="/shuoshuo/Public/amcharts/serial.js" type="text/javascript"></script>
-    <script src="/shuoshuo/Public/amcharts/amstock.js" type="text/javascript"></script>
-    <link rel="stylesheet" type="text/css" href="/shuoshuo/Public/css/sidebar.css" />
-    <script src="/shuoshuo/Public/js/jquery.min.js"></script>
+    <script src="/Public/amcharts/amcharts.js" type="text/javascript"></script>
+    <script src="/Public/amcharts/serial.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="/Public/css/sidebar.css" />
+    <script src="/Public/js/jquery.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.8.13/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="/shuoshuo/Public/js/jquery.sidebar.js"></script>
+    <script type="text/javascript" src="/Public/js/jquery.sidebar.js"></script>
+
+
+
+
     <script type="text/javascript">
         var chart;
         var chartData = [
@@ -22,7 +25,7 @@
             // SERIAL CHART
             chart = new AmCharts.AmSerialChart();
             chart.dataProvider = chartData;
-            chart.categoryField = "data";
+            chart.categoryField = "date";
             chart.startDuration = 0.5;
             chart.balloon.color = "#000000";
             // AXES
@@ -42,21 +45,25 @@
             valueAxis.minimum = 0;
             valueAxis.maximum = <?php echo ($maxVal); ?>;
             valueAxis.integersOnly = true;
-            valueAxis.gridCount = 10;
+            valueAxis.gridCount = 100;
             valueAxis.reversed = true; // this line makes the value axis reversed
             chart.addValueAxis(valueAxis);
+
+
             // comment graph
             var graph = new AmCharts.AmGraph();
             graph.title = "评论";
             graph.valueField = "comment";
-            graph.balloonText = "发布于-[[category]]-的评论条数: [[value]]";
+            graph.balloonText = "-[[category]]-<br/>-评论条数: [[value]]-";
             graph.bullet = "round";
             chart.addGraph(graph);
+
+
             // United Kingdom graph
             var graph = new AmCharts.AmGraph();
             graph.title = "赞";
             graph.valueField = "like";
-            graph.balloonText = "发布于-[[category]]-的赞数: [[value]]";
+            graph.balloonText = "-[[category]]-<br/>-赞数: [[value]]-";
             graph.bullet = "round";
             chart.addGraph(graph);
             // CURSOR
@@ -72,6 +79,7 @@
 
             // WRITE
             chart.write("chartdiv");
+
         });
     </script>
 </head>

@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 <title>Hello Mr. Memory </title>
 <head>
-    <link href="/shuoshuo/Public/css/style.css" type="text/css" rel="stylesheet" />
-    <script type="text/javascript" src="/shuoshuo/Public/js/jquery.min.js"></script>
+    <link href="/Public/css/style.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="/Public/js/jquery.min.js"></script>
 </head>
 <body>
 <div class="headeline"></div>

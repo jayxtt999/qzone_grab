@@ -2,13 +2,17 @@
 namespace Home\Controller;
 use Think\Controller;
 class ShowController extends Controller {
+
+    private $shuoshuo = "";
+
+
     /**
      * 显示列表
      */
     public function Table(){
         ini_set('date.timezone','Asia/Shanghai');
-        $qq = session('qq');
-        $shuoshuoAll = unserialize(F($qq));
+        $uqq = session('uqq');
+        $shuoshuoAll = unserialize(F($uqq));
         $shuoshuoAll = @array_reverse($shuoshuoAll);
         $chartData = "";
         $max = array();
@@ -20,12 +24,11 @@ class ShowController extends Controller {
             //统计全部评论与赞数目
             $numAll += @$shuoshuo['comment']['num'];
             $likeAll += @$shuoshuo['like']['num'];
-
-            if(@$shuoshuo[original]){
+            if(isset($shuoshuo[original])){
                 //转发不计
                 continue;
             }
-            $ymd = date('Y,m,d',$shuoshuo['comm']['time']);
+            $ymd = date('Y-m-d',$shuoshuo['comm']['time']);
             if(!@($shuoshuo['comment']['num'])){
                 $shuoshuo['comment']['num'] = 0;
             }
@@ -39,7 +42,7 @@ class ShowController extends Controller {
             $max[] =  $shuoshuo['comment']['num'];
             $max[] = $shuoshuo['like']['num'];
             //合并数据
-            $chartData.="{'data': '".$ymd."','italy': 1,'like':".$shuoshuo['like']['num'].",'comment':".$shuoshuo['comment']['num']."},";
+            $chartData.="{'date': '".$ymd."','italy': 1,'like':".$shuoshuo['like']['num'].",'comment':".$shuoshuo['comment']['num']."},";
             //echo $chartData;exit();
         }
         //计算 说说或者赞 中最大值 为显示最大值用
@@ -47,7 +50,6 @@ class ShowController extends Controller {
         $maxVal = $max[$pos];
         //计算 评论前十
         $top = array_reverse($commentTop);
-
         $this->chartData = $chartData;
         $this->maxVal = $maxVal;
         $this->top = $top;
@@ -59,15 +61,59 @@ class ShowController extends Controller {
         $this->display('index');
     }
 
+
+
+    public function Emotion(){
+
+        $uqq = session('uqq');
+        error_reporting( E_ALL & ~E_STRICT );
+        ini_set('date.timezone','Asia/Shanghai');
+        $strShuoshuo = "";
+        if($this->shuoshuo){
+            $strShuoshuo = $this->shuoshuo;
+        }else{
+            $shuoshuoAll = unserialize(F($uqq));
+            $shuoshuoAll = @array_reverse($shuoshuoAll);
+            foreach( $shuoshuoAll as $shuoshuo){
+                @$strShuoshuo.=$shuoshuo['summary']['summary']."  ";
+            }
+            $strShuoshuo = iconv( "UTF-8", "gb2312//IGNORE" ,$strShuoshuo);
+        }
+
+        
+
+        //F()
+
+        Vendor('QcloudApi.QcloudApi');
+        $service = \QcloudApi::load(\QcloudApi::MODULE_WENZHI, C("QcloudApi"));
+        $method = 'POST';
+        $service->setConfigRequestMethod($method);
+        $package = array("content"=>"李亚鹏挺王菲：加油！孩儿他娘。");
+        $request = $service->TextSentiment($package);
+        if ($request === false) {
+            $error = $service->getError();
+            echo "Error code:" . $error->getCode() . ".\n";
+            echo "message:" . $error->getMessage() . ".\n";
+            echo "ext:" . var_export($error->getExt(), true) . ".\n";
+        } else {
+            var_dump($request);
+        }
+        $this->display('emotion');
+        exit;
+
+    }
+
+
     /**
      * 分词
      */
     public function KeyItem(){
+
         $strShuoshuo = "";
         ini_set('date.timezone','Asia/Shanghai');
-        $qq = session('qq');
+        $uqq = session('uqq');
         error_reporting( E_ALL & ~E_STRICT );
-        $shuoshuoAll = unserialize(F($qq));
+        $shuoshuoAll = unserialize(F($uqq));
         $shuoshuoAll = @array_reverse($shuoshuoAll);
         foreach( $shuoshuoAll as $shuoshuo){
             @$strShuoshuo.=$shuoshuo['summary']['summary']."  ";
