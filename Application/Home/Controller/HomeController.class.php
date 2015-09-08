@@ -1,9 +1,7 @@
 <?php
 namespace Home\Controller;
 
-use Think\Controller;
-
-class HomeController extends Controller
+class HomeController extends AbstractController
 {
 
     private $interval = 30;//自动赞,评论间隔时间 (分钟)

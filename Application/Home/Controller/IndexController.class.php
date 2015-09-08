@@ -7,8 +7,14 @@ class IndexController extends Controller {
     }
 
     public function login(){
-
         $qq = I('post.qq');
+        $pwd = I('post.pwd');
+        if(!$qq || !$pwd){
+            $this->error("QQ号码或密码为空","/home/home/index");
+        }
+        if(!preg_match("/^\d{4,12}$/",$qq,$match)){
+            $this->error("QQ号码格式错误","/home/home/index");
+        }
         //获取初始sid与vdata
         $initookie = tempnam('./temp', 'initookie');
         $ch = curl_init("http://pt.3g.qq.com/s?aid=nLoginqz");

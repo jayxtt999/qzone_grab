@@ -8,3 +8,6 @@ http://m.qzone.com/list?g_tk=938730696&format=json&list_type=shuoshuo&action=0&r
 http://m.qzone.com/list?g_tk=938730696&format=json&list_type=shuoshuo&action=0&res_uin=2352805800&count=20&sid=ARDZc2yYglhnZlJ1A5vlNh5f
 http://m.qzone.com/list?g_tk=938730696&format=json&list_type=shuoshuo&action=0&res_uin=2352805800&count=30&sid=ARDZc2yYglhnZlJ1A5vlNh5f
 http://m.qzone.com/list?g_tk=938730696&format=json&list_type=shuoshuo&action=0&res_uin=2352805800&count=40&sid=ARDZc2yYglhnZlJ1A5vlNh5f
+http://m.qzone.com/list?g_tk=938730696&format=json&list_type=shuoshuo&action=0&res_uin=2721984237&count=10&sid=ARDZc2yYglhnZlJ1A5vlNh6W
+http://m.qzone.com/list?g_tk=938730696&format=json&list_type=shuoshuo&action=0&res_uin=2721984237&count=20&sid=ARDZc2yYglhnZlJ1A5vlNh6W
+http://m.qzone.com/list?g_tk=938730696&format=json&list_type=shuoshuo&action=0&res_uin=2721984237&count=30&sid=ARDZc2yYglhnZlJ1A5vlNh6W
