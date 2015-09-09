@@ -2,7 +2,7 @@
 namespace Home\Controller;
 class ShowController extends AbstractController {
 
-    private $shuoshuo = "";
+    private $shuoshuo = array();
 
 
     /**
@@ -60,48 +60,38 @@ class ShowController extends AbstractController {
         $this->display('index');
     }
 
-
-
+    /**
+     * 情绪分析
+     */
     public function Emotion(){
 
         $uqq = session('uqq');
-        error_reporting( E_ALL & ~E_STRICT );
-        ini_set('date.timezone','Asia/Shanghai');
-        $strShuoshuo = "";
-        if($this->shuoshuo){
-            $strShuoshuo = $this->shuoshuo;
+        if($this->shuoshuo[$uqq]){
+            $strShuoshuo = $this->shuoshuo[$uqq];
         }else{
-            $shuoshuoAll = unserialize(F($uqq));
-            $shuoshuoAll = @array_reverse($shuoshuoAll);
-            foreach( $shuoshuoAll as $shuoshuo){
-                @$strShuoshuo.=$shuoshuo['summary']['summary']."  ";
-            }
-            $strShuoshuo = iconv( "UTF-8", "gb2312//IGNORE" ,$strShuoshuo);
+            $strShuoshuo = $this->getShuoshuoAll($uqq);
         }
-
-        
-
-        //F()
-
+        $chartData = "";
         Vendor('QcloudApi.QcloudApi');
         $service = \QcloudApi::load(\QcloudApi::MODULE_WENZHI, C("QcloudApi"));
         $method = 'POST';
         $service->setConfigRequestMethod($method);
-        $package = array("content"=>"李亚鹏挺王菲：加油！孩儿他娘。");
-        $request = $service->TextSentiment($package);
-        if ($request === false) {
-            $error = $service->getError();
-            echo "Error code:" . $error->getCode() . ".\n";
-            echo "message:" . $error->getMessage() . ".\n";
-            echo "ext:" . var_export($error->getExt(), true) . ".\n";
-        } else {
-            var_dump($request);
+
+        foreach($strShuoshuo as $v){
+
+            $request = $service->TextSentiment(array("content"=>iconv( "gb2312//IGNORE", "UTF-8" ,$v['comment'])));
+            if ($request === false) {
+                $error = $service->getError();
+                echo "Error code:" . $error->getCode() . ".\n";
+                echo "message:" . $error->getMessage() . ".\n";
+                echo "ext:" . var_export($error->getExt(), true) . ".\n";
+            }
+            //positive
+            $chartData.="{'time': '".$v['time']."','positive':".$request['positive'].",'comment':\"".iconv( "gb2312//IGNORE", "UTF-8" ,$v['comment'])."\"},";
         }
+        $this->assign("chartData",$chartData);
         $this->display('emotion');
-        exit;
-
     }
-
 
     /**
      * 分词
@@ -221,12 +211,22 @@ class ShowController extends AbstractController {
         $this->display('keyitem');
     }
 
+    /**
+     * @return float
+     */
     public function get_microtime()
     {
         list($usec, $sec) = explode(' ', microtime());
         return ((float)$usec + (float)$sec);
     }
 
+    /**
+     * @param $ArrayData
+     * @param $KeyName1
+     * @param string $SortOrder1
+     * @param string $SortType1
+     * @return mixed
+     */
     public function sysSortArray($ArrayData,$KeyName1,$SortOrder1 = "SORT_ASC",$SortType1 = "SORT_REGULAR")
     {
         if(!is_array($ArrayData))
@@ -260,5 +260,45 @@ class ShowController extends AbstractController {
     }
 
 
+    /**
+     * 获取说说
+     * @param $uqq
+     * @return mixed
+     */
+    public function getShuoshuoAll($uqq){
+
+        if(is_array($this->shuoshuo[$uqq]) && !empty($this->shuoshuo[$uqq])){
+            return $this->shuoshuo[$uqq];
+        }else{
+            $shuoshuoAll = unserialize(F($uqq));
+            $shuoshuoAll = @array_reverse($shuoshuoAll);
+            foreach( $shuoshuoAll as $k=>$v){
+                if(!isset($v['timeline']['timestr'])){
+                    //如果没有timeline.timestr
+                    if(!isset($v['comment']['comments'][0]['date'])){
+                        //如果comment.comments 也没有 取评论数据
+                        if(!isset($v['comm']['time'])){
+                            //没有办法了
+                            continue;
+                        }else{
+                            $this->shuoshuo[$uqq][$k]['time'] = date("Y/m/d",$v['comm']['time']);
+                        }
+                    }else{
+                        $this->shuoshuo[$uqq][$k]['time'] = date("Y/m/d",$v['comment']['comments'][0]['date']);
+                    }
+                }else{
+                    //如果为今年发布的说说
+                    if(!preg_match("/^\d{4}\/\d{2}\/\d{2}$/",$v['timeline']['timestr'],$match)){
+                        $this->shuoshuo[$uqq][$k]['time'] = date("Y",time())."/".$v['timeline']['timestr'];
+                    }else{
+                        $this->shuoshuo[$uqq][$k]['time'] = $v['timeline']['timestr'];
+                    }
+                }
+                $this->shuoshuo[$uqq][$k]['comment'] = iconv( "UTF-8", "gb2312//IGNORE" ,$v['summary']['summary']);
+            }
+            return $this->shuoshuo[$uqq];
+        }
+
+    }
 
 }
