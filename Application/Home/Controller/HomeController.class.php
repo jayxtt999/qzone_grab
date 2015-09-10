@@ -95,17 +95,19 @@ class HomeController extends AbstractController
                 $this->jsonElement(404, "sid错误");
             }
             $res = array();
-            if (I('cookie.' . $uqq) == "isPass") {
-                $shuoshuoAll = unserialize(F($qq));
+            /*if (I('cookie.' . $uqq) == "isPass") {
+                $shuoshuoAll = F("shuoshuo_$uqq");
                 $msg = "获取到说说一共" . count($shuoshuoAll) . "条<br/>";
                 //print_r($this->jsonElement(1,$msg));exit;
                 $this->jsonElement(1, $msg);
                 exit;
-            }
+            }*/
             //$this->getData(array("qq"=>$qq, "sid"=>$sid,"count"=>10));exit;
-            $shuoshuoAll = $this->trampoline("getData",array("uqq"=>$uqq, "sid"=>$sid,"count"=>10));
-            if ($shuoshuoAll) {
-                F($uqq, serialize($shuoshuoAll));
+            //清空重置
+            F("shuoshuo_$uqq",null);
+            $res = $this->trampoline("getData",array("uqq"=>$uqq, "sid"=>$sid,"count"=>0));
+            if ($res) {
+                $shuoshuoAll = F("shuoshuo_$uqq");
                 setcookie($uqq, "isPass", time() + 3600);
                 $msg = "获取到说说一共" . count($shuoshuoAll) . "条<br/>";
                 $this->jsonElement(1, $msg);
@@ -145,26 +147,25 @@ class HomeController extends AbstractController
         $uqq = $params['uqq'];
         $sid = $params['sid'];
         $count = $params['count'];
-        $url = "http://m.qzone.com/list?g_tk=938730696&format=json&list_type=shuoshuo&action=0&res_uin=" . $uqq . "&count=".$count."&sid=" . $sid . "";
-        $h = fopen("log222.txt","a");
-        fwrite($h,$url."\r\n");
-        fclose($h);
+        $url = "http://m.qzone.com/list?g_tk=938730696&res_attach=att%3D".$count."&format=json&list_type=shuoshuo&action=0&res_uin=" . $uqq . "&count=40&sid=" . $sid . "";
         $info = file_get_contents($url);
         $result = json_decode($info, true);
         if (!empty($result['message'])) {
             return $this->jsonElement(0, $result['message']);
         }
-
-        $this->sData = array_merge($this->sData, $result[data][vFeeds]);
+        if(F("shuoshuo_$uqq")){
+            F("shuoshuo_$uqq",array_merge(F("shuoshuo_$uqq"),$result[data][vFeeds]));
+        }else{
+            F("shuoshuo_$uqq",$result[data][vFeeds]);
+        }
         if ($result[data][has_more]) {
-            $count += 10;
+            $count += 40;
             $params["count"] = $count;
             return function() use($params) {
                 return $this->getData($params);
             };
-            //return $this->getData($params);
         }
-        return ($this->sData);
+        return true;
     }
 
 
