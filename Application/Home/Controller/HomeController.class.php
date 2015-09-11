@@ -153,6 +153,11 @@ class HomeController extends AbstractController
         if (!empty($result['message'])) {
             return $this->jsonElement(0, $result['message']);
         }
+        //好友是否隐藏说说
+        if(!isset($result[data][vFeeds])){
+            return true;
+        }
+
         if(F("shuoshuo_$uqq")){
             F("shuoshuo_$uqq",array_merge(F("shuoshuo_$uqq"),$result[data][vFeeds]));
         }else{

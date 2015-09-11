@@ -155,8 +155,9 @@ class ShowController extends AbstractController {
                         $code = "0X000000".strtoupper(dechex($v2['class_num']));
                     }
                     if(!isset($this->class[$code])){
-                        echo "Error:Not ID ".$code;
-                        var_dump($v2);exit;
+                        $this->class[$code] = array("className"=>$v2['class'],"conf"=>0);
+                        //echo "Error:Not ID ".$code;
+                        //var_dump($v2);exit;
                     }
                     $this->class[$code]['conf'] += $v2['conf'];
                 }
