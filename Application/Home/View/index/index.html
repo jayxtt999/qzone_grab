@@ -11,6 +11,8 @@
     <link href="__PUBLIC__/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="__PUBLIC__/css/docs.css" rel="stylesheet">
     <script src="__PUBLIC__/js/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+
 
     <style>
         #qq_loginform {
@@ -43,39 +45,60 @@
         <div class="control-group">
             <div class="controls">
 
-                <div class="input-append">
 
 
-                    <img src="" id="tdCode">
+                <ul class="nav nav-tabs">
+                    <li><a href="#qqpwd" data-toggle="tab">帐号密码登录</a></li>
+                    <li><a href="#code" data-toggle="tab">扫码登录</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="qqpwd">
+                        <div class="input-append">
+                            <p class="tabs-1">QQ号码:</p>
+
+                            <p class="tabs-1">
+                                <input name="qq" type="text" maxlength="40" value=""/>
+                            </p>
+
+                            <p class="tabs-1 margin-t-5">QQ密码:</p>
+
+                            <p class="tabs-1">
+                                <input name="pwd" type="password" value=""/>
+                            </p>
+
+                            <p class="tabs-1 margin-t-5">
+                                <input name="loginsubmit" type="submit" class="btn-s" value="登录"/>
+                            </p>
+
+                            <p></p>
+                            <input type="hidden" name="login_url" value="http://pt.3g.qq.com/s?aid=nLogin"/>
+                            <input type="hidden" name="sidtype" value="1"/>
+                            <input type="hidden" name="bid" value="0"/>
+                            <input type="hidden" name="nopre" value="0"/>
+                            <input type="hidden" name="loginType" value="3"/>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane" id="code">
+                        <div class="input-append">
+
+
+                            <img src="" id="tdCode" style="width: 300px;">
+
+                        </div>
+
+                    </div>
 
                 </div>
 
 
 
-                <div class="input-append">
-                    <p class="tabs-1">QQ号码:</p>
 
-                    <p class="tabs-1">
-                        <input name="qq" type="text" maxlength="40" value=""/>
-                    </p>
 
-                    <p class="tabs-1 margin-t-5">QQ密码:</p>
 
-                    <p class="tabs-1">
-                        <input name="pwd" type="password" value=""/>
-                    </p>
 
-                    <p class="tabs-1 margin-t-5">
-                        <input name="loginsubmit" type="submit" class="btn-s" value="登录"/>
-                    </p>
 
-                    <p></p>
-                    <input type="hidden" name="login_url" value="http://pt.3g.qq.com/s?aid=nLogin"/>
-                    <input type="hidden" name="sidtype" value="1"/>
-                    <input type="hidden" name="bid" value="0"/>
-                    <input type="hidden" name="nopre" value="0"/>
-                    <input type="hidden" name="loginType" value="3"/>
-                </div>
             </div>
         </div>
 
@@ -100,6 +123,7 @@
 
 </ol>
 </div>
+        </div>
 
 
         </div>
@@ -109,25 +133,38 @@
 
     <script>
 
+        function checkCode(){
+
+            $.ajax({
+
+                url:"/home/index/index/tdCodeCheck",
+                type:"post",
+                datatype:"json",
+                success:function(d){
+
+
+                }
+
+
+            })
+
+
+
+
+        }
+
         $(function(){
             var rand = Math.random()
             var url = "/index.php/home/index/ptqrShow?r="+rand
             $("#tdCode").attr("src",url)
             ///index.php/home/index/ptqrShow
-
+            $('#myTab a:last').tab('show');
         })
 
-        window._bd_share_config = {
-        "common": {
-            "bdSnsKey": {},
-            "bdText": "",
-            "bdMini": "2",
-            "bdMiniList": false,
-            "bdPic": "",
-            "bdStyle": "0",
-            "bdSize": "16"
-        }, "slide": {"type": "slide", "bdImg": "0", "bdPos": "left", "bdTop": "100"}
-    };
-    with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+
+
+
+    </script>
+
 </body>
 </html>
