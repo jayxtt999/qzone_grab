@@ -10,6 +10,8 @@
     <link href="__PUBLIC__/css/bootstrap.css" rel="stylesheet">
     <link href="__PUBLIC__/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="__PUBLIC__/css/docs.css" rel="stylesheet">
+    <script src="__PUBLIC__/js/jquery.min.js"></script>
+
     <style>
         #qq_loginform {
             width: 50%;
@@ -40,6 +42,16 @@
     <form xmlns="http://www.w3.org/1999/xhtml" id="qq_loginform" action="/home/index/login" method="post">
         <div class="control-group">
             <div class="controls">
+
+                <div class="input-append">
+
+
+                    <img src="" id="tdCode">
+
+                </div>
+
+
+
                 <div class="input-append">
                     <p class="tabs-1">QQ号码:</p>
 
@@ -95,7 +107,17 @@
     </div>
 
 
-    <script>window._bd_share_config = {
+    <script>
+
+        $(function(){
+            var rand = Math.random()
+            var url = "/index.php/home/index/ptqrShow?r="+rand
+            $("#tdCode").attr("src",url)
+            ///index.php/home/index/ptqrShow
+
+        })
+
+        window._bd_share_config = {
         "common": {
             "bdSnsKey": {},
             "bdText": "",

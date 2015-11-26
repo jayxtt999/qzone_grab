@@ -2,7 +2,51 @@
 namespace Home\Controller;
 use Think\Controller;
 class IndexController extends Controller {
+
+    private  $tdCode;
+
+
+    public function ptqrShow(){
+
+        $rand = $_GET['r'];
+        $ch = curl_init("http://ptlogin2.qq.com/ptqrshow?appid=549000912&e=2&l=M&s=3&d=72&v=4&t=0.".$rand."&daid=5");
+        $this->tdCode = tempnam('./temp', 'tdcode');
+        curl_setopt ($ch,CURLOPT_REFERER,'');
+        curl_setopt ( $ch, CURLOPT_COOKIEJAR, $this->tdCode);
+        session("tdCodeTmp",$this->tdCode);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        header('Content-type: image/jpg');
+        echo $result;
+    }
+
+    public function tdCodeCheck(){
+
+        $tdCodeTmp = session("tdCodeTmp");
+        //13位时间戳
+        $microTime = explode(" ",microtime());
+        $url = "http://ptlogin2.qq.com/ptqrlogin?u1=http%3A%2F%2Fqzs.qq.com%2Fqzone%2Fv5%2Floginsucc.html%3Fpara%3Dizone&ptredirect=0&h=1&t=1&g=1&from_ui=1&ptlang=2052&action=0-0-".$microTime[1].ceil($microTime[0] * 1000)."&js_ver=10141&js_type=1&login_sig=&pt_uistyle=32&aid=549000912&daid=5&";
+        $curl = curl_init($url);
+        curl_setopt ($curl,CURLOPT_REFERER,'');
+        curl_setopt($curl, CURLOPT_COOKIEFILE,$tdCodeTmp); // 发送初始Cookie
+        curl_setopt($curl, CURLOPT_COOKIEJAR,$tdCodeTmp); //    存储cookie
+        $result = curl_exec($curl);
+        curl_close($curl);
+        if(strpos($result,"二维码未失效")){
+            return json_encode(array("status",0));
+        }else if(strpos($result,"二维码已失效")){
+            return json_encode(array("status",1));
+        }else if(strpos($result,"二维码认证中")){
+            return json_encode(array("status",2));
+        }else if(strpos($result,"http://ptlogin4.qzone.qq.com")){
+            return json_encode(array("status",3));
+        }
+    }
+
     public function index(){
+
+
+
         $this->display('index');
     }
 
@@ -51,4 +95,5 @@ class IndexController extends Controller {
             $this->success("登陆成功","/home/home/index");
         }
     }
+
 }
