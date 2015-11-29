@@ -10,5 +10,11 @@ return array(
         'SecretId' => 'AKIDZxOHgUlTXXT9H5qEC3qTreCCrBgPP6Ab',
         'SecretKey' => 'BWcUAIC5jTCvKL4IGYX9g0h9YyK9DsCp',
         'RequestMethod' => 'GET',
-        'DefaultRegion' => 'gz')
+        'DefaultRegion' => 'gz'),
+
+    'saveType'=>"mysql",
+
+
+
+
 );

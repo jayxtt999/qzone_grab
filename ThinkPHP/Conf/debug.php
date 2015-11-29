@@ -25,3 +25,5 @@ return  array(
     'SHOW_ERROR_MSG'        =>  true,    // 显示错误信息
     'URL_CASE_INSENSITIVE'  =>  false,  // URL区分大小写
 );
+
+
