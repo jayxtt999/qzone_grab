@@ -13,13 +13,27 @@ class HomeController extends AbstractController
     public function index()
     {
         $qq = session('qq');
-        $sid = session('sid');
-        if (empty($qq)) {
+        if($qq){
+            $accredit = M('accredit');
+            $row = $accredit->where("qq=".$qq)->find();
+        }
+        if (!$row) {
             $this->error("请重新登录", '/', 3);
         }
         //获取好友列表
-        $list = file_get_contents("http://m.qzone.com/friend/mfriend_list?g_tk=383288931&res_uin=" . $qq . "&res_type=normal&format=json&count_per_page=10&page_index=0&page_type=0&mayknowuin=&qqmailstat=&sid=" . $sid . "");
-        $list = json_decode($list);
+
+        $url = "http://m.qzone.com/friend/mfriend_list?g_tk=".$row['gtk']."&res_uin=".$qq."&res_type=normal&format=json&count_per_page=10&page_index=0&page_type=0&mayknowuin=&qqmailstat=";
+        $curl = curl_init($url);
+        $cookie = " p_uin=".$row['pUin']."; skey=".$row['sKey']."; uin=".$row['uin'];
+        $headers['Host'] = 'm.qzone.com';
+        curl_setopt($curl, CURLOPT_REFERER, '');
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt ($curl, CURLOPT_HTTPHEADER,$headers);
+        curl_setopt($curl, CURLOPT_COOKIE, $cookie);
+        $result = curl_exec($curl);
+        curl_close($curl);
+        $list = json_decode($result);
         $data = ($list->data);
         //相关配置
         $groud = $data->gpnames;
@@ -33,7 +47,6 @@ class HomeController extends AbstractController
         $this->list = $list;
         $this->autoZantask = F('zan_lock_' . $qq);
         $this->autoCommtask = F('comm_lock_' . $qq);
-        $this->assign("sid",$sid);
         $this->assign("qq",$qq);
         $this->display('index');
     }

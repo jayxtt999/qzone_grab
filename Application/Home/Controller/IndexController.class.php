@@ -36,7 +36,6 @@ class IndexController extends Controller
 
         //存储临时cookie
         $tdCodeTmp = session("tdCodeTmp");
-
         //13位时间戳
         $microTime = explode(" ", microtime());
         $url = "http://ptlogin2.qq.com/ptqrlogin?u1=http%3A%2F%2Fqzs.qq.com%2Fqzone%2Fv5%2Floginsucc.html%3Fpara%3Dizone&ptredirect=0&h=1&t=1&g=1&from_ui=1&ptlang=2052&action=0-0-" . $microTime[1] . ceil($microTime[0] * 1000) . "&js_ver=10141&js_type=1&login_sig=&pt_uistyle=32&aid=549000912&daid=5&";
@@ -69,6 +68,7 @@ class IndexController extends Controller
             $result = explode("\r\n", file_get_contents($tdCodeTmp));
             $uinRes = explode("	", $result[6]);
             $sKeyRes = explode("	", $result[7]);
+            $ptczRes = explode("	", $result[16]);
             $pUinRes = explode("	", $result[17]);
             $pSkeyRes = explode("	", $result[18]);
             $pt4TokenRes = explode("	", $result[19]);
@@ -77,6 +77,7 @@ class IndexController extends Controller
             $pUin = $pUinRes[6];
             $pSkey = $pSkeyRes[6];
             $pt4Token = $pt4TokenRes[6];
+            $ptcz = $ptczRes[6];
             //根据sKey获取gtk
             $gtk = getGTK($sKey);
             $data = array(
@@ -85,8 +86,10 @@ class IndexController extends Controller
                 "pUin" => $pUin,
                 "pSkey" => $pSkey,
                 "pt4Token" => $pt4Token,
+                "ptcz" => $ptcz,
                 "gtk" => $gtk,
             );
+
             //存储信息.
             $data['qq']=$qq;
             $accredit = M('accredit');
@@ -97,7 +100,6 @@ class IndexController extends Controller
             }else{
                 $r = $accredit->add($data);
             }
-
             if($r){
                 session("loginType","tdCode");
                 session("qq",$qq);
@@ -110,8 +112,6 @@ class IndexController extends Controller
 
     public function index()
     {
-
-
         $this->display('index');
     }
 
