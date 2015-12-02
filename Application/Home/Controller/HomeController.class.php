@@ -8,7 +8,6 @@ class HomeController extends AbstractController
     private $autoCon = "【来自自动评论】";//小尾巴
     private $sData = array();
     private $qq = '';
-    private $sid = '';
 
     public function index()
     {
@@ -21,7 +20,6 @@ class HomeController extends AbstractController
             $this->error("请重新登录", '/', 3);
         }
         //获取好友列表
-
         $url = "http://m.qzone.com/friend/mfriend_list?g_tk=".$row['gtk']."&res_uin=".$qq."&res_type=normal&format=json&count_per_page=10&page_index=0&page_type=0&mayknowuin=&qqmailstat=";
         $curl = curl_init($url);
         $cookie = " p_uin=".$row['pUin']."; skey=".$row['sKey']."; uin=".$row['uin'];
@@ -33,18 +31,71 @@ class HomeController extends AbstractController
         curl_setopt($curl, CURLOPT_COOKIE, $cookie);
         $result = curl_exec($curl);
         curl_close($curl);
-        $list = json_decode($result);
-        $data = ($list->data);
-        //相关配置
-        $groud = $data->gpnames;
+        $results = json_decode($result);
+        $datas = $results->data;
+        $gpnames = $datas->gpnames;
+        $list = $datas->list;
+
+        //存储gpnames
+        $friendGp = M('friend_gp');
+        $map['qq'] = $qq;
+        foreach($gpnames as $v1){
+
+            $data['qq'] = $qq;
+            $data['gpid'] = $v1->gpid;
+            $data['gpname'] = $v1->gpname;
+            //构造条件
+            $map['gpid'] = $v1->gpid;
+            //插入更新数据
+            $row = $friendGp->where($map)->select();
+            if($row){
+                $r = $friendGp->where($map)->save($data);
+            }else{
+                $r = $friendGp->add($data);
+            }
+        }
+        //存储list
+        $friendGpQq = M('friend_gpqq');
+        unset($map);
+        unset($data);
+        $map['qq'] = $qq;
+        foreach($list as $v2){
+
+            //构造数据集
+            $data['qq'] = $qq;
+            $data['uin'] = $v2->uin;
+            $data['groupid'] = $v2->groupid;
+            $data['isvip'] = $v2->isvip;
+            $data['nick'] = $v2->nick;
+            $data['remark'] = $v2->remark;
+            $data['searchField'] = $v2->searchField;
+            $data['viplevel'] = $v2->viplevel;
+
+            //构造条件
+            $map['uin'] = $v2->uin;
+            //插入更新数据
+            $row = $friendGpQq->where($map)->select();
+            if($row){
+                $r = $friendGpQq->where($map)->save($data);
+            }else{
+                $r = $friendGpQq->add($data);
+            }
+
+        }
+
+
+
+
+
         //是否启动自动赞进程
         $this->qq = $qq;
-        $this->data = $data;
+        $this->data = $gpnames;
         //存储相关数据
         F('fl_' . $qq, $data);
-        $this->groud = $groud;
-        $this->sid = $sid;
+        $this->groud = $list;
         $this->list = $list;
+        print_r($data);exit;
+
         $this->autoZantask = F('zan_lock_' . $qq);
         $this->autoCommtask = F('comm_lock_' . $qq);
         $this->assign("qq",$qq);
@@ -84,7 +135,6 @@ class HomeController extends AbstractController
         }
         exit;
     }
-
 
 
     /**
@@ -186,7 +236,6 @@ class HomeController extends AbstractController
         return true;
     }
 
-
     function trampoline($callback, $params) {
 
         $result = call_user_func(array(__CLASS__,$callback), $params);
@@ -195,9 +244,6 @@ class HomeController extends AbstractController
 	    }
 	    return $result;
 	}
-
-
-
 
     /**
      * 自动赞

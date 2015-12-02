@@ -93,7 +93,6 @@ class IndexController extends Controller
             //存储信息.
             $data['qq']=$qq;
             $accredit = M('accredit');
-
             $row = $accredit->where("qq=".$qq)->select();
             if($row){
                 $r = $accredit->where('qq='.$qq)->save($data);
