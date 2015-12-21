@@ -57,6 +57,10 @@ class AbstractController  extends Controller{
 
     }
 
+    public function getUserInfo($qq){
+        $user = M('user');
+        return   $user->where("qq=".$qq)->find();
+    }
 
     /*控制台*/
     public function console($msg){

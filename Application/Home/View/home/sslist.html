@@ -200,54 +200,9 @@
 
                 <div class="col-md-9">
 
-                    <div class="col-md-4">
-
-                        <?php for($i=0;$i<count($groud);$i++){?>
-                        <div class="form-group ss">
-                            <label class="col-md-3 control-label"><?php echo $groud[$i]->gpname ?></label>
-                            <select class="form-control input-medium myfriend col-md-3">
-                                <option value="0">==请选择一位好友==</option>
-                                <?php foreach($data->list as $list){
-                                if($list->groupid==$groud[$i]->gpid){
-                                ?>
-                                <option value="<?php echo $list->uin?>"
-                                        key="<?php echo $list->searchField;?>"><?php echo $list->remark."---".$list->uin?>
-                                </option>
-                                <?php } } ?>
-                            </select>
-
-                            <div class="clearfix"></div>
-                        </div>
-                        <?php } ?>
-
-                        <div class="form-group">
 
 
-                            <label class="col-md-3 control-label"></label>
-
-                            <div class="col-md-3">
-                                <div class="input-group pinshuoshuo input-medium" style="margin-left: -16px;">
-                                    <input type="text" id="disabledInput" class="form-control " placeholder="选择一位好友">
-                            <span class="input-group-btn">
-											<button class="btn blue loading findfriend" data-loading-text="Loading..." type="button">Shuoshuo!</button>
-											</span>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="form-group">
-
-
-
-
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-md-8">
+                    <div class="col-md-12">
 
                         <div class="portlet">
                             <div class="portlet-title line">
@@ -270,32 +225,30 @@
 
 
                                     <ul class="chats">
+
+                                    <volist name="ssAll" id="vo">
+
+
                                         <li class="in">
-                                            <img class="avatar" alt="" src="../../assets/admin/layout/img/avatar1.jpg"/>
+                                            <img class="avatar" alt="" src="http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin={$vo.user.qq}&src_uin=www.feifeiboke.com&fid=blog&spec=100"/>
                                             <div class="message">
 											<span class="arrow">
 											</span>
                                                 <a href="#" class="name">
-                                                    Bob Nilson </a>
+                                                    {$vo.user.nackname} </a>
 											<span class="datetime">
-											at 20:09 </span>
+											at {$vo.timeline}</span>
 											<span class="body">
-											Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                                                {$vo.summary}
+                                            </span>
                                             </div>
                                         </li>
-                                        <li class="out">
-                                            <img class="avatar" alt="" src="../../assets/admin/layout/img/avatar2.jpg"/>
-                                            <div class="message">
-											<span class="arrow">
-											</span>
-                                                <a href="#" class="name">
-                                                    Lisa Wong </a>
-											<span class="datetime">
-											at 20:11 </span>
-											<span class="body">
-											Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
-                                            </div>
-                                        </li>
+
+
+                                    </volist>
+
+
+
 
                                     </ul>
 
@@ -326,36 +279,6 @@
                 </div>
 
 
-                <div class="col-md-3">
-
-                    <div class="pinconsole">
-
-                        <div class="portlet">
-                            <div class="portlet-title">
-                                <div class="caption">
-                                    <i class="fa fa-gift"></i>控制台
-                                </div>
-                                <div class="tools">
-                                    <a href="javascript:;" class="collapse">
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="portlet-body">
-
-                                <iframe src="" style="background: #eee;color: #ffffff;font-size: 18px;width: 100%;height: 300px"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes">
-
-
-                                </iframe>
-
-                            </div>
-                        </div>
-
-
-
-                    </div>
-
-
-                </div>
 
 
             </div>
@@ -465,33 +388,7 @@
 
 </body>
 
-<script>
 
-    var lodingSsOver = false;
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.pinconsole').pin();
-            $('.pinshuoshuo ').pin();
-
-        });
-    });
-
-
-    function lodingSsOver(){
-        lodingSsOver = true;
-    }
-
-    function showSs(){
-
-
-
-
-
-
-    }
-
-
-</script>
 
 <!-- END BODY -->
 </html>

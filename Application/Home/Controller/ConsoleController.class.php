@@ -28,12 +28,45 @@ class ConsoleController extends AbstractController
         ini_set('memory_limit', '512M');
         set_time_limit(0);
         $uqq = I('get.uqq');
-        $uqq = "435024179";
+        $uqq = "154894476";
 
         if (empty($uqq)) {
             consoleShow("请先选择好友..");
             exit;
         }
+        consoleShow("存储好友相关资料".$uqq."数据开始");
+
+        $url = "http://m.qzone.com/profile_get?g_tk=".$this->qq['gtk']."&format=json&hostuin=".$uqq;
+        $result = json_decode($this->sendToQq($url), true);
+        $userData = $result['data'];
+        $data['qq'] = $uqq;
+        $data['age'] = $userData['age'];
+        $data['birthday'] = $userData['birthday'];
+        $data['birthmonth'] = $userData['birthmonth'];
+        $data['birthyear'] = $userData['birthyear'];
+        $data['city'] = $userData['city'];
+        $data['constellation'] = $userData['constellation'];
+        $data['country'] = $userData['country'];
+        $data['face'] = $userData['face'];
+        $data['nackname'] = $userData['nackname'];
+        $data['province'] = $userData['province'];
+        $data['vip'] = $userData['vip'];
+        $data['gender'] = $userData['gender'];
+        $data['viplevel'] = $userData['viplevel'];
+
+
+         $user = M('user');
+         $row = $user->where("qq=".$uqq)->find();
+            if($row){
+                $r = $user->where('qq='.$uqq)->save($data);
+            }else{
+                $r = $user->add($data);
+            }
+
+        consoleShow("存储好友相关资料".$uqq."数据完成");
+
+        //http://m.qzone.com/profile_get?g_tk=1845112471&format=json&hostuin=154894476
+
         session('uqq', $uqq);
 
         consoleShow("获取".$uqq."说说数据开始");

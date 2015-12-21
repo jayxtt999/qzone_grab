@@ -41,6 +41,25 @@ class HomeController extends AbstractController
     }
 
 
+    public  function showShuoshuoList(){
+
+        $uqq = "154894476";
+        $shuoshuoAll = array();
+        $friendShuoshuo = M('friend_shuoshuo');
+        $result = $friendShuoshuo->where("uin=".$uqq)->select();
+        foreach($result as $k=>$v){
+            $result[$k]['user'] = $this->getUserInfo($uqq);
+        }
+        $this->assign("ssAll",$result);
+        $this->display('sslist');
+
+
+
+
+
+
+    }
+
 
 
 }
