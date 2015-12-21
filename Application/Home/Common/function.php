@@ -39,3 +39,13 @@ function jsonObject($array)
     header("Content-type: application/json");
     exit(json_encode($array));
 }
+
+
+
+function consoleShow($msg){
+    ob_end_flush();
+    echo $msg.'<br />';
+    echo('<script> $("body").scrollTop($("body")[0].scrollHeight);</script>');
+    ob_flush();
+    flush();
+}

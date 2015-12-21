@@ -1,294 +1,492 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="keywords" content="主界面" />
-<meta name="description" content="主界面" />
-<meta name="generator" content="naix" />
-<title>Hello Mr. Memory </title>
+<!DOCTYPE html>
+
+<html lang="en" class="no-js">
 <head>
-    <meta charset="utf-8">
-    <link href="__PUBLIC__/css/bootstrap.css" rel="stylesheet">
-    <link href="__PUBLIC__/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="__PUBLIC__/css/docs.css" rel="stylesheet">
-    <script src="__PUBLIC__/js/jquery.min.js"></script>
-    <script src="__PUBLIC__/js/bootstrap.min.js"></script>
-    <script src="__PUBLIC__/js/bootstrap-tooltip.js"></script>
-    <script src="__PUBLIC__/js/layer.min.js"></script>
-    <script src="__PUBLIC__/js/bootstrap-popover.js"></script>
-    <style>
-        .control-label{text-align: left;}
-        #disabledInput{height: 18px;margin-left: 145px;width: 200px}
-        .showInfo{float: left;margin-left: 10px;height: 400px;border-left:1px solid gray;padding-left: 10px;width: 740px;}
-        .timeInfo{display:none}
-        .msgInfo{display:none}
-        .alert{width:650px;float:right}
-        .well{margin-top: 26px;display:none}
-        #danxiang{margin-top: 20px}
-    </style>
+    <meta charset="utf-8"/>
+    <title>Metronic | Admin Dashboard Template</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <!--
+        <link href="http://fonts.useso.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
+    -->
+    <link href="__PUBLIC__/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"
+          type="text/css"/>
+    <link href="__PUBLIC__/assets/global/plugins/pace/themes/pace-theme-barber-shop.css" rel="stylesheet" type="text/css"/>
+
+    <link href="__PUBLIC__/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet"
+          type="text/css"/>
+    <link href="__PUBLIC__/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="__PUBLIC__/assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+    <link href="__PUBLIC__/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet"
+          type="text/css"/>
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
+    <link href="__PUBLIC__/assets/global/plugins/gritter/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>
+    <link href="__PUBLIC__/assets/global/plugins/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet"
+          type="text/css"/>
+    <link href="__PUBLIC__/assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet"
+          type="text/css"/>
+    <link href="__PUBLIC__/assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css"/>
+    <!-- END PAGE LEVEL PLUGIN STYLES -->
+    <!-- BEGIN PAGE STYLES -->
+    <link href="__PUBLIC__/assets/admin/pages/css/tasks.css" rel="stylesheet" type="text/css"/>
+    <!-- END PAGE STYLES -->
+    <!-- BEGIN THEME STYLES -->
+    <link href="__PUBLIC__/assets/global/css/components.css" rel="stylesheet" type="text/css"/>
+    <link href="__PUBLIC__/assets/global/css/plugins.css" rel="stylesheet" type="text/css"/>
+    <link href="__PUBLIC__/assets/admin/layout/css/layout.css" rel="stylesheet" type="text/css"/>
+    <link href="__PUBLIC__/assets/admin/layout/css/themes/default.css" rel="stylesheet" type="text/css"
+          id="style_color"/>
+    <link href="__PUBLIC__/assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
+    <!-- END THEME STYLES -->
+    <link rel="shortcut icon" href="favicon.ico"/>
 </head>
-<body data-spy="scroll" data-target=".subnav" data-offset="50" style="">
-<div class="container">
-    <header class="jumbotron subhead" id="overview">
-        <h1> {$qq}登陆成功</h1>
-        <p class="lead">
-            选择一个好友。
-        </p>
-    </header>
-    <form class="form-horizontal">
-        <input type="hidden" name="sid" id="sid" value="<?=$sid?>">
-        <input type="hidden" name="qq" id="qq" value="<?=$qq?>">
-        <div class="control-group">
-            <div class="controls">
-                <div class="input-append" style="float: left;">
-                    <?php for($i=0;$i<count($groud);$i++){?>
-                    <div class="control-group success">
-                        <label class="control-label" for="selectError"><?php echo "--分组".($i+1)."--".$groud[$i]->gpname ?></label>
-                        <div class="controls">
-                            <select class="selectError">
+
+<body class="page-header-fixed page-quick-sidebar-over-content">
+<!-- BEGIN HEADER -->
+<div class="page-header navbar navbar-fixed-top">
+    <!-- BEGIN HEADER INNER -->
+    <div class="page-header-inner">
+        <!-- BEGIN LOGO -->
+        <div class="page-logo">
+            <a href="index.html">
+                <img src="__PUBLIC__/assets/admin/layout/img/logo.png" alt="logo" class="logo-default"/>
+            </a>
+
+            <div class="menu-toggler sidebar-toggler hide">
+                <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
+            </div>
+        </div>
+        <!-- END LOGO -->
+        <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
+           data-target=".navbar-collapse">
+        </a>
+        <!-- END RESPONSIVE MENU TOGGLER -->
+        <!-- BEGIN TOP NAVIGATION MENU -->
+        <div class="top-menu">
+            <ul class="nav navbar-nav pull-right">
+                <!-- BEGIN USER LOGIN DROPDOWN -->
+                <li class="dropdown dropdown-user">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                       data-close-others="true">
+                        <img alt="" class="img-circle hide1"
+                             src="__PUBLIC__/assets/admin/layout/img/avatar3_small.jpg"/>
+					<span class="username username-hide-on-mobile">
+					Bob </span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="extra_profile.html">
+                                <i class="icon-user"></i> My Profile </a>
+                        </li>
+                        <li>
+                            <a href="page_calendar.html">
+                                <i class="icon-calendar"></i> My Calendar </a>
+                        </li>
+                        <li>
+                            <a href="inbox.html">
+                                <i class="icon-envelope-open"></i> My Inbox <span class="badge badge-danger">
+							3 </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-rocket"></i> My Tasks <span class="badge badge-success">
+							7 </span>
+                            </a>
+                        </li>
+                        <li class="divider">
+                        </li>
+                        <li>
+                            <a href="extra_lock.html">
+                                <i class="icon-lock"></i> Lock Screen </a>
+                        </li>
+                        <li>
+                            <a href="login.html">
+                                <i class="icon-key"></i> Log Out </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- END USER LOGIN DROPDOWN -->
+                <!-- BEGIN QUICK SIDEBAR TOGGLER -->
+                <li class="dropdown dropdown-quick-sidebar-toggler">
+                    <a href="javascript:;" class="dropdown-toggle">
+                        <i class="icon-logout"></i>
+                    </a>
+                </li>
+                <!-- END QUICK SIDEBAR TOGGLER -->
+            </ul>
+        </div>
+        <!-- END TOP NAVIGATION MENU -->
+    </div>
+    <!-- END HEADER INNER -->
+</div>
+<!-- END HEADER -->
+<div class="clearfix">
+</div>
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+<!-- BEGIN SIDEBAR -->
+<div class="page-sidebar-wrapper">
+    <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+    <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+
+    <include file="Home@layout/menu"/>
+
+</div>
+<!-- END SIDEBAR -->
+<!-- BEGIN CONTENT -->
+<div class="page-content-wrapper">
+    <div class="page-content">
+        <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+        <div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        Widget settings form goes here
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn blue">Save changes</button>
+                        <button type="button" class="btn default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+        <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+        <!-- BEGIN STYLE CUSTOMIZER -->
+        <include file="Home@layout/widgets"/>
+        <!-- END STYLE CUSTOMIZER -->
+        <!-- BEGIN PAGE HEADER-->
+        <h3 class="page-title">
+            好友
+            <small>简介</small>
+        </h3>
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="index.html">HOME</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="#">Dashboard</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <a href="#">Dashboard</a>
+                </li>
+            </ul>
+
+        </div>
+
+
+        <div class="row">
+
+
+            <div class="col-md-12">
+
+                <div class="col-md-9">
+
+                    <div class="col-md-4">
+
+                        <?php for($i=0;$i<count($groud);$i++){?>
+                        <div class="form-group ss">
+                            <label class="col-md-3 control-label"><?php echo $groud[$i]->gpname ?></label>
+                            <select class="form-control input-medium myfriend col-md-3">
                                 <option value="0">==请选择一位好友==</option>
                                 <?php foreach($data->list as $list){
                                 if($list->groupid==$groud[$i]->gpid){
                                 ?>
-                                <option value="<?php echo $list->uin?>"><?php echo $list->remark."---".$list->uin?></option>
+                                <option value="<?php echo $list->uin?>"
+                                        key="<?php echo $list->searchField;?>"><?php echo $list->remark."---".$list->uin?>
+                                </option>
                                 <?php } } ?>
                             </select>
-                            <span class="help-inline">耶！</span>
+
+                            <div class="clearfix"></div>
                         </div>
-                    </div>
-                    <?php } ?>
-                    <input name="qq" class="input-xlarge disabled" id="disabledInput"  type="text" placeholder="" readonly="readonly">
-                    <input class="btn" id="go" value="执行" type="button">
-                    <div class="well">
-                        <a  class="btn btn-danger" id="timeInterval"  data-toggle="modal" data-target="#myModal" rel="popover" data-content="该功能可以查看好友发表说说的时间分布,评论,赞统计记录" data-original-title="功能说明">评论&赞</a>
-                        <a  class="btn btn-danger" id="keyitem"  data-toggle="modal" data-target="#myModal" rel="popover" data-content="该功能可以查看好友发表说说的相关关键字" data-original-title="功能说明">关键字解析</a>
+                        <?php } ?>
+
+                        <div class="form-group">
 
 
+                            <label class="col-md-3 control-label"></label>
 
-                    </div>
-
-
-                    <div class="breadcrumb" style="margin-top: 20px">
-
-                        <span class="badge badge-success">通用功能</span>
-
-                        <div class="btn-group" data-toggle="buttons-radio" style="margin-top: 10px">
-                            <div class="btn-group" style="float: left;">
-                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">　赞　<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a id="zan_on" href="javascript:;">开启自动赞</a></li>
-                                    <li><a id="zan_off" href="javascript:;">取消自动赞</a></li>
-                                </ul>
+                            <div class="col-md-3">
+                                <div class="input-group pinshuoshuo input-medium" style="margin-left: -16px;">
+                                    <input type="text" id="disabledInput" class="form-control " placeholder="选择一位好友">
+                            <span class="input-group-btn">
+											<button class="btn blue loading findfriend" data-loading-text="Loading..." type="button">Shuoshuo!</button>
+											</span>
+                                </div>
                             </div>
 
-                            <select id="auto_zan_time">
-                                <option value="0">请选择自动点赞持续时间</option>
-                                <option value="60">测试(仅一次)</option>
-                                <option value="3600">1小时</option>
-                                <option value="86400">1天</option>
-                                <option value="604800">1周</option>
-                                <option value="2592000">1个月</option>
-                            </select>
+                        </div>
+
+                        <div class="form-group">
+
+
+
 
 
                         </div>
-
-                        <div class="btn-group" data-toggle="buttons-radio" style="margin-top: 10px">
-                            <div class="btn-group" style="float: left;">
-                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">评　论<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a id="comm_on" href="javascript:;">开启自动评论</a></li>
-                                    <li><a id="comm_off" href="javascript:;">取消自动评论</a></li>
-                                </ul>
-                            </div>
-                            <select id="auto_comm_time">
-                                <option value="0">请选择自动点评论持续时间</option>
-                                <option value="60">测试(仅一次)</option>
-                                <option value="3600">1小时</option>
-                                <option value="86400">1天</option>
-                                <option value="604800">1周</option>
-                                <option value="2592000">1个月</option>
-                            </select>
-
-                        </div>
-                        <a  class="btn btn-primary" id="danxiang"  data-toggle="modal" data-target="#myModal" rel="popover"
-                            data-content="该功能可以查看把你删除的好友" data-original-title="功能说明">单向好友查询
-                        </a>
-
-
-
 
                     </div>
+
+
+                    <div class="col-md-8">
+
+                        <div class="portlet">
+                            <div class="portlet-title line">
+                                <div class="caption">
+                                    <i class="fa fa-comments"></i>Chats
+                                </div>
+                                <div class="tools">
+                                    <a href="" class="collapse">
+                                    </a>
+                                    <a href="#portlet-config" data-toggle="modal" class="config">
+                                    </a>
+                                    <a href="" class="reload">
+                                    </a>
+                                    <a href="" class="remove">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="portlet-body" id="chats">
+                                <div class="scroller" style="height: 435px;" data-always-visible="1" data-rail-visible1="1">
+                                    <ul class="chats">
+                                        <li class="in">
+                                            <img class="avatar" alt="" src="../../assets/admin/layout/img/avatar1.jpg"/>
+                                            <div class="message">
+											<span class="arrow">
+											</span>
+                                                <a href="#" class="name">
+                                                    Bob Nilson </a>
+											<span class="datetime">
+											at 20:09 </span>
+											<span class="body">
+											Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                                            </div>
+                                        </li>
+                                        <li class="out">
+                                            <img class="avatar" alt="" src="../../assets/admin/layout/img/avatar2.jpg"/>
+                                            <div class="message">
+											<span class="arrow">
+											</span>
+                                                <a href="#" class="name">
+                                                    Lisa Wong </a>
+											<span class="datetime">
+											at 20:11 </span>
+											<span class="body">
+											Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </span>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                                <div class="chat-form">
+                                    <div class="input-cont">
+                                        <input class="form-control" type="text" placeholder="Type a message here..."/>
+                                    </div>
+                                    <div class="btn-cont">
+									<span class="arrow">
+									</span>
+                                        <a href="" class="btn blue icn-only">
+                                            <i class="fa fa-check icon-white"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
 
 
 
 
                 </div>
-                <div class="showInfo">
-                    <!--信息区-->
-                    <div class="alert fade in">
-                        <a class="close" data-dismiss="alert" href="#">×</a>
-                        <strong>-友情提示-</strong> 第一次获取数据的时候会很慢，大约30s左右，请耐心等待。
+
+
+                <div class="col-md-3">
+
+                    <div class="pinconsole">
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-gift"></i>控制台
+                                </div>
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+
+                                <iframe src="" style="background: #eee;color: #ffffff;font-size: 18px;width: 100%;height: 300px"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes">
+
+
+                                </iframe>
+
+                            </div>
+                        </div>
+
+
+
                     </div>
-                    <div class="alert alert-info timeInfo">
-                        获取数据中,已耗时  <strong class="time">0</strong>  s
-                    </div>
-                    <div class="alert alert-info msgInfo">
-                    </div>
+
+
                 </div>
-                <div style="clear:both"></div>
+
+
+            </div>
+
+            <div class="col-md-12">
+
+
+                <div style="height: 2400px"></div>
+
             </div>
         </div>
 
-    </form>
+
+    </div>
 </div>
+<!-- END CONTENT -->
+<!-- BEGIN QUICK SIDEBAR -->
+<a href="javascript:;" class="page-quick-sidebar-toggler"><i class="icon-close"></i></a>
+
+<div class="page-quick-sidebar-wrapper">
+<div class="page-quick-sidebar">
+<div class="nav-justified">
+
+</div>
+</div>
+</div>
+<!-- END QUICK SIDEBAR -->
+</div>
+<!-- END CONTAINER -->
+<!-- BEGIN FOOTER -->
+<div class="page-footer">
+    <div class="page-footer-inner">
+        2014 &copy; Metronic by keenthemes.
+    </div>
+    <div class="page-footer-tools">
+		<span class="go-top">
+		<i class="fa fa-angle-up"></i>
+		</span>
+    </div>
+</div>
+
+
+
+<script src="__PUBLIC__/assets/global/plugins/pace/pace.min.js" type="text/javascript"></script>
+
+<!-- END FOOTER -->
+<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+<!-- BEGIN CORE PLUGINS -->
+<!--[if lt IE 9]>
+<script src="__PUBLIC__/assets/global/plugins/respond.min.js"></script>
+<script src="__PUBLIC__/assets/global/plugins/excanvas.min.js"></script>
+<![endif]-->
+<script src="__PUBLIC__/assets/global/plugins/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+<!-- IMPORTANT! Load jquery-ui-1.10.3.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
+<script src="__PUBLIC__/assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="__PUBLIC__/assets/global/plugins/flot/jquery.flot.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/flot/jquery.flot.resize.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/flot/jquery.flot.categories.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jquery.pulsate.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/bootstrap-daterangepicker/moment.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
+<!-- IMPORTANT! fullcalendar depends on jquery-ui-1.10.3.custom.min.js for drag & drop support -->
+<script src="__PUBLIC__/assets/global/plugins/fullcalendar/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/gritter/js/jquery.gritter.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="__PUBLIC__/assets/global/plugins/jqvmap/jqvmap/jquery.vmap.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.russia.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.world.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.europe.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.germany.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.usa.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/scripts/metronic.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/admin/layout/scripts/layout.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/admin/layout/scripts/quick-sidebar.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/admin/layout/scripts/demo.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/admin/pages/scripts/index.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/admin/pages/scripts/tasks.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/assets/global/plugins/jquery.pin.js" type="text/javascript"></script>
+
+<!-- END PAGE LEVEL SCRIPTS -->
+
+<!--Table-->
+
+<script type="text/javascript" src="__PUBLIC__/assets/global/plugins/datatables/media/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js"></script>
+
+<script src="__PUBLIC__/assets/global/plugins/select2/select2.min.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+
+<!-- END JAVASCRIPTS -->
+<script src="__PUBLIC__/js/common/shuoshuo.js" type="text/javascript"></script>
+
+</body>
+
 <script>
 
-    autoisclick = 0;
-    $(function(){
-        $('#timeInterval').popover()
-        $('#keyitem').popover()
-        $('#danxiang').popover()
-        $("#timeInterval").click(function(){
-            $.layer({
-                type : 2,
-                title: '统计线形图',
-                shadeClose: true,
-                maxmin: true,
-                fix : false,
-                area: ['1024px', 500],
-                iframe: {
-                    src : '/index.php/home/show/table'
-                }
-            });
-        })
-        $("#keyitem").click(function(){
-            $.layer({
-                type : 2,
-                title: '内容分词',
-                shadeClose: true,
-                maxmin: true,
-                fix : false,
-                area: ['1024px', 500],
-                iframe: {
-                    src : '/index.php/home/show/keyitem'
-                }
-            });
-        })
+    var lodingSsOver = false;
+    jQuery(function($) {
+        $(document).ready( function() {
+            $('.pinconsole').pin();
+            $('.pinshuoshuo ').pin();
 
-        $("#danxiang").click(function(){
-
-        })
+        });
+    });
 
 
-    })
-    var c,t
-    //计时器
-    function timedCount()
-    {
-        c=$(".time").text();
-        c++
-        $(".time").text(c)
-        if(c==60){
-        //超时处理
-            stopCount()
-            $(".msgInfo").show(1000)
-            $(".msgInfo").html("返回超时，你可以重试")
-        }
-        t=setTimeout("timedCount()",1000)
+    function lodingSsOver(){
+        lodingSsOver = true;
     }
-    function stopCount()
-    {
-        clearTimeout(t)
+
+    function showSs(){
+
+
+
+
+
+
     }
-    $(".selectError").change(function(){
-        $(".well").hide(1000)
-        val=$(this).val();
-        $(".selectError").find("option[value='0']").attr("selected",true);
-        $(this).find("option[value="+val+"]").attr("selected",true);
-        $("#disabledInput").val(val)
-    })
-    $("#go").click(function(){
-        $(".time").text(0)
-        stopCount()
-        timedCount()
-        $.ajax({
-            type:'POST',
-            url:'/index.php/home/home/show',
-            dataType:'json',
-            data: {sid:$("#sid").val(), qq:$("#qq").val(),uqq:$("#disabledInput").val(),program:"one"},
-            beforeSend:function(){
-                $(".msgInfo").hide(1000)
-                $(".timeInfo").show(1000)
-            },
-            success:function(data){
-                $(".timeInfo").hide(1000)
-                $(".msgInfo").show(1000)
-                if(data.status==1){
-                    $(".msgInfo").html(data.msg)
-                    $(".well").show(1000)
-                }else{
-                    $(".msgInfo").html(data.msg)
-                }
-            }
-        })
-    })
-
-
-
-    $("#zan_on").click(function(){
-        if($("#auto_zan_time").val()==0){
-            alert("必须选择一个持续时间!!")
-            return false;
-        }
-        $.ajax({
-            type:'POST',
-            url:'/index.php/home/home/autozan',
-            dataType:'json',
-            data: {time:$("#auto_zan_time").val()}
-        })
-    })
-
-
-    $("#zan_off").click(function(){
-        $.ajax({
-            type:'POST',
-            url:'/index.php/home/home/autozanoff',
-            dataType:'text',
-            success:function(m){
-                alert(m)
-            }
-        })
-    })
-
-
-
-    $("#comm_on").click(function(){
-        if($("#auto_comm_time").val()==0){
-            alert("必须选择一个持续时间!!")
-            return false;
-        }
-        $.ajax({
-            type:'POST',
-            url:'/index.php/home/home/autoComm',
-            dataType:'json',
-            data: {time:$("#auto_comm_time").val()}
-        })
-    })
-
-    $("#comm_off").click(function(){
-        $.ajax({
-            type:'POST',
-            url:'/index.php/home/home/autoCommoff',
-            dataType:'text',
-            success:function(m){
-                alert(m)
-            }
-        })
-    })
-
 
 
 </script>
-<div class="shuoshuo"></div>
-</body>
+
+<!-- END BODY -->
 </html>

@@ -11,10 +11,7 @@ return array(
         'SecretKey' => 'BWcUAIC5jTCvKL4IGYX9g0h9YyK9DsCp',
         'RequestMethod' => 'GET',
         'DefaultRegion' => 'gz'),
-
-    'saveType'=>"mysql",
-
-
-
+    //是否将数据进行存储
+    'save'=>false,
 
 );

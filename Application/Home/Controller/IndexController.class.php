@@ -80,6 +80,7 @@ class IndexController extends Controller
             $ptcz = $ptczRes[6];
             //根据sKey获取gtk
             $gtk = getGTK($sKey);
+            $gtk2 = getGTK($pSkey);
             $data = array(
                 "uin" => $uin,
                 "sKey" => $sKey,
@@ -88,12 +89,13 @@ class IndexController extends Controller
                 "pt4Token" => $pt4Token,
                 "ptcz" => $ptcz,
                 "gtk" => $gtk,
+                "gtk2" => $gtk2,
             );
 
             //存储信息.
             $data['qq']=$qq;
             $accredit = M('accredit');
-            $row = $accredit->where("qq=".$qq)->select();
+            $row = $accredit->where("qq=".$qq)->find();
             if($row){
                 $r = $accredit->where('qq='.$qq)->save($data);
             }else{
@@ -101,7 +103,7 @@ class IndexController extends Controller
             }
             if($r){
                 session("loginType","tdCode");
-                session("qq",$qq);
+                session("qq",$data);
                 return jsonObject(array("status" => 3, "msg" => "ok"));
             }else{
                 return jsonObject(array("status" => 4, "msg" => "授权失败,请重试"));
