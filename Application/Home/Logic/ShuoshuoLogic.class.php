@@ -8,7 +8,12 @@
 
 namespace Home\Logic;
 use Think\Model;
-class ConsoleLogic extends \Think\Model{
+class ShuoshuoLogic extends \Think\Model{
 
+
+    public function getComment($uin,$cellId){
+
+        echo 2122;exit;
+    }
 
 }

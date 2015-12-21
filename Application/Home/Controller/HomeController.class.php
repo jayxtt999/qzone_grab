@@ -46,16 +46,19 @@ class HomeController extends AbstractController
         $uqq = "154894476";
         $shuoshuoAll = array();
         $friendShuoshuo = M('friend_shuoshuo');
+        $ssLogic = D('Shuoshuo','Logic');
         $result = $friendShuoshuo->where("uin=".$uqq)->select();
         foreach($result as $k=>$v){
             $result[$k]['user'] = $this->getUserInfo($uqq);
+            if($v['cntnum']){
+                $result[$k]['comment'] = $ssLogic->getComment($uqq,$v['cellid']);
+            }
+            
         }
+
+
         $this->assign("ssAll",$result);
         $this->display('sslist');
-
-
-
-
 
 
     }
