@@ -13,7 +13,28 @@ class ShuoshuoLogic extends \Think\Model{
 
     public function getComment($uin,$cellId){
 
-        echo 2122;exit;
+        if(!$uin || !$cellId){
+            return "";
+        }
+        $common = M("friend_comment");
+        $where = array(
+            'uin'=>$uin,
+            'cellid'=>$cellId,
+        );
+        return $common->where($where)->select();
+    }
+
+    public function getReplys($cellid,$commentid){
+
+        if(!$cellid || !$commentid){
+            return "";
+        }
+        $replys = M("friend_replys");
+        $where = array(
+            'cellid'=>$cellid,
+            'commentid'=>$commentid,
+        );
+        return $replys->where($where)->select();
     }
 
 }

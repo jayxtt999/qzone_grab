@@ -91,7 +91,6 @@ class IndexController extends Controller
                 "gtk" => $gtk,
                 "gtk2" => $gtk2,
             );
-
             //存储信息.
             $data['qq']=$qq;
             $accredit = M('accredit');
@@ -100,6 +99,8 @@ class IndexController extends Controller
                 $r = $accredit->where('qq='.$qq)->save($data);
             }else{
                 $r = $accredit->add($data);
+                file_put_contents("a.txt",$result);
+
             }
             if($r){
                 session("loginType","tdCode");

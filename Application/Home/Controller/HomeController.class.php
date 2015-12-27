@@ -15,16 +15,7 @@ class HomeController extends AbstractController
         $this->qq = is_array(session('qq'))?session('qq'):$this->error("请重新登录", '/', 3);
         //获取好友列表
         $url = "http://m.qzone.com/friend/mfriend_list?g_tk=".$this->qq['gtk']."&res_uin=".$this->qq['qq']."&res_type=normal&format=json&count_per_page=10&page_index=0&page_type=0&mayknowuin=&qqmailstat=";
-        $curl = curl_init($url);
-        $cookie = " p_uin=".$this->qq['pUin']."; skey=".$this->qq['sKey']."; uin=".$this->qq['uin'];
-        $headers['Host'] = 'm.qzone.com';
-        curl_setopt($curl, CURLOPT_REFERER, '');
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt ($curl, CURLOPT_HTTPHEADER,$headers);
-        curl_setopt($curl, CURLOPT_COOKIE, $cookie);
-        $result = curl_exec($curl);
-        curl_close($curl);
+        $result = $this->sendToQq($url);
         $results = json_decode($result);
         $datas = $results->data;
         $gpnames = $datas->gpnames;
@@ -43,22 +34,55 @@ class HomeController extends AbstractController
 
     public  function showShuoshuoList(){
 
+        //return $this->ajaxReturn(array(1,2,3));
+
         $uqq = "154894476";
         $shuoshuoAll = array();
         $friendShuoshuo = M('friend_shuoshuo');
         $ssLogic = D('Shuoshuo','Logic');
+        //Todo 分页
         $result = $friendShuoshuo->where("uin=".$uqq)->select();
+        //获取说说
+
         foreach($result as $k=>$v){
-            $result[$k]['user'] = $this->getUserInfo($uqq);
-            if($v['cntnum']){
-                $result[$k]['comment'] = $ssLogic->getComment($uqq,$v['cellid']);
+            $likemans = $v['likemans'];
+            //2种显示形式假设赞数量为10
+            //1：赞（10）
+            //2：张三,李四,王五等7人觉得很赞
+            if($likemans && strpos($likemans,",")){
+                $likemansArr = explode(",",$likemans);
+                $result[$k]['likemansArr'] = $likemansArr;
+                $result[$k]['likemansAndNum'] = $v['likenum']-count($likemansArr);
             }
-            
+            $result[$k]['user'] = $this->getUserInfo($uqq);exit;
+            if($v['cntnum']){
+                $comment = $ssLogic->getComment($uqq,$v['cellid']);
+                foreach($comment as $k2=>$v2){
+                    $comment[$k2]['date'] = date("Y-m-d H:i",$v2['time']);
+                    $comment[$k2]['user'] = $this->getUserInfo($v2['fuin']);;
+                    if($v2['replynum']>0){
+                        $replys = $ssLogic->getReplys($v2['cellid'],$v2['commentid']);
+                        foreach($replys as $k3=>$v3){
+                            $replys[$k3]['date'] = date("Y-m-d H:i",$v3['time']);
+                            $comment[$k3]['user'] = $this->getUserInfo($v3['fuin']);exit;
+                        }
+                        $comment[$k2]['replys'] = $replys;
+                    }
+                }
+                exit;
+
+                $result[$k]['comment'] = $comment;
+                echo date("Y-m-d H:i:s")."<br/>";
+                ob_flush();
+                flush();
+            }
+            echo date("Y-m-d H:i:s")."<br/>";
+            ob_flush();
+            flush();
         }
-
-
-        $this->assign("ssAll",$result);
-        $this->display('sslist');
+        //debug pass
+        //var_dump($result[0]['comment'][0]['replys'][0]);exit;
+        return $this->ajaxReturn($result);
 
 
     }
