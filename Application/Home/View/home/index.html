@@ -456,11 +456,13 @@
             "dataType":"json",
             "type":"post",
             "success":function(d){
-
-                console.log(d)
-
+                error = d.errArr
+                $.each(error,function(n,v) {
+                    console.log(n)
+                    console.log(v)
+                });
+               console.log(d.error)
             }
-
 
         })
 

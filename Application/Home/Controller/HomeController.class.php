@@ -21,7 +21,7 @@ class HomeController extends AbstractController
         $gpnames = $datas->gpnames;
         $list = $datas->list;
         //存储相关数据
-        F('fl_' . $this->qq['qq'], $results);
+        //F('fl_' . $this->qq['qq'], $results);
         $this->groud = $gpnames;
         $this->autoZantask = F('zan_lock_' . $this->qq['qq']);
         $this->autoCommtask = F('comm_lock_' . $this->qq['qq']);
@@ -34,7 +34,14 @@ class HomeController extends AbstractController
 
     public  function showShuoshuoList(){
 
-        //return $this->ajaxReturn(array(1,2,3));
+        $arr = array(
+
+            "status"=>false,
+            "errArr"=>array("name"=>"只能为汉字","id"=>"必须大于16位","age"=>"必须为数字"),
+            "msg"=>"error",
+        );
+
+        return $this->ajaxReturn($arr,"JSON");exit;
 
         $uqq = "154894476";
         $shuoshuoAll = array();

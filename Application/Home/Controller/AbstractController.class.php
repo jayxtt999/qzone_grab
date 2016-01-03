@@ -57,7 +57,6 @@ class AbstractController  extends Controller{
      */
     public function saveQqInfo($uin){
 
-
         //api 1
         $url = "http://r.qzone.qq.com/cgi-bin/user/cgi_personal_card?uin=".$uin."&remark=0&g_tk=".$this->qq['gtk'];
         $cookieArr = array(
@@ -99,15 +98,13 @@ class AbstractController  extends Controller{
 
         $user = M('user');
         $r = $user->where('qq='.$uin)->add($data);
-        var_dump($r);
-        var_dump($data);exit;
         return $data;
 
     }
 
 
     /**
-     * 说说通用核心发包接口  特别注意的是  这个cookie key组装的时候前面要有个空格，没有就会失败，这个原因找个许久，也比较奇葩不是以为;分割么.....
+     * 说说通用核心发包接口  特别注意的是  这个cookie key组装的时候前面要有个空格，没有就会失败，这个原因找个许久，也比较奇葩不是以;分割么.....
      * @param $url
      * @param string $cookieCode
      * @return mixed

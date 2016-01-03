@@ -40,6 +40,8 @@ class ConsoleController extends AbstractController
         $result = json_decode($this->sendToQq($url), true);
         $userData = $result['data'];
         $data['qq'] = $uqq;
+
+        var_dump($userData);exit;
         $data['age'] = $userData['age'];
         $data['birthday'] = $userData['birthday'];
         $data['birthmonth'] = $userData['birthmonth'];
@@ -47,10 +49,10 @@ class ConsoleController extends AbstractController
         $data['city'] = $userData['city'];
         $data['constellation'] = $userData['constellation'];
         $data['country'] = $userData['country'];
-        $data['face'] = $userData['face'];
-        $data['nackname'] = $userData['nackname'];
+        $data['avatarUrl'] = $userData['face'];
+        $data['nickname'] = $userData['nickname'];
         $data['province'] = $userData['province'];
-        $data['vip'] = $userData['vip'];
+        $data['vip'] = $userData['qqvip'];
         $data['gender'] = $userData['gender'];
         $data['viplevel'] = $userData['viplevel'];
 
