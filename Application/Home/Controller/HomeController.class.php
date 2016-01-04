@@ -14,17 +14,23 @@ class HomeController extends AbstractController
 
         $this->qq = is_array(session('qq'))?session('qq'):$this->error("请重新登录", '/', 3);
         //获取好友列表
-        $url = "http://m.qzone.com/friend/mfriend_list?g_tk=".$this->qq['gtk']."&res_uin=".$this->qq['qq']."&res_type=normal&format=json&count_per_page=10&page_index=0&page_type=0&mayknowuin=&qqmailstat=";
-        $result = $this->sendToQq($url);
-        $results = json_decode($result);
-        $datas = $results->data;
+        $mfriend_list = F('mfriend_list' . $this->qq['qq']);
+        if(!unserialize($mfriend_list)){
+            $url = "http://m.qzone.com/friend/mfriend_list?g_tk=".$this->qq['gtk']."&res_uin=".$this->qq['qq']."&res_type=normal&format=json&count_per_page=10&page_index=0&page_type=0&mayknowuin=&qqmailstat=";
+            $result = $this->sendToQq($url);
+            $results = json_decode($result);
+            $datas = $results->data;
+            F('mfriend_list' . $this->qq['qq'],serialize($datas));
+        }else{
+            $datas = unserialize($mfriend_list);
+        }
         $gpnames = $datas->gpnames;
         $list = $datas->list;
         //存储相关数据
         //F('fl_' . $this->qq['qq'], $results);
         $this->groud = $gpnames;
-        $this->autoZantask = F('zan_lock_' . $this->qq['qq']);
-        $this->autoCommtask = F('comm_lock_' . $this->qq['qq']);
+        //$this->autoZantask = F('zan_lock_' . $this->qq['qq']);
+        //$this->autoCommtask = F('comm_lock_' . $this->qq['qq']);
         $this->assign("qq",$this->qq['qq']);
         $this->assign("groud",$gpnames);
         $this->assign("data",$datas);
@@ -33,15 +39,6 @@ class HomeController extends AbstractController
 
 
     public  function showShuoshuoList(){
-
-        $arr = array(
-
-            "status"=>false,
-            "errArr"=>array("name"=>"只能为汉字","id"=>"必须大于16位","age"=>"必须为数字"),
-            "msg"=>"error",
-        );
-
-        return $this->ajaxReturn($arr,"JSON");exit;
 
         $uqq = "154894476";
         $shuoshuoAll = array();
@@ -61,7 +58,7 @@ class HomeController extends AbstractController
                 $result[$k]['likemansArr'] = $likemansArr;
                 $result[$k]['likemansAndNum'] = $v['likenum']-count($likemansArr);
             }
-            $result[$k]['user'] = $this->getUserInfo($uqq);exit;
+            $result[$k]['user'] = $this->getUserInfo($uqq);
             if($v['cntnum']){
                 $comment = $ssLogic->getComment($uqq,$v['cellid']);
                 foreach($comment as $k2=>$v2){
@@ -71,24 +68,21 @@ class HomeController extends AbstractController
                         $replys = $ssLogic->getReplys($v2['cellid'],$v2['commentid']);
                         foreach($replys as $k3=>$v3){
                             $replys[$k3]['date'] = date("Y-m-d H:i",$v3['time']);
-                            $comment[$k3]['user'] = $this->getUserInfo($v3['fuin']);exit;
+                            $replys[$k3]['user'] = $this->getUserInfo($v3['fuin']);
                         }
                         $comment[$k2]['replys'] = $replys;
                     }
                 }
-                exit;
-
                 $result[$k]['comment'] = $comment;
-                echo date("Y-m-d H:i:s")."<br/>";
                 ob_flush();
                 flush();
             }
-            echo date("Y-m-d H:i:s")."<br/>";
             ob_flush();
             flush();
         }
-        //debug pass
-        //var_dump($result[0]['comment'][0]['replys'][0]);exit;
+        /*echo("<pre>");
+        print_r($result);
+        echo("</pre>");exit;*/
         return $this->ajaxReturn($result);
 
 
