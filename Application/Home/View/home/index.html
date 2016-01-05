@@ -41,6 +41,8 @@
     <link href="__PUBLIC__/assets/admin/layout/css/themes/default.css" rel="stylesheet" type="text/css"
           id="style_color"/>
     <link href="__PUBLIC__/assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
+
+    <link href="__PUBLIC__/plug/layer/skin/layer.css" rel="stylesheet" type="text/css"/>
     <!-- END THEME STYLES -->
     <link rel="shortcut icon" href="favicon.ico"/>
 </head>
@@ -227,7 +229,7 @@
 
                             <div class="col-md-3">
                                 <div class="input-group pinshuoshuo input-medium" style="margin-left: -16px;">
-                                    <input type="text" id="disabledInput" class="form-control " placeholder="选择一位好友">
+                                    <input type="text" id="friendQq" class="form-control " placeholder="选择一位好友">
                             <span class="input-group-btn">
 											<button class="btn blue loading findfriend" data-loading-text="Loading..." type="button">Shuoshuo!</button>
 											</span>
@@ -312,7 +314,7 @@
                             </div>
                             <div class="portlet-body">
 
-                                <iframe src="" style="background: #eee;color: #ffffff;font-size: 18px;width: 100%;height: 300px"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes">
+                                <iframe  id="iframe" src="" style="background: #eee;color: #ffffff;font-size: 18px;width: 100%;height: 300px"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes">
 
 
                                 </iframe>
@@ -432,6 +434,7 @@
 
 <!-- END JAVASCRIPTS -->
 <script src="__PUBLIC__/js/common/shuoshuo.js" type="text/javascript"></script>
+<script src="__PUBLIC__/plug/layer/layer.js" type="text/javascript"></script>
 
 </body>
 
@@ -439,11 +442,25 @@
 
     var lodingSsOver = false;
     jQuery(function($) {
+        //元素固定
         $(document).ready( function() {
             $('.pinconsole').pin();
             $('.pinshuoshuo ').pin();
 
         });
+        //选择好友
+        $(".findfriend").click(function(){
+            var uqq = $("#friendQq").val();
+            if(!uqq){
+                layer.msg('请先选择好友',function(){$(".findfriend").button('reset')});
+                return false;
+            }
+            $("#iframe").attr("src","/home/console/getshuoshuoall?uqq="+uqq)
+
+
+
+
+        })
     });
 
 
@@ -451,11 +468,12 @@
         lodingSsOver = true;
     }
 
-    function getShuoshuo(){
+    function getShuoshuo(uin){
         $.ajax({
             "url":"/home/home/showShuoshuoList",
             "dataType":"json",
             "type":"post",
+            "data":{uin:uin},
             "success":function(d){
                 var html = "";
                 $.each(d,function(n,v) {

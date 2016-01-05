@@ -28,19 +28,17 @@ class ConsoleController extends AbstractController
         ini_set('memory_limit', '512M');
         set_time_limit(0);
         $uqq = I('get.uqq');
-        $uqq = "154894476";
-
+        //$uqq = "154894476";
         if (empty($uqq)) {
             consoleShow("请先选择好友..");
             exit;
         }
         consoleShow("存储好友相关资料".$uqq."数据开始");
-
         $url = "http://m.qzone.com/profile_get?g_tk=".$this->qq['gtk']."&format=json&hostuin=".$uqq;
-        $result = json_decode($this->sendToQq($url), true);
+
+        $result = json_decode($this->sendToQq($url));
         $userData = $result['data'];
         $data['qq'] = $uqq;
-
         var_dump($userData);exit;
         $data['age'] = $userData['age'];
         $data['birthday'] = $userData['birthday'];
@@ -82,6 +80,7 @@ class ConsoleController extends AbstractController
             $msg = "获取失败，可能是没权限或者网络繁忙";
         }
         consoleShow("获取".$uqq."说说数据结束,".$msg);
+        consoleShow("<script>getShuoshuo(".$uqq.")</script>");
         exit;
 
 

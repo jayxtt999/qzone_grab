@@ -6,16 +6,13 @@ jQuery(document).ready(function () {
     $(".myfriend").change(function () {
         //$(".well").hide(1000)
         val = $(this).val();
-        $("#disabledInput").val(val)
-        $("#disabledInput").attr("readonly","readonly")
+        $("#friendQq").val(val)
+        $("#friendQq").attr("readonly","readonly")
     })
 
     $(".findfriend").click(function(){
         var btn = $(this)
         btn.button('loading')
-            
-
-
         //btn.button('reset')
     })
 

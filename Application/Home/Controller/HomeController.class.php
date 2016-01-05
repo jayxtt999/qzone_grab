@@ -40,7 +40,7 @@ class HomeController extends AbstractController
 
     public  function showShuoshuoList(){
 
-        $uqq = "154894476";
+        $uqq = I('get.uqq');
         $shuoshuoAll = array();
         $friendShuoshuo = M('friend_shuoshuo');
         $ssLogic = D('Shuoshuo','Logic');
