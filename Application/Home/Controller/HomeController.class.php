@@ -15,17 +15,19 @@ class HomeController extends AbstractController
         $this->qq = is_array(session('qq'))?session('qq'):$this->error("请重新登录", '/', 3);
         //获取好友列表
         $mfriend_list = F('mfriend_list' . $this->qq['qq']);
+        $mfriend_list = null;
         if(!unserialize($mfriend_list)){
-            $url = "http://m.qzone.com/friend/mfriend_list?g_tk=".$this->qq['gtk']."&res_uin=".$this->qq['qq']."&res_type=normal&format=json&count_per_page=10&page_index=0&page_type=0&mayknowuin=&qqmailstat=";
+            $url = "http://r.cnc.qzone.qq.com/cgi-bin/tfriend/friend_mngfrd_get.cgi?uin=".$this->qq['qq']."&rd=".rand(1,999)."&g_tk=".$this->qq['gtk'];
             $result = $this->sendToQq($url);
+            $result = $this->filterCallback($result);
             $results = json_decode($result);
-            $datas = $results->data;
-            F('mfriend_list' . $this->qq['qq'],serialize($datas));
+            F('mfriend_list' . $this->qq['qq'],serialize($results));
         }else{
-            $datas = unserialize($mfriend_list);
+            $results = unserialize($mfriend_list);
         }
-        $gpnames = $datas->gpnames;
-        $list = $datas->list;
+        $datas = $results->items;
+        var_dump($datas[0]);
+        $gpnames = $results->gpnames;
         //存储相关数据
         //F('fl_' . $this->qq['qq'], $results);
         $this->groud = $gpnames;

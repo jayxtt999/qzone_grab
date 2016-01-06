@@ -112,18 +112,18 @@ class AbstractController  extends Controller{
     public function sendToQq($url,$cookieCode=array()){
 
         $cookie = array(
-            " uin"=>$this->qq['uin'],
-            " skey"=>$this->qq['sKey'],
-            " p_uin"=>$this->qq['pUin'],
-            " p_skey"=>$this->qq['pSkey'],
-            " pt4_token"=>$this->qq['pt4Token'],
+            "uin"=>$this->qq['uin'],
+            "skey"=>$this->qq['sKey'],
+            "p_uin"=>$this->qq['pUin'],
+            "p_skey"=>$this->qq['pSkey'],
+            "pt4_token"=>$this->qq['pt4Token'],
         );
         if(is_array($cookieCode) && $cookieCode){
             $cookie = array_merge($cookie,$cookieCode);
         }
         $cookieAs = "";
         foreach($cookie as $k=>$v){
-            $cookieAs .=  ($k."=".$v.";");
+            $cookieAs .=  (" ".$k."=".$v.";");
         }
         $headers['Host'] = 'm.qzone.com';
         $curl = curl_init($url);

@@ -29,40 +29,16 @@ class ConsoleController extends AbstractController
         set_time_limit(0);
         $uqq = I('get.uqq');
         //$uqq = "154894476";
+        $uqq = 136787510;
+
         if (empty($uqq)) {
             consoleShow("请先选择好友..");
             exit;
         }
         consoleShow("存储好友相关资料".$uqq."数据开始");
-        $url = "http://m.qzone.com/profile_get?g_tk=".$this->qq['gtk']."&format=json&hostuin=".$uqq;
-
-        $result = json_decode($this->sendToQq($url));
-        $userData = $result['data'];
-        $data['qq'] = $uqq;
-        var_dump($userData);exit;
-        $data['age'] = $userData['age'];
-        $data['birthday'] = $userData['birthday'];
-        $data['birthmonth'] = $userData['birthmonth'];
-        $data['birthyear'] = $userData['birthyear'];
-        $data['city'] = $userData['city'];
-        $data['constellation'] = $userData['constellation'];
-        $data['country'] = $userData['country'];
-        $data['avatarUrl'] = $userData['face'];
-        $data['nickname'] = $userData['nickname'];
-        $data['province'] = $userData['province'];
-        $data['vip'] = $userData['qqvip'];
-        $data['gender'] = $userData['gender'];
-        $data['viplevel'] = $userData['viplevel'];
-
 
          $user = M('user');
-         $row = $user->where("qq=".$uqq)->find();
-            if($row){
-                $r = $user->where('qq='.$uqq)->save($data);
-            }else{
-                $r = $user->add($data);
-            }
-
+         $this->getUserInfo($uqq);
         consoleShow("存储好友相关资料".$uqq."数据完成");
 
         //http://m.qzone.com/profile_get?g_tk=1845112471&format=json&hostuin=154894476
@@ -110,11 +86,10 @@ class ConsoleController extends AbstractController
         $uqq = $params['uqq'];
         $count = $params['count'];
         $gtk = $params['gtk'];
-
         //Todo 验证权限
-        $url = "http://m.qzone.com/list?g_tk=" . $gtk . "&res_attach=att%3D" . $count . "&format=json&list_type=shuoshuo&action=0&res_uin=" . $uqq . "&count=40";
-        $result = json_decode($this->sendToQq($url), true);
-        //http://m.qzone.com/profile_get?g_tk=61269364&format=json&hostuin=154894476
+        $url="http://taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin=".$uqq."&inCharset=utf-8&outCharset=utf-8&hostUin=".$uqq."&notice=0&sort=0&pos=0&num=20&cgi_host=http%3A%2F%2Ftaotao.qq.com%2Fcgi-bin%2Femotion_cgi_msglist_v6&code_version=1&format=jsonp&need_private_comment=1&g_tk=".$gtk;
+        //！！ 有坑 这里不需要p_skey 不知道是什么鬼 0.0
+        $result = json_decode($this->sendToQq($url,array("p_skey"=>"")));
         if (!empty($result['message'])) {
             consoleShow($result['message']);
         }
