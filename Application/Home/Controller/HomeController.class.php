@@ -26,7 +26,6 @@ class HomeController extends AbstractController
             $results = unserialize($mfriend_list);
         }
         $datas = $results->items;
-        var_dump($datas[0]);
         $gpnames = $results->gpnames;
         //存储相关数据
         //F('fl_' . $this->qq['qq'], $results);
