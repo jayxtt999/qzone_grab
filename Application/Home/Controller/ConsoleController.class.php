@@ -28,15 +28,13 @@ class ConsoleController extends AbstractController
         ini_set('memory_limit', '512M');
         set_time_limit(0);
         $uqq = I('get.uqq');
-        //$uqq = "154894476";
-        $uqq = 229353459;
-        $uqq = 435024179;
+        $uqq = "435024179";
+        $uqq = "757114617";
         if (empty($uqq)) {
             consoleShow("请先选择好友..");
             exit;
         }
         consoleShow("存储好友相关资料".$uqq."数据开始");
-
          $user = M('user');
          $this->getUserInfo($uqq);
         consoleShow("存储好友相关资料".$uqq."数据完成");
@@ -83,7 +81,7 @@ class ConsoleController extends AbstractController
         $gtk = $params['gtk'];
         //Todo 验证权限
         $url="http://taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin=".$uqq."&inCharset=utf-8&outCharset=utf-8&hostUin=".$uqq."&notice=0&sort=0&pos=0&num=20&cgi_host=http%3A%2F%2Ftaotao.qq.com%2Fcgi-bin%2Femotion_cgi_msglist_v6&code_version=1&format=jsonp&need_private_comment=1&g_tk=".$gtk;
-        //！！ 有坑 这里不需要p_skey 不知道是什么鬼 0.0
+        //有坑！！  这里不需要p_skey 不知道是什么鬼 0.0
         $result = $this->sendToQq($url,array("p_skey"=>""));
         $result = $this->filterCallback($result);
         $result = json_decode($result,true);
@@ -91,10 +89,10 @@ class ConsoleController extends AbstractController
             consoleShow($result['message']);
         }
         //好友是否隐藏说说
-        /*if (!isset($result[data][vFeeds])) {
+        if ($result[total]>0 && !$result["msglist"]) {
             consoleShow("####该好友隐藏了说说");
             return true;
-        }*/
+        }
 
         $this->shuoshuoNum = $result['total'];
         $friendShuoShuo = M('friend_shuoshuo');
@@ -104,11 +102,11 @@ class ConsoleController extends AbstractController
 
 
 
-        foreach ($result[msglist] as $v) {
 
-            echo "<pre>";
-            print_r($result[msglist]);
-            echo "</pre>";exit;
+        foreach ($result["msglist"] as $v) {
+
+
+
             if($v['rt_certified']){
                 //转发不计
                 continue;
@@ -132,7 +130,7 @@ class ConsoleController extends AbstractController
                 if ($row) {
                     continue;
                 }*/
-                $data['curlikekey'] = "http://user.qzone.qq.com/435024179/mood/".$cellid;
+                $data['curlikekey'] = "http://user.qzone.qq.com/".$uqq."/mood/".$cellid;
                 //http://r.qzone.qq.com/cgi-bin/user/qz_opcnt2?_stp=1452151686481&unikey=http://user.qzone.qq.com/562809727/mood/7fcb8b21739c8c56963f0500
                 $data['operatemask'] = $v['rt_certified']?"98315":"516107";
                 //获取赞信息
@@ -158,13 +156,11 @@ class ConsoleController extends AbstractController
                 $data['summary'] = $v['content'];
 
                 if($v['pic']){
-
+                    $data['summary_img_url'] = $v['pic'][0]['url2'];
+                    $data['summary_img_wh'] = $v['pic'][0]['b_width'].",".$v['pic'][0]['b_height'];
                 }
-                $data['summary_img_url'] = $v['operation']['share_info']['photo']['url'];
-                $data['summary_img_wh'] = $v['operation']['share_info']['photo']['width'] . "," . $v['operation']['share_info']['photo']['height'];
-                $data['timeline'] = $v['timeline']['timestr'];
-                $data['cntnum'] = $v['comment']['cntnum'];
-
+                $data['timeline'] = date("m-d H:i",$v['created_time']);
+                $data['cntnum'] = $v['cmtnum'];
                 $r = $friendShuoShuo->add($data);
                 if ($r) {
                     consoleShow("##预存储:<a target='_blank' href='" . $data['curlikekey'] . "'>" . $data['cellid'] . "</a>成功");
@@ -174,20 +170,20 @@ class ConsoleController extends AbstractController
             }
             // 存储评论
 
-            if ($v['comment']['cntnum'] > 0) {
-                consoleShow("####获取相关评论,数量：".$v['comment']['cntnum']);
-                $comments = $v['comment']['comments'];
+            if ($v['cntnum'] > 0) {
+                consoleShow("####获取相关评论,数量：".$v['cntnum']);
+                $comments = $v['commentlist'];
                 foreach ($comments as $v2) {
                     $data = array();
                     $data['uin'] = $uin;
-                    $fuin = $v2['user']['uin'];
+                    $fuin = $v2['uin'];
                     $data['fuin'] = $fuin;
                     $data['cellid'] = $cellid;
-                    $data['commentid'] = $v2['commentid'];
-                    $data['commentpic'] = $v2['commentpic'];
+                    $data['commentid'] = $v2['tid'];
+                    //$data['commentpic'] = $v2['commentpic'];
                     $data['content'] = $v2['content'];
                     $data['referid'] = $v2['refer'] ? $v2['refer'] : 0;
-                    $data['time'] = $v2['date'];
+                    $data['time'] = $v2['create_time'];
                     $where = array('cellid' => $cellid, 'fuin' => $fuin, 'commentid' => $v2['commentid']);
                     $row = $friendComment->where($where)->find();
                     if (!$row) {
@@ -196,19 +192,23 @@ class ConsoleController extends AbstractController
                     unset($data['commentpic']);
                     unset($data['referid']);
                     // 存储回复
-                    if ($v2['replynum'] > 0) {
-                        consoleShow("####获取评论相关回复,数量:".$v2['replynum']);
+                    if($v2['list_3']){
+                        $replys = $v2['list_3'];
+                        $replysNum = count($replys);
+                    }
+                    if ($replysNum> 0) {
+                        consoleShow("####获取评论相关回复,数量:".$replysNum);
                         $replys = $v2['replys'];
                         foreach ($replys as $v3) {
-                            $replyId = $v3['replyid'];
+                            $replyId = $v3['tid'];
                             $where['replyid'] = $replyId;
-                            $fuin = $v3['user']['uin'];
+                            $fuin = $v3['uin'];
                             $data['fuin'] = $fuin;
                             $data['content'] = $v3['content'];
-                            $data['replyid'] = $v3['replyid'];
-                            $data['replypic'] = $v3['replypic'];
-                            $data['time'] = $v3['date'];
-                            $data['referid'] = $v3['refer'] ? $v3['refer'] : 0;
+                            $data['replyid'] = $v3['tid'];
+                            //$data['replypic'] = $v3['replypic'];
+                            $data['time'] = $v3['create_time'];
+                            //$data['referid'] = $v3['refer'] ? $v3['refer'] : 0;
                             $row = $friendReplys->where($where)->find();
                             if (!$row) {
                                 $r = $friendReplys->add($data);
@@ -219,7 +219,7 @@ class ConsoleController extends AbstractController
             }
             unset($data);
             unset($where);
-            consoleShow("处理:".$v['id']['cellid']."结束");
+            consoleShow("处理:".$cellid."结束");
         }
 
         if ($result["data"]["has_more"]) {
