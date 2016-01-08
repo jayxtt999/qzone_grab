@@ -133,242 +133,184 @@
 </div>
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
-<!-- BEGIN SIDEBAR -->
-<div class="page-sidebar-wrapper">
-    <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-    <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+    <!-- BEGIN SIDEBAR -->
+    <div class="page-sidebar-wrapper">
+        <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+        <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
 
-    <include file="Home@layout/menu"/>
+        <include file="Home@layout/menu"/>
 
-</div>
-<!-- END SIDEBAR -->
-<!-- BEGIN CONTENT -->
-<div class="page-content-wrapper">
-<div class="page-content">
-<!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
-<div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">Modal title</h4>
-            </div>
-            <div class="modal-body">
-                Widget settings form goes here
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn blue">Save changes</button>
-                <button type="button" class="btn default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
-<!-- BEGIN STYLE CUSTOMIZER -->
-<include file="Home@layout/widgets"/>
-<!-- END STYLE CUSTOMIZER -->
-<!-- BEGIN PAGE HEADER-->
-<h3 class="page-title">
-    好友
-    <small>简介</small>
-</h3>
-<div class="page-bar">
-    <ul class="page-breadcrumb">
-        <li>
-            <i class="fa fa-home"></i>
-            <a href="index.html">HOME</a>
-            <i class="fa fa-angle-right"></i>
-        </li>
-        <li>
-            <a href="#">Dashboard</a>
-            <i class="fa fa-angle-right"></i>
-        </li>
-        <li>
-            <a href="#">Dashboard</a>
-        </li>
-    </ul>
-
-</div>
-
-
-<div class="row">
-
-
-    <div class="col-md-12">
-
-        <div class="col-md-9">
-
-
-            <div class="col-md-12">
-
-                <div class="portlet">
-                    <div class="portlet-title line">
-                        <div class="caption">
-                            <i class="fa fa-comments"></i>Chats
+    <!-- END SIDEBAR -->
+    <!-- BEGIN CONTENT -->
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+            <div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                            <h4 class="modal-title">Modal title</h4>
                         </div>
-                        <div class="tools">
-                            <a href="" class="collapse">
-                            </a>
-                            <a href="#portlet-config" data-toggle="modal" class="config">
-                            </a>
-                            <a href="" class="reload">
-                            </a>
-                            <a href="" class="remove">
-                            </a>
+                        <div class="modal-body">
+                            Widget settings form goes here
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn blue">Save changes</button>
+                            <button type="button" class="btn default" data-dismiss="modal">Close</button>
                         </div>
                     </div>
-                    <div class="portlet-body" id="chats">
-                        <div class="scroller" style="height: 435px;" data-always-visible="1" data-rail-visible1="1">
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+            <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
+            <!-- BEGIN STYLE CUSTOMIZER -->
+            <include file="Home@layout/widgets"/>
+            <!-- END STYLE CUSTOMIZER -->
+            <!-- BEGIN PAGE HEADER-->
+            <h3 class="page-title">
+                好友
+                <small>简介</small>
+            </h3>
+            <div class="page-bar">
+                <ul class="page-breadcrumb">
+                    <li>
+                        <i class="fa fa-home"></i>
+                        <a href="index.html">HOME</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <a href="#">Dashboard</a>
+                        <i class="fa fa-angle-right"></i>
+                    </li>
+                    <li>
+                        <a href="#">Dashboard</a>
+                    </li>
+                </ul>
 
-                            <div class='col-md-12 blog-page'>
-                                <div class='media'>
-                                    <a href='#' class='pull-left'>
-                                        <img alt='' src='__PUBLIC__/assets/admin/pages/media/blog/5.jpg'
-                                             style='width: 50px;height: 50px' class='media-object img-circle'>
-                                    </a>
-
-                                    <div class='media-body'>
-                                        <h6 class='media-heading'>小明
-                                                <span>
-											12/24
-											</span>
-                                        </h6>
-                                        <h4>
-                                            老师好！！！！！
-                                        </h4>
-
-                                        <div class='clearfix'>
-
-                                        <span class='btn'>
-                                            <i class='fa  fa-comments-o'></i>评论(12)
-                                        </span>
-
-
-                                            <span class='btn'>
-                                                <i class='fa fa-thumbs-o-up'></i>
-                                                赞(12)
-                                            </span>
-                                        </div>
-
-                                        <div class='clearfix'>
-
-                                            <span class='btn'>
-                                                <i class='fa fa-thumbs-up'></i>
-
-                                                1,2,3,4等3人觉得很赞
-
-                                            </span>
+            </div>
 
 
-                                        </div>
-
-                                        <hr/>
+            <div class="row">
 
 
-                                        <div class='media'>
-                                            <a href='#' class='pull-left'>
-                                                <img alt='' src='__PUBLIC__/assets/admin/pages/media/blog/5.jpg'
-                                                     style='width: 50px;height: 50px' class='media-object img-circle'>
-                                            </a>
+                <div class="col-md-12">
 
-                                            <div class='media-body'>
-                                                <h6 class='media-heading'>张老师<span>
-											22：30 / <a href='#'>
-                                                    评论 </a>
-											</span>
-                                                </h6>
-                                                <h4>
-                                                    小明我问你个问题吧？
+                    <div class="col-md-9">
 
-                                                </h4>
 
+                        <div class="col-md-12">
+
+                            <div class="portlet">
+                                <div class="portlet-title line">
+                                    <div class="caption">
+                                        <i class="fa fa-comments"></i>Chats
+                                    </div>
+                                    <div class="tools">
+                                        <a href="" class="collapse">
+                                        </a>
+                                        <a href="#portlet-config" data-toggle="modal" class="config">
+                                        </a>
+                                        <a href="" class="reload">
+                                        </a>
+                                        <a href="" class="remove">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body" id="chats">
+                                    <div class="scroller" style="height: 435px;" data-always-visible="1"
+                                         data-rail-visible1="1">
+
+                                        <div class='col-md-12 blog-page'>
+
+                                            <div class="media"><a href="#" class="pull-left"><img alt=""
+                                                                                                  src="http://q.qlogo.cn/headimg_dl?bs=qq&amp;dst_uin=undefined&amp;src_uin=www.xietaotao.cn&amp;fid=blog&amp;spec=100"
+                                                                                                  style="width: 50px;height: 50px"
+                                                                                                  class="media-object img-circle"></a>
+
+                                                <div class="media-body"><h6 class="media-heading"> 美年达。<span>&nbsp;&nbsp;10-03 21:47</span>
+                                                </h6><h4>那些年，我们上课偷偷玩过的4399[嘘][嘘]。 配图我的最爱。 哈哈哈。 </h4>
+
+                                                    <div class="clearfix"><span class="btn" ><i
+                                                            class="fa  fa-comments-o"></i>评论(2)</span><span class="btn"><i
+                                                            class="fa fa-thumbs-o-up"></i>(18)</span></div>
+                                                    <div class="clearfix"><span class="btn"><i
+                                                            class="fa fa-thumbs-up"></i>29306912,123919272,348564808,429672974,505186179,582032581,等12人觉得很赞</span>
+                                                    </div>
+                                                    <hr>
+                                                    <div class="media"><a href="#" class="pull-left"><img alt=""
+                                                                                                          src="http://q.qlogo.cn/headimg_dl?bs=qq&amp;dst_uin=1040333054&amp;src_uin=www.xietaotao.cn&amp;fid=blog&amp;spec=100"
+                                                                                                          style="width: 50px;height: 50px"
+                                                                                                          class="media-object img-circle"></a>
+
+                                                        <div class="media-body"><h6 class="media-heading">不乱于心…<span>&nbsp;&nbsp;2015-10-03 21:54 / <a
+                                                                href="javascript:;" onclick="comment(this)">评论 </a> </span></h6><h4>
+                                                            钟秀泰说他不服[em]e328514[/em][em]e328514[/em][em]e328514[/em]</h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="media"><a href="#" class="pull-left"><img alt=""
+                                                                                                          src="http://q.qlogo.cn/headimg_dl?bs=qq&amp;dst_uin=1904157220&amp;src_uin=www.xietaotao.cn&amp;fid=blog&amp;spec=100"
+                                                                                                          style="width: 50px;height: 50px"
+                                                                                                          class="media-object img-circle"></a>
+
+                                                        <div class="media-body"><h6 class="media-heading">
+                                                            染指阳光、向日葵永不落泪<span>&nbsp;&nbsp;2015-10-03 22:15 / <a
+                                                                href="#">评论 </a> </span></h6><h4>也是我的最爱</h4></div>
+                                                    </div>
+                                                    <div class="chat-form">
+                                                        <div class="input-cont"><input class="form-control" type="text"
+                                                                                       placeholder="我也说一句"></div>
+                                                        <div class="btn-cont"><span class="arrow"></span><a href=""
+                                                                                                            class="btn blue icn-only"><i
+                                                                class="fa fa-check icon-white"></i></a></div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
 
 
-                                        <div class='media'>
-                                            <a href='#' class='pull-left'>
-                                                <img alt='' src='__PUBLIC__/assets/admin/pages/media/blog/5.jpg'
-                                                     style='width: 50px;height: 50px' class='media-object img-circle'>
-                                            </a>
-
-                                            <div class='media-body'>
-                                                <h6 class='media-heading'>小明<span>
-											22：30 / <a href='#'>
-                                                    评论 </a>
-											</span>
-                                                </h6>
-                                                <h4>
-                                                    回复：问你麻痹
-
-                                                </h4>
-
-                                            </div>
                                         </div>
 
 
                                     </div>
-
-                                    <div class='chat-form'>
-                                        <div class='input-cont'>
-                                            <input class='form-control' type='text' placeholder='我也说一句'/>
-                                        </div>
-                                        <div class='btn-cont'>
-									<span class='arrow'>
-									</span>
-                                            <a href='' class='btn blue icn-only'>
-                                                <i class='fa fa-check icon-white'></i>
-                                            </a>
-                                        </div>
-                                    </div>
-
 
                                 </div>
-
-
                             </div>
-
 
                         </div>
 
+
                     </div>
+
+
                 </div>
 
+                <div class="col-md-12">
+
+
+                    <div style="height: 2400px"></div>
+
+                </div>
             </div>
 
 
         </div>
-
-
     </div>
+    <!-- END CONTENT -->
+    <!-- BEGIN QUICK SIDEBAR -->
+    <a href="javascript:;" class="page-quick-sidebar-toggler"><i class="icon-close"></i></a>
 
-    <div class="col-md-12">
+    <div class="page-quick-sidebar-wrapper">
+        <div class="page-quick-sidebar">
+            <div class="nav-justified">
 
-
-        <div style="height: 2400px"></div>
-
-    </div>
-</div>
-
-
-</div>
-</div>
-<!-- END CONTENT -->
-<!-- BEGIN QUICK SIDEBAR -->
-<a href="javascript:;" class="page-quick-sidebar-toggler"><i class="icon-close"></i></a>
-
-<div class="page-quick-sidebar-wrapper">
-    <div class="page-quick-sidebar">
-        <div class="nav-justified">
-
+            </div>
         </div>
     </div>
-</div>
-<!-- END QUICK SIDEBAR -->
+    <!-- END QUICK SIDEBAR -->
 </div>
 <!-- END CONTAINER -->
 <!-- BEGIN FOOTER -->
@@ -457,6 +399,8 @@
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <!-- END JAVASCRIPTS -->
+<script src="__PUBLIC__/plug/layer/layer.js" type="text/javascript"></script>
+
 <script src="__PUBLIC__/js/common/shuoshuo.js" type="text/javascript"></script>
 
 </body>

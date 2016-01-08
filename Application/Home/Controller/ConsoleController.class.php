@@ -28,8 +28,6 @@ class ConsoleController extends AbstractController
         ini_set('memory_limit', '512M');
         set_time_limit(0);
         $uqq = I('get.uqq');
-        $uqq = "435024179";
-        $uqq = "757114617";
         if (empty($uqq)) {
             consoleShow("请先选择好友..");
             exit;
@@ -49,7 +47,8 @@ class ConsoleController extends AbstractController
             $msg = "获取失败，可能是没权限或者网络繁忙";
         }
         consoleShow("获取".$uqq."说说数据结束,".$msg);
-        consoleShow("<script>getShuoshuo(".$uqq.")</script>");
+        consoleShow("<script>parent.lodingSs()</script>");
+        consoleShow("<script>parent.getShuoshuo(".$uqq.")</script>");
         exit;
 
 
@@ -76,6 +75,7 @@ class ConsoleController extends AbstractController
      */
     function getData($params)
     {
+
         $uqq = $params['uqq'];
         $count = $params['count'];
         $gtk = $params['gtk'];
@@ -99,14 +99,7 @@ class ConsoleController extends AbstractController
         $lastShuoshuo = $friendShuoShuo->where(array('uin' => $uqq))->order("time desc")->find();
         $friendComment = M('friend_comment');
         $friendReplys = M('friend_replys');
-
-
-
-
-        foreach ($result["msglist"] as $v) {
-
-
-
+        foreach ($result["msglist"] as $v){
             if($v['rt_certified']){
                 //转发不计
                 continue;
@@ -169,8 +162,7 @@ class ConsoleController extends AbstractController
                 }
             }
             // 存储评论
-
-            if ($v['cntnum'] > 0) {
+            if ($v['cmtnum'] > 0) {
                 consoleShow("####获取相关评论,数量：".$v['cntnum']);
                 $comments = $v['commentlist'];
                 foreach ($comments as $v2) {
@@ -184,7 +176,7 @@ class ConsoleController extends AbstractController
                     $data['content'] = $v2['content'];
                     $data['referid'] = $v2['refer'] ? $v2['refer'] : 0;
                     $data['time'] = $v2['create_time'];
-                    $where = array('cellid' => $cellid, 'fuin' => $fuin, 'commentid' => $v2['commentid']);
+                    $where = array('cellid' => $cellid, 'fuin' => $fuin, 'commentid' => $v2['tid']);
                     $row = $friendComment->where($where)->find();
                     if (!$row) {
                         $r = $friendComment->add($data);
@@ -223,13 +215,12 @@ class ConsoleController extends AbstractController
         }
 
         if ($result["data"]["has_more"]) {
-            $count += 40;
+            $count += 20;
             $params["count"] = $count;
             return function () use ($params) {
                 return $this->getData($params);
             };
         }
-        consoleShow("<script>window.parent.lodingSsOver()</script>");
         return true;
     }
 

@@ -145,30 +145,6 @@
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
     <div class="page-content">
-        <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
-        <div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 class="modal-title">Modal title</h4>
-                    </div>
-                    <div class="modal-body">
-                        Widget settings form goes here
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn blue">Save changes</button>
-                        <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-        <!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
-        <!-- BEGIN STYLE CUSTOMIZER -->
         <include file="Home@layout/widgets"/>
         <!-- END STYLE CUSTOMIZER -->
         <!-- BEGIN PAGE HEADER-->
@@ -244,9 +220,6 @@
                         <div class="form-group">
 
 
-
-
-
                         </div>
 
                     </div>
@@ -271,32 +244,13 @@
                                 </div>
                             </div>
                             <div class="portlet-body" id="chats">
-                                <div class="scroller" style="height: 435px;" data-always-visible="1" data-rail-visible1="1">
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <button type="button" id="getShuoshuo" onclick="getShuoshuo()" class="btn btn-default">Default</button>
-
-
-
+                                <div class="scroller" style="height: 600px;" data-always-visible="1" data-rail-visible1="1">
 
                                 </div>
                             </div>
                         </div>
 
                     </div>
-
-
-
 
 
                 </div>
@@ -317,9 +271,7 @@
                             </div>
                             <div class="portlet-body">
 
-                                <iframe  id="iframe" src="" style="background: #eee;color: #ffffff;font-size: 18px;width: 100%;height: 300px"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes">
-
-
+                                <iframe  id="iframe" src="" style="background: #eee;color: #ffffff;font-size: 18px;width: 100%;height: 300px"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="yes" allowtransparency="yes">
                                 </iframe>
 
                             </div>
@@ -438,90 +390,7 @@
 <!-- END JAVASCRIPTS -->
 <script src="__PUBLIC__/js/common/shuoshuo.js" type="text/javascript"></script>
 <script src="__PUBLIC__/plug/layer/layer.js" type="text/javascript"></script>
-
 </body>
-
-<script>
-
-    var lodingSsOver = false;
-    jQuery(function($) {
-        //元素固定
-        $(document).ready( function() {
-            $('.pinconsole').pin();
-            $('.pinshuoshuo ').pin();
-
-        });
-        //选择好友
-        $(".findfriend").click(function(){
-            var uqq = $("#friendQq").val();
-            if(!uqq){
-                layer.msg('请先选择好友',function(){$(".findfriend").button('reset')});
-                return false;
-            }
-            $("#iframe").attr("src","/home/console/getshuoshuoall?uqq="+uqq)
-
-
-
-
-        })
-    });
-
-
-    function lodingSsOver(){
-        lodingSsOver = true;
-    }
-
-    function getShuoshuo(uin){
-        $.ajax({
-            "url":"/home/home/showShuoshuoList",
-            "dataType":"json",
-            "type":"post",
-            "data":{uin:uin},
-            "success":function(d){
-                var html = "";
-                $.each(d,function(n,v) {
-                    //拼接说说评论与回复
-                    var user = v.user.realname?v.user.realname:v.user.nickname;
-                    html+="<div class='media'> <a href='#' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v.user.uin+"&src_uin=www.xietaotao.cn&fid=blog&spec=100'style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+ v.timeline+"</span></h6><h4>"+ v.summary+"</h4><div class='clearfix'><span class='btn'><i class='fa  fa-comments-o'></i>评论("+ v.cntnum+")</span><span class='btn'><i class='fa fa-thumbs-o-up'></i>("+ v.likenum+")</span></div>";
-
-                    if(v.likenum>0){
-                        html+="<div class='clearfix'><span class='btn'><i class='fa fa-thumbs-up'></i>"
-                        $.each(v.likemansArr,function(n2,v2) {
-                            html+=v2+","
-                        })
-                        if(v.likemansAndNum){
-                            html+="等"+v.likemansAndNum+"人觉得很赞"
-                        }
-                    }
-                    html+="</span></div><hr/>";
-                    if(v.comment.length>0){
-                        $.each(v.comment,function(n3,v3){
-                            var user = v3.user.realname?v3.user.realname:v3.user.nickname
-                            html+="<div class='media'><a href='#' class='pull-left'><img alt=''src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v3.user.qq+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+v3.date+" / <a href='#'>评论 </a> </span></h6><h4>"+v3.content+"</h4></div></div>";
-                            if(v3.replys.length>0){
-                                $.each(v3.replys,function(n4,v4){
-                                    var user = v4.user.realname?v4.user.realname:v4.user.nickname
-                                    html+="<div class='media'><a href='#' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v4.user.qq+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+v4.date+" / <a href='#'>评论 </a> </span></h6><h4>回复:"+v4.content+"</h4></div></div>";
-
-                                })
-                            }
-
-                        })
-                    }
-                    html +="<div class='chat-form'><div class='input-cont'><input class='form-control' type='text' placeholder='我也说一句'/></div><div class='btn-cont'><span class='arrow'></span><a href='' class='btn blue icn-only'><i class='fa fa-check icon-white'></i></a></div></div></div></div>";
-
-                });
-
-               $(".scroller").html(html)
-               console.log(html)
-            }
-
-        })
-
-    }
-
-
-</script>
 
 <!-- END BODY -->
 </html>

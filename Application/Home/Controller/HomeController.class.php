@@ -41,14 +41,13 @@ class HomeController extends AbstractController
 
     public  function showShuoshuoList(){
 
-        $uqq = I('get.uqq');
+        $uqq = I('post.uin');
         $shuoshuoAll = array();
         $friendShuoshuo = M('friend_shuoshuo');
         $ssLogic = D('Shuoshuo','Logic');
         //Todo 分页
         $result = $friendShuoshuo->where("uin=".$uqq)->select();
         //获取说说
-
         foreach($result as $k=>$v){
             $likemans = $v['likemans'];
             //2种显示形式假设赞数量为10
