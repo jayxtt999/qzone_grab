@@ -38,7 +38,9 @@ class HomeController extends AbstractController
         $this->display('index');
     }
 
-
+    /**
+     * 显示说说数据
+     */
     public  function showShuoshuoList(){
 
         $uqq = I('post.uin');
@@ -85,9 +87,56 @@ class HomeController extends AbstractController
         echo("</pre>");exit;*/
         return $this->ajaxReturn($result);
 
-
     }
 
+
+
+    public function likes(){
+
+        $uin = I('post.uin');
+        $cellid = I('post.cellid');
+        $ssLogic = D('Shuoshuo','Logic');
+        if(!$uin || !$cellid){
+            return $this->ajaxReturn(array("status"=>false,"msg"=>"参数错误"));
+        }
+        $ssRow = $ssLogic->getShuoshuoRow($uin,$cellid);
+        if(!$ssRow){
+            return $this->ajaxReturn(array("status"=>false,"msg"=>"数据异常"));
+        }
+        $data = array(
+            "opuin"=>$uin,
+            "unikey"=>$ssRow['curlikekey'],
+            "curkey"=>$ssRow['curlikekey'],
+            "from"=>1,
+            "appid"=>311,
+            "typeid"=>0,
+            "abstime"=>time(),
+            "fid"=>$ssRow['cellid'],
+            "active"=>0,
+            "fupdate"=>1,
+        );
+        $url = "http://w.cnc.qzone.qq.com/cgi-bin/likes/internal_dolike_app?g_tk=".$this->qq['gtk'];
+
+        $res = $this->sendToQq($url,array(),$data);
+
+
+
+
+    /*    qzreferrer	http://user.qzone.qq.com/164483642/infocenter?ptsig=tvH2KWnZHiWKkfKF3q-MT1DONI3vSNcQGJ4czF8RKew_
+opuin	164483642
+unikey	http://user.qzone.qq.com/89980806/mood/86ff5c05c7858f5673920400
+curkey	http://user.qzone.qq.com/89980806/mood/86ff5c05c7858f5673920400
+from	1
+appid	311
+typeid	0
+abstime	1452246471
+fid	86ff5c05c7858f5673920400
+active	0
+fupdate	1*/
+
+
+
+    }
 
 
 }

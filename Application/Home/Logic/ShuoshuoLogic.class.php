@@ -37,4 +37,14 @@ class ShuoshuoLogic extends \Think\Model{
         return $replys->where($where)->select();
     }
 
+    public function getShuoShuoRow($uin,$cellid){
+        $shuoshuo = M("friend_shuoshuo");
+        $where = array(
+            'uin'=>$uin,
+            'cellid'=>$cellid,
+        );
+        return $shuoshuo->where($where)->select()->limit(1);
+
+    }
+
 }

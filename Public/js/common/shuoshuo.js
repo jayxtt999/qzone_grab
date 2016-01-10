@@ -27,6 +27,27 @@ jQuery(document).ready(function () {
         $("#iframe").attr("src","/home/console/getshuoshuoall?uqq="+uqq+"&r="+new Date().getTime())
     })
 
+    $(".likes").click(function(z){
+
+        uin = $(z).attr("data-uin")
+        cellid = $(z).attr("data-cellid")
+        if(!uin || !cellid){
+            layer.msg('参数错误',function(){});
+        }
+        $.ajax({
+            "url":"/home/home/likes",
+            "dataType":"json",
+            "type":"post",
+            "data":{uin:uin,cellid:cellid},
+            "success":function(d){
+
+            }
+        })
+
+
+    })
+
+
 });
 
 //初始参数
@@ -54,16 +75,18 @@ function getShuoshuo(uin){
             var html = "";
             $.each(d,function(n,v) {
                 //拼接说说评论与回复
+                var uin = v.uin;
+                var cellid = v.cellid;
                 var user = v.user.realname?v.user.realname:v.user.nickname;
-                html+="<div class='media'> <a href='#' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v.user.uin+"&src_uin=www.xietaotao.cn&fid=blog&spec=100'style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+ v.timeline+"</span></h6><h4>"+ v.summary+"</h4><div class='clearfix'><span class='btn'><i class='fa  fa-comments-o'></i>评论("+ v.cntnum+")</span><span class='btn'><i class='fa fa-thumbs-o-up'></i>("+ v.likenum+")</span></div>";
+                html+="<div class='media'> <a href='#' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v.user.uin+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+ v.timeline+"</span></h6><h4>"+ v.summary+"</h4><div class='clearfix'><span class='btn'><i class='fa  fa-comments-o'></i>评论("+ v.cntnum+")</span><span class='btn likes' data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='fa fa-thumbs-o-up'></i>("+ v.likenum+")</span></div>";
 
                 if(v.likenum>0){
-                    html+="<div class='clearfix'><span class='btn'><i class='fa fa-thumbs-up'></i>"
+                    html+="<div class='clearfix '><span class='media'><a href='javascript:;' class='pull-left'><i class='fa fa-thumbs-up' style='font-size: 20px;line-height: 25px'></i></a>"
                     $.each(v.likemansArr,function(n2,v2) {
-                        html+=v2+","
+                        html+="<a href='http://user.qzone.qq.com/'"+v2+"' class='pull-left' target='_blank'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v2+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' class='media-object' style='width:30px;height:30px'></a>"
                     })
                     if(v.likemansAndNum){
-                        html+="等"+v.likemansAndNum+"人觉得很赞"
+                        html+="<span class='pull-left' style='line-height: 30px;'>等"+v.likemansAndNum+"人觉得很赞</span>"
                     }
                 }
                 html+="</span></div><hr/>";
@@ -82,14 +105,14 @@ function getShuoshuo(uin){
                     })
                 }
                 html +="<div class='chat-form'><div class='input-cont'><input class='form-control' type='text' placeholder='我也说一句'/></div><div class='btn-cont'><span class='arrow'></span><a href='' class='btn blue icn-only'><i class='fa fa-check icon-white'></i></a></div></div></div></div>";
-                $(".scroller").html(html)
             });
+            $(".findfriend").button('reset')
+            $(".scroller").html(html)
+            Metronic.unblockUI('.scroller');
 
         }
     })
-    //还原状态
-    $(".findfriend").button('reset')
-    Metronic.unblockUI('.scroller');
+
 }
 
 function closeComment(z){
@@ -97,8 +120,8 @@ function closeComment(z){
     layer.confirm('你要关闭评论吗？', {
         btn: ['是','否'] //按钮
     }, function(index){
-        f =  $(z).parent().parent().parent()
-        f.find(".reComment").remove()
+        f =  $(z).parent().parent().parent();
+        f.find(".reComment").remove();
         $(z).attr("ison",false)
         layer.close(index)
     }, function(index){
@@ -108,18 +131,20 @@ function closeComment(z){
 
 //回复其它好友评论
 function comment(z){
-    if($(z).attr("ison") && $(z).attr("ison")!="undefined"){
+    if($(z).data("ison")==true && $(z).data("ison")!="undefined"){
+        console.log($(z).data("ison"))
         closeComment(z)
+        $(z).data("ison",false)
+        return false
     }
     //加载回复评论区域  隐藏主评论区域
     tpl = "<div class='input-group input-medium reComment'><input type='text' class='form-control' placeholder='输入...'><span class='input-group-btn'><button class='btn  blue' type='button'>回复</button></span></div>";
     f =  $(z).parent().parent().parent()
     f.find(".reComment").remove()
     f.append(tpl);
-    $(z).attr("ison",true)
+    $(z).data("ison",true)
 
 }
-
 
 
 
