@@ -58,6 +58,11 @@ class HomeController extends AbstractController
             if($likemans && strpos($likemans,",")){
                 $likemansArr = explode(",",$likemans);
                 $result[$k]['likemansArr'] = $likemansArr;
+                if(in_array($this->qq['qq'],$likemansArr)){
+                    $result[$k]['islike'] = true;
+                }else{
+                    $result[$k]['islike'] = false;
+                }
                 $result[$k]['likemansAndNum'] = $v['likenum']-count($likemansArr);
             }
             $result[$k]['user'] = $this->getUserInfo($uqq);
@@ -91,10 +96,11 @@ class HomeController extends AbstractController
 
 
 
-    public function likes(){
+    public function like(){
 
         $uin = I('post.uin');
         $cellid = I('post.cellid');
+        $c = I('post.c');
         $ssLogic = D('Shuoshuo','Logic');
         if(!$uin || !$cellid){
             return $this->ajaxReturn(array("status"=>false,"msg"=>"参数错误"));
@@ -115,28 +121,14 @@ class HomeController extends AbstractController
             "active"=>0,
             "fupdate"=>1,
         );
-        $url = "http://w.cnc.qzone.qq.com/cgi-bin/likes/internal_dolike_app?g_tk=".$this->qq['gtk'];
-
+        if($c){
+            $url = "http://w.cnc.qzone.qq.com/cgi-bin/likes/internal_dolike_app?g_tk=".$this->qq['gtk'];
+        }else{
+            $url = "http://w.cnc.qzone.qq.com/cgi-bin/likes/internal_unlike_app?g_tk=".$this->qq['gtk'];
+        }
         $res = $this->sendToQq($url,array(),$data);
-
-
-
-
-    /*    qzreferrer	http://user.qzone.qq.com/164483642/infocenter?ptsig=tvH2KWnZHiWKkfKF3q-MT1DONI3vSNcQGJ4czF8RKew_
-opuin	164483642
-unikey	http://user.qzone.qq.com/89980806/mood/86ff5c05c7858f5673920400
-curkey	http://user.qzone.qq.com/89980806/mood/86ff5c05c7858f5673920400
-from	1
-appid	311
-typeid	0
-abstime	1452246471
-fid	86ff5c05c7858f5673920400
-active	0
-fupdate	1*/
-
-
+        return $this->ajaxReturn(array("status"=>true));
 
     }
-
 
 }

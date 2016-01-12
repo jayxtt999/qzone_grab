@@ -27,27 +27,6 @@ jQuery(document).ready(function () {
         $("#iframe").attr("src","/home/console/getshuoshuoall?uqq="+uqq+"&r="+new Date().getTime())
     })
 
-    $(".likes").click(function(z){
-
-        uin = $(z).attr("data-uin")
-        cellid = $(z).attr("data-cellid")
-        if(!uin || !cellid){
-            layer.msg('参数错误',function(){});
-        }
-        $.ajax({
-            "url":"/home/home/likes",
-            "dataType":"json",
-            "type":"post",
-            "data":{uin:uin,cellid:cellid},
-            "success":function(d){
-
-            }
-        })
-
-
-    })
-
-
 });
 
 //初始参数
@@ -78,12 +57,13 @@ function getShuoshuo(uin){
                 var uin = v.uin;
                 var cellid = v.cellid;
                 var user = v.user.realname?v.user.realname:v.user.nickname;
-                html+="<div class='media'> <a href='#' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v.user.uin+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+ v.timeline+"</span></h6><h4>"+ v.summary+"</h4><div class='clearfix'><span class='btn'><i class='fa  fa-comments-o'></i>评论("+ v.cntnum+")</span><span class='btn likes' data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='fa fa-thumbs-o-up'></i>("+ v.likenum+")</span></div>";
+                var likeStyle = v.islike?"fa fa-thumbs-up":"fa fa-thumbs-o-up";
+                html+="<div class='media'> <a href='#' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v.user.uin+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+ v.timeline+"</span></h6><h4>"+ v.summary+"</h4><div class='clearfix'><span class='btn'><i class='fa  fa-comments-o'></i>评论("+ v.cntnum+")</span><span class='btn likes' onclick='like(this)' data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='"+likeStyle+"'></i>(<em>"+ v.likenum+"</em>)</span></div>";
 
                 if(v.likenum>0){
                     html+="<div class='clearfix '><span class='media'><a href='javascript:;' class='pull-left'><i class='fa fa-thumbs-up' style='font-size: 20px;line-height: 25px'></i></a>"
                     $.each(v.likemansArr,function(n2,v2) {
-                        html+="<a href='http://user.qzone.qq.com/'"+v2+"' class='pull-left' target='_blank'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v2+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' class='media-object' style='width:30px;height:30px'></a>"
+                        html+="<a href='http://user.qzone.qq.com/"+v2+"' class='pull-left' target='_blank'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v2+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' class='media-object' style='width:30px;height:30px'></a>"
                     })
                     if(v.likemansAndNum){
                         html+="<span class='pull-left' style='line-height: 30px;'>等"+v.likemansAndNum+"人觉得很赞</span>"
@@ -146,7 +126,39 @@ function comment(z){
 
 }
 
-
+function like(z){
+    if($(z).find("i").hasClass("fa-thumbs-o-up")){
+        c = true
+    }else{
+        c = false
+    }
+    uin = $(z).attr("data-uin")
+    cellid = $(z).attr("data-cellid")
+    if(!uin || !cellid){
+        layer.msg('参数错误',function(){});
+    }
+    $.ajax({
+        "url":"/home/home/like",
+        "dataType":"json",
+        "type":"post",
+        "data":{uin:uin,cellid:cellid,c:c},
+        "success":function(d){
+            if(d.status){
+                if(c){
+                    $(z).find("i").removeClass("fa-thumbs-o-up").addClass("fa-thumbs-up")
+                    num = parseInt($(z).find("em").text())
+                    $(z).find("em").text(num+1)
+                }else{
+                    $(z).find("i").removeClass("fa-thumbs-up").addClass("fa-thumbs-o-up")
+                    num = parseInt($(z).find("em").text())
+                    $(z).find("em").text(num-1)
+                }
+            }else{
+                layer.msg(d.msg,function(){});
+            }
+        }
+    })
+}
 
 
 

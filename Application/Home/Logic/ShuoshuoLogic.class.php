@@ -43,7 +43,7 @@ class ShuoshuoLogic extends \Think\Model{
             'uin'=>$uin,
             'cellid'=>$cellid,
         );
-        return $shuoshuo->where($where)->select()->limit(1);
+        return $shuoshuo->where($where)->find();;
 
     }
 
