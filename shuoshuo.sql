@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50617
 File Encoding         : 65001
 
-Date: 2015-12-27 21:59:08
+Date: 2016-01-12 22:16:59
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -36,7 +36,8 @@ CREATE TABLE `ss_accredit` (
 -- ----------------------------
 -- Records of ss_accredit
 -- ----------------------------
-INSERT INTO `ss_accredit` VALUES ('435024179', null, 'o0435024179', '@sngQJ6Tz2', 'o0435024179', 'x6nZCgYcDt7LktAs0G9hFMEt40ifEk408LABQ*yfkrk_', 'uuVSLuzCzQ3xB8l64IxnZ6SKVxWSj7pwHP33OucbOzM_', '1266472766', 'd09d9c8e1470d31c225bdb7f93bf7ff481744c22514549bc5ca49f086c7842af', '1098101794');
+INSERT INTO `ss_accredit` VALUES ('164483642', null, 'o0164483642', '@9lTax1sfN', 'lDUjULQncugPRClMT8NoiG5YPcjHc0*o3xzPf9J0Xls_', '*3ME8Hi2kWL-Vd652k52dzo3*VnTXkLarBiT4KTKbcI_', null, '12961199', 'o0164483642', '1605739457');
+INSERT INTO `ss_accredit` VALUES ('435024179', null, 'o0435024179', '@eKDqPyQ9T', 'o0435024179', 'T73oaJvvcJZE*4KSza4Ypj*5aR1G9i2UexPRdfVFMdc_', 'Dd9zZweR*4PQ8Jes65VzZmcXwcPwBIawkfKEPsukej0_', '1689161617', 'fd7bd598262193ea335b91dbaad78474335e10fd506cac8f7c6cc442cf1ccf57', '1159846046');
 
 -- ----------------------------
 -- Table structure for `ss_friend_comment`
@@ -46,12 +47,12 @@ CREATE TABLE `ss_friend_comment` (
   `uin` varchar(13) NOT NULL COMMENT '好友qq',
   `cellid` varchar(256) NOT NULL COMMENT '说说的key 不知道是与qq唯一还是全表唯一',
   `fuin` varchar(13) NOT NULL COMMENT '评论者qq',
-  `commentid` int(11) NOT NULL,
-  `commentpic` varchar(256) DEFAULT NULL,
-  `content` text,
-  `referid` int(11) DEFAULT NULL,
+  `commentid` int(11) NOT NULL COMMENT '评论id',
+  `commentpic` varchar(256) DEFAULT NULL COMMENT '评论图片',
+  `content` text COMMENT '内容',
+  `referid` int(11) DEFAULT NULL COMMENT '来源id',
   `time` int(11) DEFAULT NULL,
-  `replynum` int(11) DEFAULT NULL,
+  `replynum` int(11) DEFAULT NULL COMMENT '回复数量',
   KEY `cellidfuin` (`cellid`(255),`fuin`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1076,6 +1077,72 @@ INSERT INTO `ss_friend_comment` VALUES ('435024179', '33f1ed197a94ed4a00000000',
 INSERT INTO `ss_friend_comment` VALUES ('435024179', '33f1ed19a907c74a00000000', '402459014', '0', null, '忙哈啊', '0', '1254585087', null);
 INSERT INTO `ss_friend_comment` VALUES ('435024179', '33f1ed19edc8f74900000000', '402459014', '0', null, '。oO 哪戈又召你了,飞古杂天理，世盖大乱里Oo。', '0', '1241003343', null);
 INSERT INTO `ss_friend_comment` VALUES ('435024179', '33f1ed190d0ba94900000000', '402459014', '0', null, '    ┏━━┓        晶 ●╭○╮♂       ┏━━┓ \n    ┃僾皒┃．．·°尕/█∨█\\ 欣°·． ┃跟皒┃ \n    ┃ 僦 ┃        ♀ ∏  ∏  尕       ┃ 辵 ┃  ', '0', '1235910262', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627085edc0f56fdde0600', '1040333054', '1', null, '钟秀泰说他不服[em]e328514[/em][em]e328514[/em][em]e328514[/em]', '0', '1443880498', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627085edc0f56fdde0600', '1904157220', '2', null, '也是我的最爱', '0', '1443881746', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '3636270860ea6555b2b60c00', '1904804598', '13', null, '美女近来在哪啊', '0', '1432779399', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '3636270860ea6555b2b60c00', '277479725', '14', null, '姐们儿！迟来的生日快乐', '0', '1432780504', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '3636270860ea6555b2b60c00', '29306912', '15', null, '妹妹生日快乐！', '0', '1432792599', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '3636270860ea6555b2b60c00', '568845995', '16', null, '妹妹生日快乐！', '0', '1432795133', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '3636270860ea6555b2b60c00', '386637979', '17', null, '生日快乐！！', '0', '1432817300', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '3636270860ea6555b2b60c00', '1791929056', '18', null, '生日快乐！', '0', '1432822065', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '3636270860ea6555b2b60c00', '358248940', '19', null, '迟到了，生日快乐乐乐。。～～[em]e163[/em]', '0', '1432921648', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '3636270860ea6555b2b60c00', '3277660657', '20', null, 's笑 , 對 於 尓 、俄 無 視 於 睹 。', '0', '1433513933', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '3636270860ea6555b2b60c00', '2064536881', '21', null, 't9我有一只小毛驴、我从来也不骑。', '0', '1434363028', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '3636270860ea6555b2b60c00', '2091223326', '22', null, '[em]e112[/em][em]e7238[/em][em]e7358[/em]你是相信我爱你 还是相信世界上有鬼。', '0', '1435128290', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708ccb5bf5410930800', '871645621', '11', null, '一切都成为将就', '0', '1421887858', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708ccb5bf5410930800', '272019065', '12', null, '这句话好经典，', '0', '1421889014', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708ccb5bf5410930800', '1791929056', '13', null, '这话说的好', '0', '1421892171', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708ccb5bf5410930800', '281529535', '14', null, '这背影是你吗？', '0', '1421892851', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708ccb5bf5410930800', '505665920', '15', null, '表情错噶冒一点，应该最特别的那个[em]e7116[/em]', '0', '1421894813', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708ccb5bf5410930800', '827914563', '16', null, '要是我那时打拳皇有个妹纸陪我我现在也不会那么菜了', '0', '1421900940', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708ccb5bf5410930800', '553417593', '17', null, '[em]e120[/em][em]e120[/em]', '0', '1421914166', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708ccb5bf5410930800', '423090175', '18', null, '亲，背个书包去打电动你就是最特别的，干的漂亮.为你点赞！', '0', '1421941211', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708ccb5bf5410930800', '626461752', '19', null, '好地方呀，我也老喜欢玩的', '0', '1421992597', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708ccb5bf5410930800', '545606420', '20', null, '干嘛呢？天下就没有了吗？', '0', '1422093095', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708b9170354aba50100', '423090175', '3', null, '哈哈哈，代表月亮消灭你', '0', '1409489211', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708b9170354aba50100', '344712192', '4', null, '强行美少女', '0', '1409490501', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708b9170354aba50100', '443810062', '5', null, '赞[em]e328077[/em]', '0', '1409492005', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708b9170354aba50100', '1195498607', '6', null, '偷偷摸摸出去浪了圈呀。', '0', '1409492100', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708b9170354aba50100', '854537856', '7', null, '都快要不认得你里[em]e110[/em]', '0', '1409495276', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708b9170354aba50100', '1066933552', '8', null, '[em]e112[/em]都好萌', '0', '1409496202', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708b9170354aba50100', '754966116', '9', null, '是我的小不点', '0', '1409501603', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708b9170354aba50100', '365456409', '10', null, '单眼皮[em]e128[/em][em]e128[/em][em]e128[/em][em]e128[/em][em]e128[/em]', '0', '1409540138', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708b9170354aba50100', '125544635', '11', null, '晒黑了', '0', '1409562056', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708b9170354aba50100', '1329997407', '12', null, '这个说说写的好，平淡中显示出不凡的文学功底，可谓是字字珠玑，句句经典，是我辈应当学习之典范。就小说艺术的角度而言，这段说说可能不算太成功，但它的实验意义却远远大于成功本身。正所谓：“一马奔腾，射雕引弓，天地都在我心中！”真不愧为无厘界新一代的开山怪！逐 句地看完你的这个说说以后，我的心久久不能平静，震撼啊！为什么会有如此好的说说！我纵横QQ空间多年，自以为再也不会有任何说说能打动我， 没想到今天看到了如此精妙绝伦的这样一段说说。是你让我深深地理解了‘人外有人，天外有天’这句话。谢谢你！在看完这说说以后，这说说以后，我没有立即回复，因为我生怕我庸俗不堪的回复会玷污了这空间少有的说说。但是我还是回复了， 因为我觉得如果不能在如此精彩的说说后面留下自己的足迹，那我死也不会瞑目的！能够在如此精彩的说说后面留下自己的足迹是多么骄傲的一件事啊！请原谅我的自私！ 我知道无论用多么华丽的辞藻来形容楼主您说说的精彩程度都是不够的，都是虚伪的，所以我只想说一句：您的说说太好了！我愿意一辈子的看下去！这段说说构思新颖，题材独具匠心，段落清晰，情节诡异，跌宕起伏，主线分明，引人入胜啊……', '0', '1410266349', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708f870eb53a4120f00', '1223821118', '7', null, '学姐，在云南呢[em]e102[/em]', '0', '1407940371', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708f870eb53a4120f00', '1511614401', '8', null, '大理。好地方啊。', '0', '1407940977', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708f870eb53a4120f00', '365456409', '9', null, '原来在云南玩[em]e141[/em]', '0', '1407941255', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708f870eb53a4120f00', '871645621', '10', null, '那一年，我在洱海倾听自己，这一年自己再出发，还记得牛背山国际青年旅社，我在墙壁上留下了一首诗，当时还好像和你分享，这样的时光真好', '0', '1407944133', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708f870eb53a4120f00', '281529535', '11', null, '好漂亮呀！', '0', '1407945710', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708f870eb53a4120f00', '754966116', '12', null, '采霞好漂亮，看到好的多发些让我们分享', '0', '1407946175', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708f870eb53a4120f00', '1107450107', '13', null, '好美', '0', '1407972501', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708f870eb53a4120f00', '409153477', '14', null, '多么令人陶醉的景色，不仅让人泛起童年的回忆。', '0', '1407985934', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708f870eb53a4120f00', '985856339', '15', null, '真的好美呀', '0', '1407995943', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708f870eb53a4120f00', '2331742353', '17', null, '是[em]e166[/em]e', '0', '1415166052', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708e8dd855347820500', '1223821118', '19', null, '学姐，生日快乐[em]e113[/em]', '0', '1401288440', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708e8dd855347820500', '871645621', '20', null, '一年一年，守望过去，拥抱未来。时光会把你变的很美好', '0', '1401288490', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708e8dd855347820500', '281529535', '21', null, '年轻真好！', '0', '1401288947', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708e8dd855347820500', '562150797', '22', null, '生日快乐', '0', '1401291149', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708e8dd855347820500', '952328399', '23', null, '[em]e177[/em]', '0', '1401291371', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708e8dd855347820500', '416191091', '24', null, '生日快乐[em]e177[/em][em]e177[/em][em]e177[/em]', '0', '1401293205', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708e8dd855347820500', '530511727', '25', null, '原来你一直叫南瓜', '0', '1401300508', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708e8dd855347820500', '593376217', '26', null, '生日快乐', '0', '1401321449', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708e8dd855347820500', '851726353', '27', null, '生日快乐', '0', '1401329557', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708e8dd855347820500', '75709277', '28', null, '生日快乐[em]e177[/em]', '0', '1401330946', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708df8a6f5371440e00', '754966116', '1', null, '有你我就是最幸福。', '0', '1399821580', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708df8a6f5371440e00', '125544635', '2', null, ' 你回家去了。', '0', '1399858750', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708df8a6f5371440e00', '1697982841', '3', null, '有点像哈', '0', '1399859036', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '36362708df8a6f5371440e00', '810526156', '4', null, '母女两真像，特别是眉毛。', '0', '1399893312', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627087164475339500600', '827914563', '2', null, '我来保护你', '0', '1397188283', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627087164475339500600', '1040145213', '3', null, '？？', '0', '1397188870', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627087164475339500600', '446734139', '4', null, '加油～！[em]e178[/em]', '0', '1397191335', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627087164475339500600', '467526636', '5', null, '加油怎么了', '0', '1397192710', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627087164475339500600', '125544635', '7', null, '[em]e132[/em]怎么回事 小姑娘', '0', '1397193188', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627087164475339500600', '365456409', '8', null, '杂了阿？', '0', '1397193383', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627087164475339500600', '784881489', '9', null, '[em]e178[/em][em]e178[/em][em]e178[/em]', '0', '1397200216', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627087164475339500600', '307645563', '10', null, '我记住你了 ', '0', '1397217000', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627087164475339500600', '455752400', '11', null, '咋了', '0', '1397229684', null);
+INSERT INTO `ss_friend_comment` VALUES ('136787510', '363627087164475339500600', '915903499', '12', null, '加油美女', '0', '1397277701', null);
 
 -- ----------------------------
 -- Table structure for `ss_friend_gp`
@@ -2383,54 +2450,21 @@ CREATE TABLE `ss_friend_shuoshuo` (
   `summary_img_url` text COMMENT '说说附带的图片地址',
   `summary_img_wh` text COMMENT '说说附带的图片地址宽高,假如为0说明没发图，但是会记录qq空间的头像',
   `timeline` varchar(24) DEFAULT NULL COMMENT '时间线  类似06/01',
-  `cntnum` int(11) DEFAULT NULL COMMENT '评论数量',
+  `cmtnum` int(11) DEFAULT NULL COMMENT '评论数量',
   UNIQUE KEY `uinandcellid` (`cellid`(255),`uin`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ss_friend_shuoshuo
 -- ----------------------------
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/154894476/mood/8c803b09b6256c55dc600900', '8c803b09b6256c55dc600900', '516107', '1433150902', '154894476', '545973325,364720722', '9', '心中那自由的世界，如此的清澈高远，盛开着永不凋零，蓝莲花~~~', 'http://qlogo3.store.qq.com/qzone/154894476/154894476/100', '0,0', '06/01', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed1953f3075606b10200', '33f1ed1953f3075606b10200', '517131', '1443361619', '435024179', '154894476,214205598,505139848', '4', '国庆去哪里装逼', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '09/27', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed195c55cb55c4ad0400', '33f1ed195c55cb55c4ad0400', '517131', '1439389020', '435024179', '455973965,545973325,1315389943', '3', null, 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/FGHVG5decpx9ave0vnFQ9fpSPpBzkDWKSfYpREW.V.E!/b/dGIBAAAAAAAA&ek=1&kp=1&pt=0&bo=gAJVAwAAAAAFAPc!&su=049655697#sce=30-1-1&rf=-311-0', '640,853', '08/12', '4');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed1960998255721a0000', '33f1ed1960998255721a0000', '517131', '1434622303', '435024179', '545973325,604265231,671814581', '3', '我已经对公司这个项目失去信心了。', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/uBj9cYIikWtkVk0m0epQOthi2zFXTDUfPDQ8tvvkfyg!/b/dBYAAAAAAAAA&ek=1&kp=1&pt=0&bo=cgSAAkAGhAMDCBg!&su=042964689#sce=30-1-1&rf=-311-0', '1138,640', '06/18', '4');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19f6297c554c800b00', '33f1ed19f6297c554c800b00', '517131', '1434200566', '435024179', '545973325', '1', 'Shadowsocks\nip：45.78.21.11\n端口：443\n密码：YzViNDE3YT\n加密方式：aes-256-cfb', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '06/13', null);
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19141d4255bd310c00', '33f1ed19141d4255bd310c00', '517131', '1430396180', '435024179', '', '0', '喂，110吗，有人在这里装逼，场面已经控制不住了。', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/i90lAzPYdRl..yLaCiFBN5.bcfo*sQzMVKSn8wtMmwo!/b/dFgAAAAAAAAA&ek=1&kp=1&pt=0&bo=KwQgA0AGsAQBCNE!&su=030608305#sce=30-1-1&rf=-311-0', '1067,800', '04/30', '3');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed196d983f55c9990700', '33f1ed196d983f55c9990700', '517131', '1430231149', '435024179', '', '0', '我这一千里', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '04/28', null);
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed199d7c38545cd60a00', '33f1ed199d7c38545cd60a00', '517131', '1412988061', '435024179', '593297240', '1', ';̷̸̨̀͒̏̃ͦ̈́̾̀́̎͢҉̵̶͚̼͉͖̺̥͔͇̰̹̮͙͉̻̼̭̻͕̮͇ͨͬͪ͗̇̑̽͋̀̋̊͌ͧͨͭ̓̅͐ͥ̂̔̊ͧ͊҉̶̵̷̞̩̦̳̺̳̬̬̩̣̫͇̯̥͖͍͕̠̦̼̗ͯ̽͌̔ͪͯ́́͋̍ͨ̿̿̎͒ͤ̓̅̀͂ͧ͋̏ͫͣ̔͘͜͠͏̶̵̸̸̸̶̸̶̧̧̡̢̡̛̛̥̺͓̘̺͎̜̥͕͈̝̫͎̺̮̱̤̠̠͖̳̻̥̣̪͍͕͇̮͙̹̪͈̼̩̯̪͕̯̫̹̥͔͚͙̦̩͚̭̥͉̰̝̺͍̭̤̹̘̮̪͖͖͉̲̯͕̜̭̙̺̬̘͉̻͍̝̦͖̣̜͖̱͚̞̞̝̝̭̖͕͓͕͇̖̜̭̠͖̼̯̼̠̹͔̲͔̟͕̱̘̹̗͙̪̥̳͓̳͖̞̻͉͈̮̯̲̘̱̱̞̜̖̞̣̱ͮͧͫ͂͒ͤͣ̌̽ͨͪ͒̄̄̉̒̊ͩ̅͆̒̎̇̆͆ͪ̈́͛̉̍̏́̄̈́̽̔̍̎̂ͬ̆͗͌̔ͫ͆̀́͑̈́ͤ́ͯ̇ͧ̾͂̐̋̉̊ͦͥͫͧ͆ͨ̽̒̃͊̒̎͊̇̽̓̒ͬ̐̈́̀́́̍̈́̆̉ͭͪ̾ͭ̈́͛͑̽͐ͬ̈ͧͧ̍̐̑̓ͥ̔̾͐́̎̎͛ͮ͑ͤ̃̉ͦ̍͒ͩ̃̌̎͗̈́̐̉͐͐͌̄̀̓͆̉̌̎͂ͨͩͬ̾̊͋ͪ̎̑̀͘̚͘͘̚͘͘͘̕͟͟͢͟͟͟͜͝͠͞͝͝͝͝͡ͅͅͅͅ͏͏̡̡̛̙̣͉̪̬̗̳̱̤̥̪̮̮̟̥̠͚̼͉̥ͯ̓̂́͐̄̉̇ͣ́ͪ̅̈̃̚͜͟;̀͒̏̃ͦ̈́̾̀́̎͢...[更多]', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/10/11', '5');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19cef337549d5d0200', '33f1ed19cef337549d5d0200', '517131', '1412953037', '435024179', '', '0', '村上春树与诺贝尔，小李子与奥斯卡，汪峰与头条，国足与世界杯，我与＿＿', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/10/10', '4');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19d723f753aa500800', '33f1ed19d723f753aa500800', '517131', '1408705495', '435024179', '178109907,330995493,505139848', '6', '她是城市的白领Office Lady，他是城市的搬运工人，高中毕业后，二个人划着不同的青春轨迹，可是他们依然保持着恋人的关系，仅仅是保持着，白天，她在公司里喝正宗的雀巢咖啡，下班后，她吃他买来的廉价的冰棒。中午，她品味着公司里精致的饭菜。晚上，他带她去脏兮兮的饭馆吃并不正宗的兰州拉面 她一直认为，这样的恋情与自己的生活太不协调 从开始的那一天，便仿佛注定了某一种结局！他每天去接她，然后送她到所居住的公寓电梯口轻声道了晚安便匆匆离去那天她突然想撤娇便对他说：背我上去吧！ 他看了看电梯，电梯运转良好 然后他回头，说了声好 没问任何理由，他背着她，慢慢向上爬 爬到一半他累了 问她：休息一下好不好？ 她突然来了兴致，娇嗔着说不行他就真的没有休息，一直爬到她所居住的13楼 她问他累不累？ 他说累。比搬运家具还累， 她知道他说的是真的，她有了一丝感动！ 但他们还是分手了！ 因为有时候，仅有感动，并不能够将爱情维持！ 爱情的本身，除了感动，好像还有太多的琐碎事！ 城市里并不缺一个搬运工人，所以他回到乡下 他偶尔会打电话给她，告诉她他现在种着一些农作物 赚了一点钱 她听着，淡淡的 那时她已有了新的男友...[更多]', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/08/22', '4');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed1963edb75344a40100', '33f1ed1963edb75344a40100', '517131', '1404562786', '435024179', '593297240,1325703628', '2', '时间老是不够用啊～～', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/07/05', '4');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed190ac5b253de520c00', '33f1ed190ac5b253de520c00', '517131', '1404224778', '435024179', '505139848,593297240,865845773', '8', '黄昏，街边，小卖部。\n\n人，男人，两个男人，一老一少，隔着柜台伫立着。\n“是你？”\n“是我。”\n“你来了。”\n“我来了。”\n“你不该来。”\n“我已经来了。”\n“你毕竟还是来了。”\n“我毕竟还是来了。”\n\n沉默，良久的沉默。\n仿佛泥塑木雕的两人，对峙着，那夕阳却越发斜了。\n“你来干什么？”老者最终打破沉默。\n“打酱油。”干脆利落，一字一顿，没有半点迟疑。\n老者沉吟少顷，缓缓道：“打多少钱一斤的？”\n“一块。”依然干脆利落，不带一丝犹豫。\n那人的脸色已变了，道：“你知道我这里从不卖一块钱一斤的酱油。”\n“我只要一块钱一斤的酱油。”\n“可当真？”\n“当真！”\n卖酱油的盯着眼前的这个人，他非常年轻，但是他的眼睛，任何人看了都不会忘记，那是夜一样的宁静，海一般的深邃。\n他知道眼前的少年决非常人，但他也知道，一块钱一斤的酱油，他是决不会卖的。\n周围还是那么寂静，死一样的寂静。\n夕阳已渐渐要落下去了，他看了看远处的夕阳，觉得说不出的恐惧。\n他苦笑道：“你一定要买一块钱一斤的么？”\n“一定！”\n“若我不卖给你呢？”\n“你大可试试！”\n沉默，死一样的沉默。\n许久，他抬眼望着少年，咬牙道：“好，我就卖你一...[更多]', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/07/01', '2');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19393cb0536fe90000', '33f1ed19393cb0536fe90000', '517131', '1404058680', '435024179', '593297240', '1', '终究是空，不虚此行。', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/06/30', null);
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed1957eaa653b6180200', '33f1ed1957eaa653b6180200', '517131', '1403447894', '435024179', '1325703628', '1', '<a  href=\"http://www.urlshare.cn/umirror_url_check?srctype=touch&amp;apptype=3ghtml&amp;loginuin=435024179&amp;plateform=qzone&amp;url=http%3A%2F%2Fwww.xietaotao.cn%2Fshuoshuo%2F&amp;src_uin=435024179&amp;src_scene=311&amp;cli_scene=getApplist\">http://www.xietaotao.cn/shuoshuo/</a>', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/06/22', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19fecba253059a0200', '33f1ed19fecba253059a0200', '517131', '1403177981', '435024179', '1187938626,1325703628', '2', '每天都有一个声音在说，“下次不能这样搞了”，然后每当这时就会有另外一个声音“不要跟自己过不去”。可能你会问究竟是什么事，那我可以告诉你有很多，比如中午吃什么，晚上吃什么，今晚几点睡，等下玩不玩游戏，周末是睡觉还是干嘛，下午加不加班诸如此类。然后这个时候就会飘来一个声音“不要在意这些细节”，然后立马就会有“一屋不扫，何以扫天下”，反驳这句的就是“成大事者，不拘小节”，然后又“不积硅步何以至千里”然后又…唉。不说了，吃饭去。', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/06/19', '3');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19bab46d53e2890000', '33f1ed19bab46d53e2890000', '517131', '1399698618', '435024179', '505139848,1325703628', '2', '0.0', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/UaGFfggKDAu*cfwyGXp7iQNWyW4Pp6Dac3eADBhQz44!/b/dGXWiWbrCgAA&ek=1&kp=1&pt=0&bo=uAGhH7gBoR8BACc!&su=084736625#sce=30-1-1&rf=-311-0', '440,8097', '2014/05/10', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed1951d35853bd1f0100', '33f1ed1951d35853bd1f0100', '517131', '1398330191', '435024179', '671814581,1005064104,1187938626', '3', '每天看到空间动态，就想问你们到底是从哪里转来这些乱七八糟的东西，能发点有意义的东西么？比如妹纸就应该多爆照，有沟必火。骚年就应该多发福利最好是磁力链接。不然我是不会给你们点赞的。', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/04/24', '2');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed190adb5753db6e0600', '33f1ed190adb5753db6e0600', '517131', '1398266631', '435024179', '335877592,1325703628', '2', '土豪就是土豪，我等屌丝只能膜拜', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/PQ5rVgQAPYafva*qY5URUxojIFtAFb5LuzNDATdFUDs!/b/dFa0XmW.KQAA&ek=1&kp=1&pt=0&bo=gAJVA7AEQAYBCAk!&su=0227136561#sce=30-1-1&rf=-311-0', '640,853', '2014/04/23', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19b88d3d537ce30a00', '33f1ed19b88d3d537ce30a00', '517131', '1396542901', '435024179', '449270404,505139848,506444235', '7', '土豪就是土豪，我等屌丝只能膜拜', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/CkffDUoaKXwZaSw6FCMwLMZ8UYSKRM5RD6l8pqQW8GQ!/b/dMAs7mXxDAAA&ek=1&kp=1&pt=0&bo=gAJVA8gEYAYBCFE!&su=0257883745#sce=30-1-1&rf=-311-0', '640,853', '2014/04/04', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed1972123053c48e0100', '33f1ed1972123053c48e0100', '517131', '1395659376', '435024179', '593297240,1005064104,1162519806', '4', '这一下雨我就知道肯定要换袜子了，屌丝生活为何如此艰难', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/03/24', '3');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19c03020535c3d0700', '33f1ed19c03020535c3d0700', '517131', '1394618558', '435024179', '1315389943', '1', '马来：啊，我的飞机失踪了 越南：不要着急，我来帮你找～ 越南：亲，是不是这个？ 马来：no～ 越南：这个呢？ 马来：no～ 越南：嗯，让我再仔细找找，这个呢？ 马来：no～不过我们有了飞机的新线索越南：哦！在哪里？我马上赶过去～ 马来：马六甲 越南：友尽～＂', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/03/12', null);
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed1953431453bcd40d00', '33f1ed1953431453bcd40d00', '517131', '1393836882', '435024179', '877377379', '1', '同学你懂的，QQ建议隐身，号码拉黑。不谢，请叫我雷锋。', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/c79VGrjQNMlgFNTS9FPHZKOVZy4Ya0QYKcpn01gGw8c!/b/dGW3ymSaIAAA&ek=1&kp=1&pt=0&bo=TwFHAk8BRwIBACc!&su=070928577#sce=30-1-1&rf=-311-0', '335,583', '2014/03/03', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed191ec50053b2680d00', '33f1ed191ec50053b2680d00', '517131', '1392559388', '435024179', '431725127,1187938626,1285240518', '3', '求扫', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/2Y55in4or*u8o9hEUhl1KKccWvBumnGjsSOIJ9UeNeg!/b/dP*dJmcZBAAA&ek=1&kp=1&pt=0&bo=AgECAQIBAgEBACc!&su=0149451889#sce=30-1-1&rf=-311-0', '258,258', '2014/02/16', '2');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed192fa6f752f2b80600', '33f1ed192fa6f752f2b80600', '517131', '1391961644', '435024179', '443743505,593297240,940607643', '5', '东莞是个好地方，谢谢ccav。', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/02/10', '4');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19de3ef25209680600', '33f1ed19de3ef25209680600', '517131', '1391607515', '435024179', '593297240,1353728291', '2', 'you can you up,no can no BB .\nlove play play,no play roll.', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/02/05', '3');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed196165ef52ae680700', '33f1ed196165ef52ae680700', '517131', '1391420768', '435024179', '410197948', '1', '人才', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2014/02/03', '3');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed191d22a4527a9f0000', '33f1ed191d22a4527a9f0000', '517131', '1386488348', '435024179', '541191296', '1', 'ส้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้  ส้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้  ส้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้ส้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2013/12/08', null);
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19c820a452303d0900', '33f1ed19c820a452303d0900', '517131', '1386488008', '435024179', '', '0', 'ส้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้  ส้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้  ส้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้้', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', null, null);
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19fc8e875274a40e00', '33f1ed19fc8e875274a40e00', '517131', '1384615677', '435024179', '', '0', null, 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/ArIAKwE9GNUlNHIGUlnzIQXqmT8j8oXOv9qKv90U5ys!/b/dC1dPplbEQAA&ek=1&kp=1&pt=0&bo=9AGmAfQBpgECACQ!&su=0105693857#sce=30-1-1&rf=-311-0', '500,422', '2013/11/16', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed193f388252beb40c00', '33f1ed193f388252beb40c00', '517131', '1384265791', '435024179', '', '0', '恨一个人,就去当城管', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2013/11/12', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19a81b5c5211290400', '33f1ed19a81b5c5211290400', '517131', '1381768104', '435024179', '305968810', '1', '总结下遇到奇葩问题的全部解决方案。开机密码忘记了，输入法切换不了，电脑没声音，网页打不开等电脑异常一律电脑城重装系统，宽带密码忘记了，qq被盗，淘宝密码忘记，支付宝密码忘记一律客服或者换账号，其它问题请联系我们首席技术工程师@{uin:178880154,nick:周雷,who:1}@{uin:449270404,nick:骆祥,who:1}。', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2013/10/15', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19e45a595200ff0e00', '33f1ed19e45a595200ff0e00', '517131', '1381587683', '435024179', '', '0', '最近没事就在搞这个，主要是一回来就有几个土豪看电影，那网速你懂的', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/pbRPAyiSarFrASdPr.x.GiuH1DqJ6CV.w7d1k2zPS0E!/b/dHGCMGRkFAAA&ek=1&kp=1&pt=0&bo=hwKSCYcCkgkBCC8!&su=079009649#sce=30-1-1&rf=-311-0', '647,2450', '2013/10/12', '4');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed1907a945524e550400', '33f1ed1907a945524e550400', '517131', '1380296967', '435024179', '410038264', '1', '[em]e134[/em][em]e134[/em][em]e134[/em][em]e134[/em]围观', 'http://imgcache.qq.com/ac/qzone_v5/app/photo/sysbussy.jpg', '0,0', '2013/09/27', '4');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed1973ba41528eca0a00', '33f1ed1973ba41528eca0a00', '517131', '1380039283', '435024179', '', '0', '我需要时间思考，很多很多。我将止步于。。。', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2013/09/25', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19f3a10852f3070700', '33f1ed19f3a10852f3070700', '517131', '1376297459', '435024179', '', '0', '妹纸，你这样让我觉得很不和谐呀。。。看到来报个道。', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2013/08/12', '2');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed197eb40352bfb00400', '33f1ed197eb40352bfb00400', '517131', '1375974526', '435024179', '645871997', '1', '这短信高富帅是无法理解的，是吧，你们都是高富帅。', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/fCKA40NdZpxqFFIzaxpAglWKG4SJSbLp.kycqroyXZQ!/b/dPfwKmFRKAAA&ek=1&kp=1&pt=0&bo=4AFWAwAAAAABAJM!&su=0189008481#sce=30-1-1&rf=-311-0', '480,854', '2013/08/08', '2');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed192580f35193550c00', '33f1ed192580f35193550c00', '517131', '1374912549', '435024179', '', '0', '貌似一个月又要到底了，但见时光流似箭，岂知天道曲如弓[em]e125[/em]', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/MQ73KOP8GqGS48CQPADEp0nwfH5BkTFZpKFNY0OjtA8!/b/dJ7k*WKeCQAA&ek=1&kp=1&pt=0&bo=hAKOAYQCjgEBACc!&su=049833809#sce=30-1-1&rf=-311-0', '644,398', '2013/07/27', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19de01ed51f6d40e00', '33f1ed19de01ed51f6d40e00', '517131', '1374487006', '435024179', '', '0', 'Dodolog：《Fairy COCO》No.4\n想要说明的是，我对这种拥有特殊压抑气氛的妹纸图没有兴趣', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/hH4kFY*N*e9fXM6ulSC43Ybopu.aNaFG5c55*ldYw9I!/b/dPYzYmLaBgAA&ek=1&kp=1&pt=0&bo=xACgD8QAoA8KCCQ!&su=048812177#sce=30-1-1&rf=-311-0', '196,4000', '2013/07/22', null);
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed19e9b2e35162f70b00', '33f1ed19e9b2e35162f70b00', '517131', '1373876969', '435024179', '690266050', '1', 'Fairy COCO No.3', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/E1SkDNIpVFeCJnYT.rih6WJVUmWiGYXj01NlObu1Hvo!/b/dIM4.WK9BQAA&ek=1&kp=1&pt=0&bo=xACgD8QAoA8KCCQ!&su=098692705#sce=30-1-1&rf=-311-0', '196,4000', '2013/07/15', '3');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed196195da51e3030800', '33f1ed196195da51e3030800', '517131', '1373279585', '435024179', '', '0', '[em]e143[/em]', 'http://m.qpic.cn/psb?/ac58416c-1961-416c-9abf-8265152cb1d7/rdvXPdgoF2YsEg.3aFZ6EvQyGXMuAH7duWs2dY942RU!/b/dARzLGHPGgAA&ek=1&kp=1&pt=0&bo=WAOAAgAAAAABAP4!&su=0249543617#sce=30-1-1&rf=-311-0', '856,640', '2013/07/08', '1');
-INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/435024179/mood/33f1ed193febd651368c0d00', '33f1ed193febd651368c0d00', '517131', '1373039423', '435024179', '1353728291', '1', '[em]e124[/em]', 'http://qlogo3.store.qq.com/qzone/435024179/435024179/100', '0,0', '2013/07/05', '1');
+INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/136787510/mood/363627085edc0f56fdde0600', '363627085edc0f56fdde0600', '516107', '1443880030', '136787510', '435024179,29306912,123919272,348564808,429672974,505186179,582032581', '19', '那些年，我们上课偷偷玩过的4399[嘘][嘘]。 配图我的最爱。 哈哈哈。 ', 'http://b373.photo.store.qq.com/psb?/V138sfdV3DeTzW/du2NQzpj0wS.EiqEA5ssFpmi*O9U0mPLN7h8Xe3RU3U!/b/dHUBAAAAAAAA&bo=gAKAAgAAAAAFACM!', '640,640', '10-03 21:47', '2');
+INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/136787510/mood/3636270860ea6555b2b60c00', '3636270860ea6555b2b60c00', '516107', '1432742496', '136787510', '29306912,97623125,229780020,292608210,296405166,344712192', '42', '今天最后一句生日快乐。 对自己说。 [em]e258388[/em]', 'http://b37.photo.store.qq.com/psb?/V138sfdV3DeTzW/zG.YIPr7MFB1yvSdnRRdNGX9wixt8.Orzuca5VubMCA!/b/dCUAAAAAAAAA&bo=gAJwBAAAAAABANE!', '640,1136', '05-28 00:01', '22');
+INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/136787510/mood/36362708ccb5bf5410930800', '36362708ccb5bf5410930800', '516107', '1421850060', '136787510', '78934017,86552055,125544635,173511370,229145223,272019065', '41', ' 如果不能把我当成最特别的那个[em]e328584[/em]，我宁愿和自己谈恋爱[em]e328542[/em]。 ', 'http://b198.photo.store.qq.com/psb?/V138sfdV3DeTzW/C0ZM5ZpeEb18NVJK9K1AOzZISgRUm2*U3SILxM6HYkE!/b/dCGnDXaAKwAA&bo=VAIwAgAAAAABAEM!', '596,560', '01-21 22:21', '20');
+INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/136787510/mood/36362708b9170354aba50100', '36362708b9170354aba50100', '516107', '1409488825', '136787510', '754966116,29306912,39623692,125544635,229145223,229780020', '53', ' 坏脾气的小小美少女战士要回归啦。 结束了27天的旅行，拥抱生活，继续奋斗。 [em]e328513[/em][em]e328513[/em][em]e328513[/em]', 'http://b193.photo.store.qq.com/psb?/V138sfdV3DeTzW/iD83aD.1hPjclEIEm7lO1xz70B*c67OwvV4pnsYrEuY!/b/dL07EXNrBQAA&bo=gAJ.AwAAAAABANg!', '640,894', '08-31 20:40', '12');
+INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/136787510/mood/36362708f870eb53a4120f00', '36362708f870eb53a4120f00', '516107', '1407938808', '136787510', '754966116,33034358,75709277,125544635,229145223,275081853', '38', ' 只想活得坦然。 在每一个夕阳夕下的日子里，想起那片晚霞，都觉得温暖依旧。 （7年前写给自己的话）', 'http://b141.photo.store.qq.com/psb?/V138sfdV3DeTzW/aKGQK79MrBDNyftfixy2mZ23I4nARJaJMaCo3J0FmjA!/b/dF8.GlQQIgAA&bo=WgOAAgAAAAABAPw!', '858,640', '08-13 22:06', '16');
+INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/136787510/mood/36362708e8dd855347820500', '36362708e8dd855347820500', '516107', '1401282024', '136787510', '29306912,123919272,125544635,173511370,191423463,229145223', '62', ' 5月27日之前，一直以为走过二十岁这个美好的年纪，铭记在心、不舍的太多，会让我步伐沉重。过了这一天，却发现能坦然接受成长的洗礼，充满快乐和力量。原来是因为有你们啊。谢谢你们～ [em]e328123[/em][em]e328123[/em][em]e328123[/em] ', 'http://b279.photo.store.qq.com/psb?/V138sfdV3DeTzW/ix1gwbaLSu2O1eVnIaAE3H.6nZHVL6sr5vcC8TWdBwU!/b/dHLGU6ZaGAAA&bo=gAJ.AwAAAAABANg!', '640,894', '05-28 21:00', '28');
+INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/136787510/mood/36362708df8a6f5371440e00', '36362708df8a6f5371440e00', '516107', '1399818975', '136787510', '754966116,29306912,39623692,229145223,229780020,281529535', '46', '你是我的光芒。心存感激被照耀着～ 祝福你，亲爱的妈妈。@{uin:754966116,nick:  零碎。,who:1} [em]e327880[/em]', 'http://b279.photo.store.qq.com/psb?/V138sfdV3DeTzW/kZaoRq96uszzTdgObWISrKlHFyc4PM221GIf77iIoR8!/b/dMfkWabiDwAA&bo=gAJ.AwAAAAABANg!', '640,894', '05-11 22:36', '4');
+INSERT INTO `ss_friend_shuoshuo` VALUES ('http://user.qzone.qq.com/136787510/mood/363627087164475339500600', '363627087164475339500600', '516107', '1397187697', '136787510', '386637979,419205743,446171196,578715951,593376217,594387159', '11', ' 第一次因为无助而哭泣。太没用，没保护好你们，希望你们好好的。这是需要被记住的。', null, null, '04-11 11:41', '11');
 
 -- ----------------------------
 -- Table structure for `ss_user`
@@ -2459,4 +2493,60 @@ CREATE TABLE `ss_user` (
 -- ----------------------------
 -- Records of ss_user
 -- ----------------------------
-INSERT INTO `ss_user` VALUES ('154894476', null, null, null, null, null, null, null, 'http://qlogo1.store.qq.com/qzone/154894476/154894476/100?1408114155', '火之灵', null, '7', '1', '深圳', '全喜阳', null);
+INSERT INTO `ss_user` VALUES ('1040145213', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('1040333054', null, null, null, null, null, null, null, 'http://qlogo3.store.qq.com/qzone/1040333054/1040333054/100?1402221236', '不乱于心…', null, null, '1', null, '', null);
+INSERT INTO `ss_user` VALUES ('1066933552', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('1107450107', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('1195498607', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('1223821118', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('125544635', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('1329997407', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('136787510', '0', '0', '0', '0', '', '-1', '', 'http://qlogo3.store.qq.com/qzone/136787510/136787510/100?1291965444', '          美年达。', '', null, null, null, '', '');
+INSERT INTO `ss_user` VALUES ('1511614401', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('154894476', '0', '0', '0', '0', '深圳', '2', '中国', 'http://qlogo1.store.qq.com/qzone/154894476/154894476/100?1408114155', '火之灵', '广东', '7', '1', '深圳', '全喜阳', '');
+INSERT INTO `ss_user` VALUES ('1697982841', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('1791929056', null, null, null, null, null, null, null, 'http://qlogo1.store.qq.com/qzone/1791929056/1791929056/100?1388668344', 'ぁ Simple', null, null, '2', '杭州', '', null);
+INSERT INTO `ss_user` VALUES ('1904157220', null, null, null, null, null, null, null, 'http://qlogo1.store.qq.com/qzone/1904157220/1904157220/100?1393681078', '染指阳光、向日葵永不落泪', null, null, '2', '株洲', '', null);
+INSERT INTO `ss_user` VALUES ('1904804598', null, null, null, null, null, null, null, 'http://qlogo3.store.qq.com/qzone/1904804598/1904804598/100?1386945973', '似水流年', null, null, null, '长沙', '', null);
+INSERT INTO `ss_user` VALUES ('2064536881', null, null, null, null, null, null, null, 'http://qlogo2.store.qq.com/qzone/2064536881/2064536881/100?1445100024', '啊丁', null, null, '1', '沙坪坝', '', null);
+INSERT INTO `ss_user` VALUES ('2091223326', null, null, null, null, null, null, null, 'http://qlogo3.store.qq.com/qzone/2091223326/2091223326/100?1438015684', '会呼吸的痛', null, null, null, '赣州', '', null);
+INSERT INTO `ss_user` VALUES ('2331742353', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('272019065', null, null, null, null, null, null, null, 'http://qlogo2.store.qq.com/qzone/272019065/272019065/100?1393643073', '淡定', null, null, '1', '阿德拉尔', '', null);
+INSERT INTO `ss_user` VALUES ('277479725', null, null, null, null, null, null, null, 'http://qlogo2.store.qq.com/qzone/277479725/277479725/100?1407169221', '心哥哥好哇塞', null, '6', '1', '青浦', '', null);
+INSERT INTO `ss_user` VALUES ('281529535', null, null, null, null, null, null, null, 'http://qlogo4.store.qq.com/qzone/281529535/281529535/100?0', '鹰', null, null, '1', '杭州', '', null);
+INSERT INTO `ss_user` VALUES ('29306912', null, null, null, null, null, null, null, 'http://qlogo1.store.qq.com/qzone/29306912/29306912/100?1434688224', '：仅此而已′', null, null, '2', '青岛', '', null);
+INSERT INTO `ss_user` VALUES ('307645563', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('3277660657', null, null, null, null, null, null, null, 'http://qlogo2.store.qq.com/qzone/3277660657/3277660657/100?1436465315', '如意', null, null, '1', '温州', '', null);
+INSERT INTO `ss_user` VALUES ('344712192', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('358248940', null, null, null, null, null, null, null, 'http://qlogo1.store.qq.com/qzone/358248940/358248940/100?1436002450', '空城', null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('365456409', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('386637979', null, null, null, null, null, null, null, 'http://qlogo4.store.qq.com/qzone/386637979/386637979/100?1367832792', '   我不吃苹果的。', null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('409153477', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('416191091', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('423090175', null, null, null, null, null, null, null, 'http://qlogo4.store.qq.com/qzone/423090175/423090175/100?1277525810', '爽歪歪', null, null, '1', null, '', null);
+INSERT INTO `ss_user` VALUES ('435024179', null, null, null, null, null, null, null, 'http://qlogo4.store.qq.com/qzone/435024179/435024179/100?1334551307', '#1', null, '6', '1', '长沙', '', null);
+INSERT INTO `ss_user` VALUES ('443810062', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('446734139', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('455752400', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('467526636', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('505665920', null, null, null, null, null, null, null, 'http://qlogo1.store.qq.com/qzone/505665920/505665920/100?1425110908', '加多宝๑', null, '6', '1', null, '', null);
+INSERT INTO `ss_user` VALUES ('530511727', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('545606420', null, null, null, null, null, null, null, 'http://qlogo1.store.qq.com/qzone/545606420/545606420/100?1246194649', '永不服输的我', null, null, '1', '宁波', '', null);
+INSERT INTO `ss_user` VALUES ('553417593', null, null, null, null, null, null, null, 'http://qlogo2.store.qq.com/qzone/553417593/553417593/100?1346029872', '╭ι．渲蒅ゝ', null, null, '1', null, '', null);
+INSERT INTO `ss_user` VALUES ('562150797', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('568845995', null, null, null, null, null, null, null, 'http://qlogo4.store.qq.com/qzone/568845995/568845995/100?1321010557', '     D    ', null, null, '1', null, '', null);
+INSERT INTO `ss_user` VALUES ('583710161', null, null, null, null, null, null, null, 'http://qlogo2.store.qq.com/qzone/583710161/583710161/100?1370017260', 'の、舞影零乱﹌', null, null, '2', '衡阳', '', null);
+INSERT INTO `ss_user` VALUES ('593376217', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('626461752', null, null, null, null, null, null, null, 'http://qlogo1.store.qq.com/qzone/626461752/626461752/100?1436683703', '花落ヽ莫相离', null, null, '1', '嘉兴', '', null);
+INSERT INTO `ss_user` VALUES ('754966116', '0', '0', '0', '0', '', '8', '', 'http://qlogo1.store.qq.com/qzone/754966116/754966116/100?1233484718', '  零碎。', '', null, '2', null, '', '');
+INSERT INTO `ss_user` VALUES ('75709277', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('757114617', '24', '0', '0', '127', '', '4', '中国', 'http://qlogo2.store.qq.com/qzone/757114617/757114617/100?1446299941', 'Enigmatic', '湖南', null, '2', '湖南', '罗惠友', '[ft=,6,][ft=#52f807,,隶书]当我安慰不了你，或你不再关心我。请记住，十二只白鹭飞过的青天。[/ft][/ft]');
+INSERT INTO `ss_user` VALUES ('784881489', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('810526156', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('827914563', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('851726353', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('854537856', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('871645621', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('915903499', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('952328399', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);
+INSERT INTO `ss_user` VALUES ('985856339', null, null, null, null, null, null, null, null, null, null, null, null, null, '', null);

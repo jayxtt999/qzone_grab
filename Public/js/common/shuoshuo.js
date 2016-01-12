@@ -24,6 +24,12 @@ jQuery(document).ready(function () {
             layer.msg('请先选择好友',function(){$(".findfriend").button('reset')});
             return false;
         }
+        $(".scroller").html("")
+        //加载拉取状态
+        Metronic.blockUI({
+            target: '.scroller',
+            boxed: true
+        });
         $("#iframe").attr("src","/home/console/getshuoshuoall?uqq="+uqq+"&r="+new Date().getTime())
     })
 
@@ -39,12 +45,7 @@ function getShuoshuo(uin){
     if(!lodingSsOver){
         return false
     }
-    $(".scroller").html("")
-    //加载拉取状态
-    Metronic.blockUI({
-        target: '.scroller',
-        boxed: true
-    });
+
     $.ajax({
         "url":"/home/home/showShuoshuoList",
         "dataType":"json",
@@ -58,7 +59,7 @@ function getShuoshuo(uin){
                 var cellid = v.cellid;
                 var user = v.user.realname?v.user.realname:v.user.nickname;
                 var likeStyle = v.islike?"fa fa-thumbs-up":"fa fa-thumbs-o-up";
-                html+="<div class='media'> <a href='#' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v.user.uin+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+ v.timeline+"</span></h6><h4>"+ v.summary+"</h4><div class='clearfix'><span class='btn'><i class='fa  fa-comments-o'></i>评论("+ v.cntnum+")</span><span class='btn likes' onclick='like(this)' data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='"+likeStyle+"'></i>(<em>"+ v.likenum+"</em>)</span></div>";
+                html+="<div class='media'> <a href='#' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v.user.uin+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+ v.timeline+"</span></h6><h4>"+ v.summary+"</h4><div class='clearfix'><span class='btn'><i class='fa  fa-comments-o'></i>评论("+ v.cmtnum+")</span><span class='btn likes' onclick='like(this)' data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='"+likeStyle+"'></i>(<em>"+ v.likenum+"</em>)</span></div>";
 
                 if(v.likenum>0){
                     html+="<div class='clearfix '><span class='media'><a href='javascript:;' class='pull-left'><i class='fa fa-thumbs-up' style='font-size: 20px;line-height: 25px'></i></a>"
@@ -78,7 +79,6 @@ function getShuoshuo(uin){
                             $.each(v3.replys,function(n4,v4){
                                 var user = v4.user.realname?v4.user.realname:v4.user.nickname
                                 html+="<div class='media'><a href='#' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v4.user.qq+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+v4.date+" / <a href='javascript:;' onclick='comment(this)'>评论 </a> </span></h6><h4>回复:"+v4.content+"</h4></div></div>";
-
                             })
                         }
 

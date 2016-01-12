@@ -96,7 +96,6 @@ class ConsoleController extends AbstractController
 
         $this->shuoshuoNum = $result['total'];
         $friendShuoShuo = M('friend_shuoshuo');
-        $lastShuoshuo = $friendShuoShuo->where(array('uin' => $uqq))->order("time desc")->find();
         $friendComment = M('friend_comment');
         $friendReplys = M('friend_replys');
         foreach ($result["msglist"] as $v){
@@ -105,47 +104,58 @@ class ConsoleController extends AbstractController
                 continue;
             }
             consoleShow("处理:".$v['tid']."开始");
-            // 存储说说
-            //获取数据库最后发布的说说日期进行比对，由于说说不会有更新且程序没必要同步删除。所以只需要同步增加
-            //$info = M('friend_shuoshuo')->field(true)->find($id);
-            $data = array();
-            $data['uin'] = $uin = $v['uin'];
-            $data['time'] = $v['created_time'];
-            //如果存储的记录的最近时间大于获取时间 则直接返回
             $cellid = $v['tid'];
-            if ($data['time'] > $lastShuoshuo['time']) {
-                $data['cellid'] = $cellid;
-                $where = array();
-                $where['uin'] = $data['uin'];
-                $where['cellid'] = $data['cellid'];
-                //理论上不会有重复数据
-                /*$row = $friendShuoShuo->where($where)->find();
-                if ($row) {
-                    continue;
-                }*/
-                $data['curlikekey'] = "http://user.qzone.qq.com/".$uqq."/mood/".$cellid;
-                //http://r.qzone.qq.com/cgi-bin/user/qz_opcnt2?_stp=1452151686481&unikey=http://user.qzone.qq.com/562809727/mood/7fcb8b21739c8c56963f0500
-                $data['operatemask'] = $v['rt_certified']?"98315":"516107";
-                //获取赞信息
-                //_stp 实际上是13位的时间戳 一般让请求不被浏览器缓存即可
-                $likeUrl="http://r.qzone.qq.com/cgi-bin/user/qz_opcnt2?_stp=".rand(1,999)."&unikey=".$data['curlikekey'].".1&fupdate=1&g_tk=".$gtk;
-                $likeRes = $this->sendToQq($likeUrl);
-                $likeRes = $this->filterCallback($likeRes);
-                $likeRes = json_decode($likeRes,true);
+            $curlikekey = "http://user.qzone.qq.com/".$uqq."/mood/".$cellid;
 
-                $likeNum = $likeRes['data'][0]['current']['likedata']['cnt'];
-                $likemansVs = "";
-                if($likeNum>0){
-                    $likemansV = array();
-                    $likemans = $likeRes['data'][0]['current']['likedata']['list'];
-                    foreach ($likemans as $mans) {
-                        $likemansV[] = $mans[0];
-                    }
-                    $likemansVs = implode(",", $likemansV);
+            //判断是否需要更新评论数量及其点赞数量
+            $uin = $v['uin'];
+            $where = array();
+            $where['uin'] = $uin;
+            $where['cellid'] = $cellid;
+            $row = $friendShuoShuo->where($where)->find();
+
+            //获取赞信息
+            //_stp 实际上是13位的时间戳 一般让请求不被浏览器缓存即可
+            $likeUrl="http://r.qzone.qq.com/cgi-bin/user/qz_opcnt2?_stp=".rand(1,999)."&unikey=".$curlikekey.".1&fupdate=1&g_tk=".$gtk;
+            $likeRes = $this->sendToQq($likeUrl);
+            $likeRes = $this->filterCallback($likeRes);
+            $likeRes = json_decode($likeRes,true);
+
+            $likeNum = $likeRes['data'][0]['current']['likedata']['cnt'];
+            $likemansVs = "";
+            if($likeNum>0){
+                $likemansV = array();
+                $likemans = $likeRes['data'][0]['current']['likedata']['list'];
+                foreach ($likemans as $mans) {
+                    $likemansV[] = $mans[0];
+                }
+                $likemansVs = implode(",", $likemansV);
+            }
+            $ilike = $likeRes['data'][0]['current']['likedata']['ilike'];
+            if($ilike){
+                $likemansVs = $this->qq['qq'].",".$likemansVs;
+            }
+            if ($row){
+                if(($row['likenum']!=$likeNum) || ($row['cmtnum']!=$v['cmtnum'])){
+                    $upDateArr = array(
+                        'likenum'=>$likeNum,
+                        'cmtnum'=>$v['cmtnum'],
+                        'likemans'=>$likemansVs,
+                    );
+                    $friendShuoShuo->where($where)->save($upDateArr);
                 }
 
+            }else{
+                $data = array();
+                $data['uin'] = $uin = $v['uin'];
+                $data['time'] = $v['created_time'];
+                $data['cellid'] = $cellid;
                 $data['likemans'] = $likemansVs;
                 $data['likenum'] = $likeNum?$likeNum: 0;
+                $data['curlikekey'] = $curlikekey;
+                //http://r.qzone.qq.com/cgi-bin/user/qz_opcnt2?_stp=1452151686481&unikey=http://user.qzone.qq.com/562809727/mood/7fcb8b21739c8c56963f0500
+                $data['operatemask'] = $v['rt_certified']?"98315":"516107";
+
                 $data['summary'] = $v['content'];
 
                 if($v['pic']){
@@ -153,7 +163,7 @@ class ConsoleController extends AbstractController
                     $data['summary_img_wh'] = $v['pic'][0]['b_width'].",".$v['pic'][0]['b_height'];
                 }
                 $data['timeline'] = date("m-d H:i",$v['created_time']);
-                $data['cntnum'] = $v['cmtnum'];
+                $data['cmtnum'] = $v['cmtnum'];
                 $r = $friendShuoShuo->add($data);
                 if ($r) {
                     consoleShow("##预存储:<a target='_blank' href='" . $data['curlikekey'] . "'>" . $data['cellid'] . "</a>成功");
@@ -161,9 +171,11 @@ class ConsoleController extends AbstractController
                     consoleShow("##预存储:<a target='_blank' href='" . $data['curlikekey'] . "' style='text-decoration: line-through'>" . $data['cellid'] . "失败</a>");
                 }
             }
+
+
             // 存储评论
             if ($v['cmtnum'] > 0) {
-                consoleShow("####获取相关评论,数量：".$v['cntnum']);
+                consoleShow("####获取相关评论,数量：".$v['cmtnum']);
                 $comments = $v['commentlist'];
                 foreach ($comments as $v2) {
                     $data = array();
