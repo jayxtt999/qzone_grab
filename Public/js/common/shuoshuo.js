@@ -84,7 +84,7 @@ function getShuoshuo(uin){
 
                     })
                 }
-                html +="<div class='chat-form'><div class='input-cont'><input class='form-control ic"+cellid+"' type='text' placeholder='我也说一句'/></div><div class='btn-cont'><span class='arrow'></span><a href='' class='btn blue icn-only'><i class='fa fa-check icon-white'></i></a></div></div></div></div>";
+                html +="<div class='chat-form'><div class='input-cont'><input class='form-control ic"+cellid+"' type='text' placeholder='我也说一句'/></div><div class='btn-cont'><span class='arrow'></span><a href='javascript:;' class='btn blue icn-only repSs'><i class='fa fa-check icon-white'></i></a></div></div></div></div>";
             });
             $(".findfriend").button('reset')
             $(".scroller").html(html)
@@ -119,12 +119,26 @@ function comment(z){
         return false
     }
     //加载回复评论区域  隐藏主评论区域
-    tpl = "<div class='input-group input-medium reComment'><input type='text' class='form-control' placeholder='输入...'><span class='input-group-btn'><button class='btn  blue' type='button'>回复</button></span></div>";
+    tpl = $("<div class='input-group input-medium reComment'><input type='text'  class='form-control' placeholder='输入...'><span class='input-group-btn'><button class='btn  blue' type='button'>回复</button></span></div>");
     f =  $(z).parent().parent().parent()
     f.find(".reComment").remove()
-    f.append(tpl);
+    f.append(tpl)
+    tpl.find("input").focus();
     $(z).data("ison",true)
 
+}
+
+
+//添加点赞者头像
+function avatarShow(z,qq){
+    insertHtml = "<a href='http://user.qzone.qq.com/435024179' class='pull-left' target='_blank'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&amp;dst_uin=435024179&amp;src_uin=www.xietaotao.cn&amp;fid=blog&amp;spec=100' class='media-object' style='width:30px;height:30px'></a>";
+    $(z).parent().next().find(".media a").eq(0).after(insertHtml);
+
+}
+
+//移除点赞者头像
+function avatarHide(z,qq){
+    $(z).parent().next().find(".media a").eq(1).remove();
 }
 
 //赞
@@ -147,13 +161,19 @@ function like(z){
         "success":function(d){
             if(d.status){
                 if(c){
+                    //拇指样式
                     $(z).find("i").removeClass("fa-thumbs-o-up").addClass("fa-thumbs-up")
                     num = parseInt($(z).find("em").text())
                     $(z).find("em").text(num+1)
+                    //添加点赞者头像
+                    avatarShow(z,d.qq)
                 }else{
+                    //拇指样式
                     $(z).find("i").removeClass("fa-thumbs-up").addClass("fa-thumbs-o-up")
                     num = parseInt($(z).find("em").text())
                     $(z).find("em").text(num-1)
+                    //移除点赞者头像
+                    avatarHide(z,d.qq)
                 }
             }else{
                 layer.msg(d.msg,function(){});
@@ -162,19 +182,16 @@ function like(z){
     })
 }
 
-
 function commentShow(z){
 
     cellid = $(z).attr("data-cellid")
-
-    $(".ic"+cellid).pulsate({
+    $(".ic"+cellid).focus();
+    /*$(".ic"+cellid).pulsate({
         color: "#399bc3",
         repeat: false
-    });
+    });*/
 
 }
-
-
 
 
 

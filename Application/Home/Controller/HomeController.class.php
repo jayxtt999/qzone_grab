@@ -96,6 +96,9 @@ class HomeController extends AbstractController
 
 
 
+
+
+
     public function like(){
 
         $uin = I('post.uin');
@@ -127,8 +130,47 @@ class HomeController extends AbstractController
             $url = "http://w.cnc.qzone.qq.com/cgi-bin/likes/internal_unlike_app?g_tk=".$this->qq['gtk'];
         }
         $res = $this->sendToQq($url,array(),$data);
-        return $this->ajaxReturn(array("status"=>true));
+        //返回点赞者
+        return $this->ajaxReturn(array("status"=>true,"qq"=>$this->qq['qq']));
 
     }
+
+
+    public function commentSs(){
+        $uin = I('post.uin');
+        $cid = I('post.cid');
+        $content = I('post.content');
+        $private = I('post.private');
+        $url = "http://taotao.qzone.qq.com/cgi-bin/emotion_cgi_re_feeds?g_tk=".$this->qq['gtk'];
+        if(!$uin || !$cid){
+            return $this->ajaxReturn(array("status"=>false,"msg"=>"参数错误"));
+        }
+        if(!$content){
+            return $this->ajaxReturn(array("status"=>false,"msg"=>"内容不能为空"));
+        }
+        //是否为私密
+        $private = $private?$private:0;
+        $data = array(
+            "topicId"=>$uin."_".$cid."_1",
+            "feedsType"=>"100",
+            "inCharset"=>"utf-8",
+            "outCharset"=>"utf-8",
+            "plat"=>"qzone",
+            "source"=>"ic",
+            "hostUin"=>$uin,
+            "platformid"=>"50",
+            "uin"=>$this->qq['qq'],
+            "format"=>"fs",
+            "ref"=>"feeds",
+            "content"=>$content,
+            "private"=>$private,
+            "paramstr"=>"1"
+        );
+        $res = $this->sendToQq($url,array(),$data);
+        preg_match("\"message\"\:\"(.*?)\"",$res,$results);
+
+
+    }
+
 
 }
