@@ -59,7 +59,7 @@ function getShuoshuo(uin){
                 var cellid = v.cellid;
                 var user = v.user.realname?v.user.realname:v.user.nickname;
                 var likeStyle = v.islike?"fa fa-thumbs-up":"fa fa-thumbs-o-up";
-                html+="<div class='media'> <a href='#' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v.user.uin+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+ v.timeline+"</span></h6><h4>"+ v.summary+"</h4><div class='clearfix'><span class='btn'><i class='fa  fa-comments-o'></i>评论("+ v.cmtnum+")</span><span class='btn likes' onclick='like(this)' data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='"+likeStyle+"'></i>(<em>"+ v.likenum+"</em>)</span></div>";
+                html+="<div class='media'> <a href='#' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v.user.uin+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' style='width: 50px;height: 50px' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+ v.timeline+"</span></h6><h4>"+ v.summary+"</h4><div class='clearfix'><span class='btn' onclick='commentShow(this)' data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='fa  fa-comments-o'></i>评论(<em>"+ v.cmtnum+"</em>)</span><span class='btn likes' onclick='like(this)' data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='"+likeStyle+"'></i>(<em>"+ v.likenum+"</em>)</span></div>";
 
                 if(v.likenum>0){
                     html+="<div class='clearfix '><span class='media'><a href='javascript:;' class='pull-left'><i class='fa fa-thumbs-up' style='font-size: 20px;line-height: 25px'></i></a>"
@@ -84,7 +84,7 @@ function getShuoshuo(uin){
 
                     })
                 }
-                html +="<div class='chat-form'><div class='input-cont'><input class='form-control' type='text' placeholder='我也说一句'/></div><div class='btn-cont'><span class='arrow'></span><a href='' class='btn blue icn-only'><i class='fa fa-check icon-white'></i></a></div></div></div></div>";
+                html +="<div class='chat-form'><div class='input-cont'><input class='form-control ic"+cellid+"' type='text' placeholder='我也说一句'/></div><div class='btn-cont'><span class='arrow'></span><a href='' class='btn blue icn-only'><i class='fa fa-check icon-white'></i></a></div></div></div></div>";
             });
             $(".findfriend").button('reset')
             $(".scroller").html(html)
@@ -95,6 +95,7 @@ function getShuoshuo(uin){
 
 }
 
+//关闭评论
 function closeComment(z){
 
     layer.confirm('你要关闭评论吗？', {
@@ -126,6 +127,7 @@ function comment(z){
 
 }
 
+//赞
 function like(z){
     if($(z).find("i").hasClass("fa-thumbs-o-up")){
         c = true
@@ -160,6 +162,17 @@ function like(z){
     })
 }
 
+
+function commentShow(z){
+
+    cellid = $(z).attr("data-cellid")
+
+    $(".ic"+cellid).pulsate({
+        color: "#399bc3",
+        repeat: false
+    });
+
+}
 
 
 

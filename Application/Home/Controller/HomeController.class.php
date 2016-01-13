@@ -66,7 +66,7 @@ class HomeController extends AbstractController
                 $result[$k]['likemansAndNum'] = $v['likenum']-count($likemansArr);
             }
             $result[$k]['user'] = $this->getUserInfo($uqq);
-            if($v['cntnum']){
+            if($v['cmtnum']){
                 $comment = $ssLogic->getComment($uqq,$v['cellid']);
                 foreach($comment as $k2=>$v2){
                     $comment[$k2]['date'] = date("Y-m-d H:i",$v2['time']);
