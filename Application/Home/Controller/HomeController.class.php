@@ -137,38 +137,86 @@ class HomeController extends AbstractController
 
 
     public function commentSs(){
+
         $uin = I('post.uin');
-        $cid = I('post.cid');
+        $hostuin = I('post.hostuin');
+        $cid = I('post.cellid');
+        $commentId = I('post.commentid');
+        $commentUin = I('post.commentuin');
+
         $content = I('post.content');
         $private = I('post.private');
-        $url = "http://taotao.qzone.qq.com/cgi-bin/emotion_cgi_re_feeds?g_tk=".$this->qq['gtk'];
+
+        $url = "http://taotao.qzone.qq.com/cgi-bin/emotion_cgi_re_feeds?g_tk=".$this->qq['gtk2'];
         if(!$uin || !$cid){
             return $this->ajaxReturn(array("status"=>false,"msg"=>"参数错误"));
         }
-        if(!$content){
+        if(!trim($content)){
             return $this->ajaxReturn(array("status"=>false,"msg"=>"内容不能为空"));
         }
         //是否为私密
         $private = $private?$private:0;
         $data = array(
-            "topicId"=>$uin."_".$cid."_1",
+            "topicId"=>$uin."_".$cid."__1",
             "feedsType"=>"100",
             "inCharset"=>"utf-8",
             "outCharset"=>"utf-8",
             "plat"=>"qzone",
             "source"=>"ic",
-            "hostUin"=>$uin,
+            "hostUin"=>$hostuin,
             "platformid"=>"50",
-            "uin"=>$this->qq['qq'],
+            "uin"=>$uin,
             "format"=>"fs",
             "ref"=>"feeds",
             "content"=>$content,
             "private"=>$private,
             "paramstr"=>"1"
         );
-        $res = $this->sendToQq($url,array(),$data);
-        preg_match("\"message\"\:\"(.*?)\"",$res,$results);
+        if($commentId){
+            $data['commentId'] = $commentId;
+            $data['commentUin'] = $uin;
+        }
 
+
+/*topicId	136787510_363627085edc0f56fdde0600__1
+feedsType	100
+inCharset	utf-8
+outCharset	utf-8
+plat	qzone
+source	ic
+hostUin	136787510
+isSignIn
+platformid	52
+uin	435024179
+format	fs
+ref	feeds
+content	@{uin:435024179,nick:#1,auto:1} ccc2
+commentId	6
+commentUin	435024179
+richval
+richtype
+private	0
+paramstr	2*/
+
+
+
+        $res = $this->sendToQq($url,array(),$data);
+        preg_match("/\"message\"\:\"(.*?)\"/",$res,$results);
+        $message = $results[1];
+        if($message){
+            return $this->ajaxReturn(array("status"=>false,"msg"=>$message));
+        }else{
+            $qq = $this->getUserInfo($this->qq['qq']);
+            $v = array(
+                "uin"=>$uin,
+                "cid"=>$cid,
+                "content"=>$content,
+                "user"=>$qq['nickname'],
+                "qq"=>$qq['qq'],
+                "date"=>date("Y-m-d H:i:s"),
+            );
+            return $this->ajaxReturn(array("status"=>true,"data"=>$v));
+        }
 
     }
 
