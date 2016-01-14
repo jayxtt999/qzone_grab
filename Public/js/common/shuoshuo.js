@@ -135,7 +135,7 @@ jQuery(document).ready(function () {
                     v = d.data
                     //渲染dom
                     layer.alert('评论成功',{ icon: 1})
-                    tpl = "<div class='media shuoshuoRow'><a href='#' class='pull-left'><img alt=''src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v.qq+"&src_uin=www.xietaotao.cn&fid=blog&spec=100'  class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+ v.user+"<span>&nbsp&nbsp"+v.date+" / <a class='commentOther' data-cellid="+ v.cellid+" data-uin="+ v.uin+" href='javascript:;'>评论 </a> </span></h6><h4>"+v.content+"</h4></div></div>";
+                    tpl = "<div class='media shuoshuoRow'><a href='#' class='pull-left'><img alt=''src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v.qq+"&src_uin=www.xietaotao.cn&fid=blog&spec=100'  class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+ v.user+"<span>&nbsp&nbsp"+v.date+" / <a class='commentOther' data-host-uin="+ v.hostUin+"  data-commentid="+ v.commentid+" data-cellid="+ v.cid+" data-uin="+ v.uin+" href='javascript:;'>评论 </a> </span></h6><h4>"+v.content+"</h4></div></div>";
                     z.parent().parent().before(tpl)
                 }else{
                     layer.msg(d.msg,function(){});

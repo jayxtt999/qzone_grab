@@ -138,82 +138,99 @@ class HomeController extends AbstractController
 
     public function commentSs(){
 
+        /*
+            这一块与前端交互起来非常麻烦，估计以后会忘记
+            可参考一下模版
+            这里有个type 是为了判断 评论与回复的前端样式  直接评论换行缩进  回复评论也是换行缩进 但是回复其它人的回复只需要换行
+            直接评论
+            uin	435024179
+            hostUin	164483642 //要评论说说的作者qq
+            topicId	164483642_3ad2cd0953ea7a53164d0e00 说说id
+            commentId 如果有这个id则表示为回复其它人的评论
+            commentUin	435024179 评论者
+            content	855555555555555555555555 内容
+            private	0 是否私密
+            with_fwd	0
+            to_tweet	0
+            hostuin	435024179 当前登录的qq
+            code_version	1
+            format	fs
+
+
+            回复
+            uin	435024179
+            hostUin	164483642
+            topicId	164483642_3ad2cd09905796561bff0800
+            commentId	6
+            commentUin	164483642
+            content	@{uin:164483642,nick:Mas,auto:1} 000000321313
+            private	0
+            with_fwd	0
+            to_tweet	0
+            hostuin	435024179
+            code_version	1
+            format	fs
+
+
+        */
+
         $uin = I('post.uin');
-        $hostuin = I('post.hostuin');
+        $hostUin = I('post.hostuin');
         $cid = I('post.cellid');
         $commentId = I('post.commentid');
-        $commentUin = I('post.commentuin');
-
         $content = I('post.content');
         $private = I('post.private');
-
-        $url = "http://taotao.qzone.qq.com/cgi-bin/emotion_cgi_re_feeds?g_tk=".$this->qq['gtk2'];
+        $commentUin = $commentId?I('post.commentuin'):$this->qq['qq'];
+        $api = $commentId?"emotion_cgi_addreply_ugc":"emotion_cgi_addcomment_ugc";
+        $url = "http://taotao.qzone.qq.com/cgi-bin/".$api."?g_tk=".$this->qq['gtk2'];
         if(!$uin || !$cid){
             return $this->ajaxReturn(array("status"=>false,"msg"=>"参数错误"));
         }
         if(!trim($content)){
             return $this->ajaxReturn(array("status"=>false,"msg"=>"内容不能为空"));
         }
+        $type = $commentId?"rep":"com";
         //是否为私密
         $private = $private?$private:0;
         $data = array(
-            "topicId"=>$uin."_".$cid."__1",
-            "feedsType"=>"100",
-            "inCharset"=>"utf-8",
-            "outCharset"=>"utf-8",
-            "plat"=>"qzone",
-            "source"=>"ic",
-            "hostUin"=>$hostuin,
-            "platformid"=>"50",
-            "uin"=>$uin,
-            "format"=>"fs",
-            "ref"=>"feeds",
+            "uin"=>$this->qq['qq'],
+            "hostUin"=>$hostUin,
+            "topicId"=>$hostUin."_".$cid,
             "content"=>$content,
             "private"=>$private,
-            "paramstr"=>"1"
+            "commentUin"=>$commentUin,
+            "commentId"=>$commentId,
+            "with_fwd"=>0,
+            "to_tweet"=>0,
+            "to_tweet"=>0,
+            "hostuin"=>$this->qq['qq'],
+            "code_version"=>1,
+            "format"=>"fs",
+
         );
-        if($commentId){
-            $data['commentId'] = $commentId;
-            $data['commentUin'] = $uin;
-        }
 
 
-/*topicId	136787510_363627085edc0f56fdde0600__1
-feedsType	100
-inCharset	utf-8
-outCharset	utf-8
-plat	qzone
-source	ic
-hostUin	136787510
-isSignIn
-platformid	52
-uin	435024179
-format	fs
-ref	feeds
-content	@{uin:435024179,nick:#1,auto:1} ccc2
-commentId	6
-commentUin	435024179
-richval
-richtype
-private	0
-paramstr	2*/
-
-
-
+        print_r($data);
         $res = $this->sendToQq($url,array(),$data);
-        preg_match("/\"message\"\:\"(.*?)\"/",$res,$results);
-        $message = $results[1];
-        if($message){
-            return $this->ajaxReturn(array("status"=>false,"msg"=>$message));
+        //preg_match("/\"message\"\:\"(.*?)\"/",$res,$results);
+        preg_match("/frameElement.callback\((.*)\);/",$res,$results);
+        $results = json_decode($results[1],true);
+        var_dump($results);exit;
+
+        if($results['message']){
+            return $this->ajaxReturn(array("status"=>false,"msg"=>$results['message']));
         }else{
             $qq = $this->getUserInfo($this->qq['qq']);
             $v = array(
                 "uin"=>$uin,
                 "cid"=>$cid,
-                "content"=>$content,
+                "commentid"=>$results['tid'],
+                "content"=>$results['data']['content'],
                 "user"=>$qq['nickname'],
+                "hostUin"=>$hostUin,
                 "qq"=>$qq['qq'],
-                "date"=>date("Y-m-d H:i:s"),
+                "type"=>$type,
+                "date"=>date("Y-m-d H:i:s",$results['data']['postTime']),
             );
             return $this->ajaxReturn(array("status"=>true,"data"=>$v));
         }
