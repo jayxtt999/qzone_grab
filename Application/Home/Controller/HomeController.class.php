@@ -9,6 +9,9 @@ class HomeController extends AbstractController
     private $interval = 30;//自动赞,评论间隔时间 (分钟)
     private $autoCon = "【自动评论】";//小尾巴
 
+    /**
+     * 主页
+     */
     public function index()
     {
 
@@ -94,11 +97,9 @@ class HomeController extends AbstractController
 
     }
 
-
-
-
-
-
+    /**
+     * 点赞
+     */
     public function like(){
 
         $uin = I('post.uin');
@@ -135,7 +136,9 @@ class HomeController extends AbstractController
 
     }
 
-
+    /**
+     * 评论
+     */
     public function commentSs(){
 
         /*
@@ -143,11 +146,11 @@ class HomeController extends AbstractController
             可参考一下模版
             这里有个type 是为了判断 评论与回复的前端样式  直接评论换行缩进  回复评论也是换行缩进 但是回复其它人的回复只需要换行
             直接评论
-            uin	435024179
+            uin	435024179 当前登录的qq
             hostUin	164483642 //要评论说说的作者qq
             topicId	164483642_3ad2cd0953ea7a53164d0e00 说说id
             commentId 如果有这个id则表示为回复其它人的评论
-            commentUin	435024179 评论者
+            commentUin	435024179 回复谁
             content	855555555555555555555555 内容
             private	0 是否私密
             with_fwd	0
@@ -155,7 +158,6 @@ class HomeController extends AbstractController
             hostuin	435024179 当前登录的qq
             code_version	1
             format	fs
-
 
             回复
             uin	435024179
@@ -170,8 +172,6 @@ class HomeController extends AbstractController
             hostuin	435024179
             code_version	1
             format	fs
-
-
         */
 
         $uin = I('post.uin');
@@ -209,14 +209,10 @@ class HomeController extends AbstractController
 
         );
 
-
-        print_r($data);
         $res = $this->sendToQq($url,array(),$data);
-        //preg_match("/\"message\"\:\"(.*?)\"/",$res,$results);
+
         preg_match("/frameElement.callback\((.*)\);/",$res,$results);
         $results = json_decode($results[1],true);
-        var_dump($results);exit;
-
         if($results['message']){
             return $this->ajaxReturn(array("status"=>false,"msg"=>$results['message']));
         }else{
@@ -225,6 +221,7 @@ class HomeController extends AbstractController
                 "uin"=>$uin,
                 "cid"=>$cid,
                 "commentid"=>$results['tid'],
+                "commentuin"=>$qq['qq'],
                 "content"=>$results['data']['content'],
                 "user"=>$qq['nickname'],
                 "hostUin"=>$hostUin,

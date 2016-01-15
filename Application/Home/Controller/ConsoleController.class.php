@@ -28,6 +28,7 @@ class ConsoleController extends AbstractController
         ini_set('memory_limit', '512M');
         set_time_limit(0);
         $uqq = I('get.uqq');
+        $uqq = 136787510;
         if (empty($uqq)) {
             consoleShow("请先选择好友..");
             exit;
@@ -38,7 +39,7 @@ class ConsoleController extends AbstractController
         consoleShow("存储好友相关资料".$uqq."数据完成");
         session('uqq', $uqq);
         consoleShow("获取".$uqq."说说数据开始");
-        $res = $this->trampoline("getData", array("uqq" => $uqq, "gtk" => $this->qq['gtk'], "count" => 0));
+        $res = $this->trampoline("getData", array("uqq" => $uqq, "gtk" => $this->qq['gtk'], "limit" => 0));
         if ($res) {
             //$shuoshuoAll = F("shuoshuo_$uqq");
             //setcookie($uqq, "isPass", time() + 3600);
@@ -54,7 +55,11 @@ class ConsoleController extends AbstractController
 
     }
 
-
+    /**
+     * @param $callback
+     * @param $params
+     * @return mixed
+     */
     function trampoline($callback, $params)
     {
 
@@ -77,10 +82,10 @@ class ConsoleController extends AbstractController
     {
 
         $uqq = $params['uqq'];
-        $count = $params['count'];
+        $limit = $params['limit'];
         $gtk = $params['gtk'];
         //Todo 验证权限
-        $url="http://taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin=".$uqq."&inCharset=utf-8&outCharset=utf-8&hostUin=".$uqq."&notice=0&sort=0&pos=0&num=20&cgi_host=http%3A%2F%2Ftaotao.qq.com%2Fcgi-bin%2Femotion_cgi_msglist_v6&code_version=1&format=jsonp&need_private_comment=1&g_tk=".$gtk;
+        $url="http://taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin=".$uqq."&inCharset=utf-8&outCharset=utf-8&hostUin=".$uqq."&notice=0&sort=0&pos=".$limit."&num=20&cgi_host=http%3A%2F%2Ftaotao.qq.com%2Fcgi-bin%2Femotion_cgi_msglist_v6&code_version=1&format=jsonp&need_private_comment=1&g_tk=".$gtk;
         //有坑！！  这里不需要p_skey 不知道是什么鬼 0.0
         $result = $this->sendToQq($url,array("p_skey"=>""));
         $result = $this->filterCallback($result);
@@ -89,12 +94,13 @@ class ConsoleController extends AbstractController
             consoleShow($result['message']);
         }
         //好友是否隐藏说说
-        if ($result[total]>0 && !$result["msglist"]) {
+        if ($result['total']>0 && !$result["msglist"]) {
             consoleShow("####该好友隐藏了说说");
             return true;
         }
-
-        $this->shuoshuoNum = $result['total'];
+        if($limit==0){
+            $this->shuoshuoNum = $result['total'];
+        }
         $friendShuoShuo = M('friend_shuoshuo');
         $friendComment = M('friend_comment');
         $friendReplys = M('friend_replys');
@@ -226,9 +232,9 @@ class ConsoleController extends AbstractController
             consoleShow("处理:".$cellid."结束");
         }
 
-        if ($result["data"]["has_more"]) {
-            $count += 20;
-            $params["count"] = $count;
+        if ($limit<$result["total"]) {
+            $limit += 20;
+            $params["limit"] = $limit;
             return function () use ($params) {
                 return $this->getData($params);
             };
@@ -238,3 +244,8 @@ class ConsoleController extends AbstractController
 
 
 }
+
+
+
+
+

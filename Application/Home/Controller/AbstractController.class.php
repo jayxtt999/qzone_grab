@@ -104,7 +104,8 @@ class AbstractController  extends Controller{
 
 
     /**
-     * 说说通用核心发包接口  特别注意的是  这个cookie key组装的时候前面要有个空格，没有就会失败，这个原因找个许久，也比较奇葩不是以;分割么.....
+     * 通用核心发包接口
+     * 特别注意的是  这个cookie key组装的时候前面要有个空格，没有就会失败，这个原因找个许久，也比较奇葩不是以;分割么.....
      * @param $url
      * @param string $cookieCode
      * @return mixed
@@ -140,6 +141,11 @@ class AbstractController  extends Controller{
         return ($result);
 
     }
+
+
+
+
+
 
     /**
      * 获取qq用户信息
