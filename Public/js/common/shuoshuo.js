@@ -3,6 +3,8 @@ jQuery(document).ready(function () {
     Metronic.init(); // init metronic core componets
     Layout.init(); // init layout
     Demo.init(); // init demo features
+    //图片插件
+    $('.mix-grid').mixitup();
     //元素固定
     $('.pinconsole').pin();
     $('.pinshuoshuo ').pin();
@@ -145,6 +147,23 @@ jQuery(document).ready(function () {
         })
     })
 
+ /*   $(".scroller").on("mouseover",".fancybox-button",function(){
+
+        $(".fancybox-button").fancybox({
+            groupAttr: 'data-rel',
+            prevEffect: 'none',
+            nextEffect: 'none',
+            closeBtn: true,
+            helpers: {
+                title: {
+                    type: 'inside'
+                }
+            }
+        });
+    })*/
+
+
+
     $(".scroller").on("click",".commentOther",function(){
         z = $(this)
         if(z.data("ison")==true && $(z).data("ison")!="undefined"){
@@ -191,43 +210,80 @@ function getShuoshuo(uin){
         "data":{uin:uin},
         "success":function(d){
             var html = "";
-            $.each(d,function(n,v) {
-                //拼接说说评论与回复
-                var uin = v.uin;
-                var cellid = v.cellid;
-                var user = v.user.realname?v.user.realname:v.user.nickname;
-                var likeStyle = v.islike?"fa fa-thumbs-up":"fa fa-thumbs-o-up";
-                html+="<div class='media shuoshuoRow'> <a href='http://user.qzone.qq.com/"+uin+"' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ uin+"&src_uin=www.xietaotao.cn&fid=blog&spec=100'  class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+ v.timeline+"</span></h6><h4>"+ v.summary+"</h4><div class='clearfix'><span class='btn commentShow'  data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='fa  fa-comments-o'></i>评论(<em>"+ v.cmtnum+"</em>)</span><span class='btn likes'  data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='"+likeStyle+"'></i>(<em>"+ v.likenum+"</em>)</span></div>";
-                if(v.likenum>0){
-                    html+="<div class='clearfix'><span class='media'><a href='javascript:;' class='pull-left'><i class='fa fa-thumbs-up' style='font-size: 20px;line-height: 25px'></i></a>"
-                    $.each(v.likemansArr,function(n2,v2) {
-                        html+="<a href='http://user.qzone.qq.com/"+v2+"' class='pull-left' target='_blank'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v2+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' class='media-object likeAva'></a>"
-                    })
-                    if(v.likemansAndNum){
-                        html+="<span class='pull-left' style='line-height: 30px;'>等"+v.likemansAndNum+"人觉得很赞</span>"
-                    }
-                    html+="</span></div><hr/>";
-                }
+            if(d && (d.length>0)){
+                $.each(d,function(n,v) {
+                    //拼接说说评论与回复
+                    var uin = v.uin;
+                    var cellid = v.cellid;
+                    var user = v.user.realname?v.user.realname:v.user.nickname;
+                    var likeStyle = v.islike?"fa fa-thumbs-up":"fa fa-thumbs-o-up";
+                    html+="<div class='media shuoshuoRow'> <a href='http://user.qzone.qq.com/"+uin+"' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ uin+"&src_uin=www.xietaotao.cn&fid=blog&spec=100'  class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+ v.timeline+"</span></h6><h4>"+ v.summary+"</h4>";
 
-                if(v.comment){
-                    $.each(v.comment,function(n3,v3){
-                        var user = v3.user.realname?v3.user.realname:v3.user.nickname
-                        html+="<div class='media shuoshuoRow'><a href='http://user.qzone.qq.com/"+v3.user.qq+"' class='pull-left'><img alt=''src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v3.user.qq+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+v3.date+" / <a class='commentOther' data-commentuin="+v3.fuin+" data-commentid="+v3.commentid+" data-host-uin="+uin+" data-cellid="+v3.cellid+" data-uin="+v3.user.qq+" href='javascript:;'>评论 </a> </span></h6><h4>"+v3.content+"</h4></div></div>";
-                        if(v3.replys){
-                            $.each(v3.replys,function(n4,v4){
-                                var user = v4.user.realname?v4.user.realname:v4.user.nickname
-                                html+="<div class='media shuoshuoRow'><a href='http://user.qzone.qq.com/"+v4.user.qq+"' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v4.user.qq+"&src_uin=www.xietaotao.cn&fid=blog&spec=100'  class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+v4.date+" / <a class='commentOther' data-commentuin="+v4.fuin+" data-commentid="+v4.commentid+" data-host-uin="+uin+" data-cellid="+v4.cellid+" data-uin="+v4.user.qq+" href='javascript:;'>评论 </a> </span></h6><h4>回复:"+v4.content+"</h4></div></div>";
+
+                    if(v.img && (v.img).length>0){
+                        html+="<div class='clearfix'><div class='row mix-grid'>";
+                        $.each(v.img,function(imgk,imgv) {
+                            /*/home/home/showpic?picurl="+imgv.url+"*/
+                            html+=" <div class='col-md-3 col-sm-4 mix category_1' style='display: block; opacity: 1;'><div class='mix-inner'><img class='img-responsive' src='/Public/assets/admin/pages/media/works/img1.jpg' alt=''><div class='mix-details'><a class='mix-link'><i class='fa fa-link'></i></a><a class='mix-preview fancybox-button' href='"+imgv.url+"' target='_blank' data-rel='fancybox-button'><i class='fa fa-search'></i></a></div></div></div>";
+                        })
+                        html+="</div></div>";
+                    }
+                    html+="<div class='clearfix'><span class='btn commentShow'  data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='fa  fa-comments-o'></i>评论(<em>"+ v.cmtnum+"</em>)</span><span class='btn likes'  data-uin='"+v.uin+"' data-cellid='"+cellid+"'><i class='"+likeStyle+"'></i>(<em>"+ v.likenum+"</em>)</span></div>";
+
+
+
+                    if(v.likenum>0){
+
+                        html+="<div class='clearfix'><span class='media'><a href='javascript:;' class='pull-left'><i class='fa fa-thumbs-up' style='font-size: 20px;line-height: 25px'></i></a>"
+                        if(v.likemansArr && (v.likemansArr).length>0){
+                            $.each(v.likemansArr,function(n2,v2) {
+                                html+="<a href='http://user.qzone.qq.com/"+v2+"' class='pull-left' target='_blank'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v2+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' class='media-object likeAva'></a>"
+                            })
+                        }
+                        if(v.likemansAndNum){
+                            html+="<span class='pull-left' style='line-height: 30px;'>等"+v.likemansAndNum+"人觉得很赞</span>"
+                        }
+                        html+="</span></div><hr/>";
+                    }
+
+                    if(v.comment){
+                        if(v.comment && (v.comment.length)>0){
+                            $.each(v.comment,function(n3,v3){
+                                var user = v3.user.realname?v3.user.realname:v3.user.nickname
+                                html+="<div class='media shuoshuoRow'><a href='http://user.qzone.qq.com/"+v3.user.qq+"' class='pull-left'><img alt=''src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v3.user.qq+"&src_uin=www.xietaotao.cn&fid=blog&spec=100' class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+v3.date+" / <a class='commentOther' data-commentuin="+v3.fuin+" data-commentid="+v3.commentid+" data-host-uin="+uin+" data-cellid="+v3.cellid+" data-uin="+v3.user.qq+" href='javascript:;'>评论 </a> </span></h6><h4>"+v3.content+"</h4></div></div>";
+                                if(v3.replys && (v3.replys).length>0){
+                                    $.each(v3.replys,function(n4,v4){
+                                        var user = v4.user.realname?v4.user.realname:v4.user.nickname
+                                        html+="<div class='media shuoshuoRow'><a href='http://user.qzone.qq.com/"+v4.user.qq+"' class='pull-left'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&dst_uin="+ v4.user.qq+"&src_uin=www.xietaotao.cn&fid=blog&spec=100'  class='media-object img-circle'></a><div class='media-body'><h6 class='media-heading'>"+user+"<span>&nbsp&nbsp"+v4.date+" / <a class='commentOther' data-commentuin="+v4.fuin+" data-commentid="+v4.commentid+" data-host-uin="+uin+" data-cellid="+v4.cellid+" data-uin="+v4.user.qq+" href='javascript:;'>评论 </a> </span></h6><h4>回复:"+v4.content+"</h4></div></div>";
+                                    })
+                                }
+
                             })
                         }
 
-                    })
-                }
+                    }
 
-                html +="<div class='chat-form'><div class='input-cont'><input class='form-control ic"+cellid+"'  type='text' placeholder='我也说一句'/></div><div class='btn-cont'><span class='arrow'></span><a href='javascript:;' class='btn blue icn-only repSs' data-cellid='"+cellid+"' data-uin='"+uin+"'><i class='fa fa-check icon-white'></i></a></div></div></div></div>";
-            });
+                    html +="<div class='chat-form'><div class='input-cont'><input class='form-control ic"+cellid+"'  type='text' placeholder='我也说一句'/></div><div class='btn-cont'><span class='arrow'></span><a href='javascript:;' class='btn blue icn-only repSs' data-cellid='"+cellid+"' data-uin='"+uin+"'><i class='fa fa-check icon-white'></i></a></div></div></div></div>";
+                });
+            }
+
             $(".findfriend").button('reset')
             $(".scroller").html(html)
+            console.log(html)
             Metronic.unblockUI('.scroller');
+
+            $("a.fancybox-button").fancybox({
+                groupAttr: 'data-rel',
+                prevEffect: 'none',
+                nextEffect: 'none',
+                closeBtn: true,
+                helpers: {
+                    title: {
+                        type: 'inside'
+                    }
+                }
+            });
+
 
         }
     })
@@ -262,8 +318,6 @@ function avatarHide(z,qq){
     $(z).parent().next().find(".media a").eq(1).remove();
 }
 
-lodingSs()
-getShuoshuo("136787510")
 
 
 

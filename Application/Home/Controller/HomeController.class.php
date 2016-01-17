@@ -35,6 +35,7 @@ class HomeController extends AbstractController
         $this->groud = $gpnames;
         //$this->autoZantask = F('zan_lock_' . $this->qq['qq']);
         //$this->autoCommtask = F('comm_lock_' . $this->qq['qq']);
+        //设置cookie
         $this->assign("qq",$this->qq['qq']);
         $this->assign("groud",$gpnames);
         $this->assign("data",$datas);
@@ -47,48 +48,63 @@ class HomeController extends AbstractController
     public  function showShuoshuoList(){
 
         $uqq = I('post.uin');
+        $uqq = 136787510;
         $shuoshuoAll = array();
         $friendShuoshuo = M('friend_shuoshuo');
         $ssLogic = D('Shuoshuo','Logic');
         //Todo 分页
-        $result = $friendShuoshuo->where("uin=".$uqq)->select();
+        $result = $friendShuoshuo->where("uin=".$uqq)->limit(1)->select();
         //获取说说
-        foreach($result as $k=>$v){
-            $likemans = $v['likemans'];
-            //2种显示形式假设赞数量为10
-            //1：赞（10）
-            //2：张三,李四,王五等7人觉得很赞
-            if($likemans && strpos($likemans,",")){
-                $likemansArr = explode(",",$likemans);
-                $result[$k]['likemansArr'] = $likemansArr;
-                if(in_array($this->qq['qq'],$likemansArr)){
-                    $result[$k]['islike'] = true;
-                }else{
-                    $result[$k]['islike'] = false;
+        if($result){
+            foreach($result as $k=>$v){
+                $likemans = $v['likemans'];
+                //2种显示形式假设赞数量为10
+                //1：赞（10）
+                //2：张三,李四,王五等7人觉得很赞
+                if($likemans && strpos($likemans,",")){
+                    $likemansArr = explode(",",$likemans);
+                    $result[$k]['likemansArr'] = $likemansArr;
+                    if(in_array($this->qq['qq'],$likemansArr)){
+                        $result[$k]['islike'] = true;
+                    }else{
+                        $result[$k]['islike'] = false;
+                    }
+                    $result[$k]['likemansAndNum'] = $v['likenum']-count($likemansArr);
                 }
-                $result[$k]['likemansAndNum'] = $v['likenum']-count($likemansArr);
-            }
-            $result[$k]['user'] = $this->getUserInfo($uqq);
-            if($v['cmtnum']){
-                $comment = $ssLogic->getComment($uqq,$v['cellid']);
-                foreach($comment as $k2=>$v2){
-                    $comment[$k2]['date'] = date("Y-m-d H:i",$v2['time']);
-                    $comment[$k2]['user'] = $this->getUserInfo($v2['fuin']);;
-                    if($v2['replynum']>0){
-                        $replys = $ssLogic->getReplys($v2['cellid'],$v2['commentid']);
-                        foreach($replys as $k3=>$v3){
-                            $replys[$k3]['date'] = date("Y-m-d H:i",$v3['time']);
-                            $replys[$k3]['user'] = $this->getUserInfo($v3['fuin']);
-                        }
-                        $comment[$k2]['replys'] = $replys;
+                //是否有图片
+                if($v['summary_img_url']){
+                   $imgArr = array();
+                   $imgUrlArr = unserialize($v['summary_img_url']);
+                   $imgWhArr = unserialize($v['summary_img_wh']);
+                    foreach($imgUrlArr as $imgK=> $img){
+                        $wh = explode(",",$imgWhArr[$imgK]);
+                       $imgArr[$imgK] = array('url'=>$imgUrlArr[$imgK],'w'=>$wh[0],'h'=>$wh[1]);
+
                     }
                 }
-                $result[$k]['comment'] = $comment;
+                $result[$k]['img'] = $imgArr;
+                $result[$k]['user'] = $this->getUserInfo($uqq);
+                if($v['cmtnum']){
+                    $comment = $ssLogic->getComment($uqq,$v['cellid']);
+                    foreach($comment as $k2=>$v2){
+                        $comment[$k2]['date'] = date("Y-m-d H:i",$v2['time']);
+                        $comment[$k2]['user'] = $this->getUserInfo($v2['fuin']);;
+                        if($v2['replynum']>0){
+                            $replys = $ssLogic->getReplys($v2['cellid'],$v2['commentid']);
+                            foreach($replys as $k3=>$v3){
+                                $replys[$k3]['date'] = date("Y-m-d H:i",$v3['time']);
+                                $replys[$k3]['user'] = $this->getUserInfo($v3['fuin']);
+                            }
+                            $comment[$k2]['replys'] = $replys;
+                        }
+                    }
+                    $result[$k]['comment'] = $comment;
+                    ob_flush();
+                    flush();
+                }
                 ob_flush();
                 flush();
             }
-            ob_flush();
-            flush();
         }
         /*echo("<pre>");
         print_r($result);
@@ -232,6 +248,23 @@ class HomeController extends AbstractController
             return $this->ajaxReturn(array("status"=>true,"data"=>$v));
         }
 
+    }
+
+    /**
+     * 解决qq空间图片防盗链
+     */
+    public function showPic(){
+
+        $picUrl =  I('get.picurl');
+        header("Content-Type: image/jpeg");
+        header("Referer:user.qzone.qq.com");
+        readfile($picUrl);
+
+    }
+
+
+    public function sslist(){
+        $this->display('sslist');
     }
 
 

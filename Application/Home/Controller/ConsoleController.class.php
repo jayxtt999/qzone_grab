@@ -28,7 +28,12 @@ class ConsoleController extends AbstractController
         ini_set('memory_limit', '512M');
         set_time_limit(0);
         $uqq = I('get.uqq');
+
         $uqq = 136787510;
+        consoleShow("<script>parent.lodingSs()</script>");
+        consoleShow("<script>parent.getShuoshuo(".$uqq.")</script>");
+        exit;
+
         if (empty($uqq)) {
             consoleShow("请先选择好友..");
             exit;
@@ -104,6 +109,7 @@ class ConsoleController extends AbstractController
         $friendShuoShuo = M('friend_shuoshuo');
         $friendComment = M('friend_comment');
         $friendReplys = M('friend_replys');
+
         foreach ($result["msglist"] as $v){
             if($v['rt_certified']){
                 //转发不计
@@ -161,12 +167,15 @@ class ConsoleController extends AbstractController
                 $data['curlikekey'] = $curlikekey;
                 //http://r.qzone.qq.com/cgi-bin/user/qz_opcnt2?_stp=1452151686481&unikey=http://user.qzone.qq.com/562809727/mood/7fcb8b21739c8c56963f0500
                 $data['operatemask'] = $v['rt_certified']?"98315":"516107";
-
                 $data['summary'] = $v['content'];
-
                 if($v['pic']){
-                    $data['summary_img_url'] = $v['pic'][0]['url2'];
-                    $data['summary_img_wh'] = $v['pic'][0]['b_width'].",".$v['pic'][0]['b_height'];
+                    $picArr = array();
+                    foreach($v['pic'] as $picK=>$pic){
+                        $picArr['summary_img_url'][$picK] = $pic['url2'];
+                        $picArr['summary_img_wh'][$picK] = $pic['b_width'].",".$pic['b_height'];
+                    }
+                    $data['summary_img_url'] = serialize($picArr['summary_img_url']);
+                    $data['summary_img_wh'] = serialize($picArr['summary_img_wh']);
                 }
                 $data['timeline'] = date("m-d H:i",$v['created_time']);
                 $data['cmtnum'] = $v['cmtnum'];
@@ -231,7 +240,6 @@ class ConsoleController extends AbstractController
             unset($where);
             consoleShow("处理:".$cellid."结束");
         }
-
         if ($limit<$result["total"]) {
             $limit += 20;
             $params["limit"] = $limit;

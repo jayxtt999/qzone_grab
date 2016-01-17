@@ -268,7 +268,7 @@ var Metronic = function () {
         }
 
         if ($(".fancybox-button").size() > 0) {
-            $(".fancybox-button").fancybox({
+           /* $(".fancybox-button").fancybox({
                 groupAttr: 'data-rel',
                 prevEffect: 'none',
                 nextEffect: 'none',
@@ -278,7 +278,7 @@ var Metronic = function () {
                         type: 'inside'
                     }
                 }
-            });
+            });*/
         }
     }
 
