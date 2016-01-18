@@ -28,7 +28,6 @@ class ConsoleController extends AbstractController
         ini_set('memory_limit', '512M');
         set_time_limit(0);
         $uqq = I('get.uqq');
-
         $uqq = 136787510;
         consoleShow("<script>parent.lodingSs()</script>");
         consoleShow("<script>parent.getShuoshuo(".$uqq.")</script>");

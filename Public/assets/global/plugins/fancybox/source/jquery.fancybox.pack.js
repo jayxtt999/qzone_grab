@@ -1,7 +1,6 @@
 /*! fancyBox v2.1.3 fancyapps.com | fancyapps.com/fancybox/#license */
 (function (B, x, f, q) {
     var r = f(B), m = f(x), b = f.fancybox = function () {
-
         b.open.apply(this, arguments)
     }, u = null, n = x.createTouch !== q, s = function (a) {
         return a && a.hasOwnProperty && a instanceof f

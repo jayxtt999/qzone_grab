@@ -15,17 +15,17 @@ class HomeController extends AbstractController
     public function index()
     {
 
-        $this->qq = is_array(session('qq'))?session('qq'):$this->error("请重新登录", '/', 3);
+        $this->qq = is_array(session('qq')) ? session('qq') : $this->error("请重新登录", '/', 3);
         //获取好友列表
         $mfriend_list = F('mfriend_list' . $this->qq['qq']);
         $mfriend_list = null;
-        if(!unserialize($mfriend_list)){
-            $url = "http://r.cnc.qzone.qq.com/cgi-bin/tfriend/friend_mngfrd_get.cgi?uin=".$this->qq['qq']."&rd=".rand(1,999)."&g_tk=".$this->qq['gtk'];
+        if (!unserialize($mfriend_list)) {
+            $url = "http://r.cnc.qzone.qq.com/cgi-bin/tfriend/friend_mngfrd_get.cgi?uin=" . $this->qq['qq'] . "&rd=" . rand(1, 999) . "&g_tk=" . $this->qq['gtk'];
             $result = $this->sendToQq($url);
             $result = $this->filterCallback($result);
             $results = json_decode($result);
-            F('mfriend_list' . $this->qq['qq'],serialize($results));
-        }else{
+            F('mfriend_list' . $this->qq['qq'], serialize($results));
+        } else {
             $results = unserialize($mfriend_list);
         }
         $datas = $results->items;
@@ -36,63 +36,73 @@ class HomeController extends AbstractController
         //$this->autoZantask = F('zan_lock_' . $this->qq['qq']);
         //$this->autoCommtask = F('comm_lock_' . $this->qq['qq']);
         //设置cookie
-        $this->assign("qq",$this->qq['qq']);
-        $this->assign("groud",$gpnames);
-        $this->assign("data",$datas);
+        $this->assign("qq", $this->qq['qq']);
+        $this->assign("groud", $gpnames);
+        $this->assign("data", $datas);
         $this->display('index');
     }
 
     /**
      * 显示说说数据
      */
-    public  function showShuoshuoList(){
+    public function showShuoshuoList()
+    {
 
         $uqq = I('post.uin');
+        $page = I('post.page')?I('post.page'):1;
         $uqq = 136787510;
         $shuoshuoAll = array();
         $friendShuoshuo = M('friend_shuoshuo');
-        $ssLogic = D('Shuoshuo','Logic');
-        //Todo 分页
-        $result = $friendShuoshuo->where("uin=".$uqq)->limit(1)->select();
+        $ssLogic = D('Shuoshuo', 'Logic');
+
+        $pageLimit = 1;//每次条数
+        $result = $friendShuoshuo->where("uin=" . $uqq)->page($page.','.$pageLimit)->select();
+        $count  = $friendShuoshuo->where("uin=" . $uqq)->count();// 总记录数
+        if($count>$page*$pageLimit){
+            $isMore = true;
+        }else{
+            $isMore = false;
+        }
+        //29  5  1
         //获取说说
-        if($result){
-            foreach($result as $k=>$v){
+        if ($result) {
+            foreach ($result as $k => $v) {
                 $likemans = $v['likemans'];
                 //2种显示形式假设赞数量为10
                 //1：赞（10）
                 //2：张三,李四,王五等7人觉得很赞
-                if($likemans && strpos($likemans,",")){
-                    $likemansArr = explode(",",$likemans);
+                if ($likemans && strpos($likemans, ",")) {
+                    $likemansArr = explode(",", $likemans);
                     $result[$k]['likemansArr'] = $likemansArr;
-                    if(in_array($this->qq['qq'],$likemansArr)){
+                    if (in_array($this->qq['qq'], $likemansArr)) {
                         $result[$k]['islike'] = true;
-                    }else{
+                    } else {
                         $result[$k]['islike'] = false;
                     }
-                    $result[$k]['likemansAndNum'] = $v['likenum']-count($likemansArr);
+                    $result[$k]['likemansAndNum'] = $v['likenum'] - count($likemansArr);
                 }
                 //是否有图片
-                if($v['summary_img_url']){
-                   $imgArr = array();
-                   $imgUrlArr = unserialize($v['summary_img_url']);
-                   $imgWhArr = unserialize($v['summary_img_wh']);
-                    foreach($imgUrlArr as $imgK=> $img){
-                        $wh = explode(",",$imgWhArr[$imgK]);
-                       $imgArr[$imgK] = array('url'=>$imgUrlArr[$imgK],'w'=>$wh[0],'h'=>$wh[1]);
+                if ($v['summary_img_url']) {
+                    $imgArr = array();
+                    $imgUrlArr = unserialize($v['summary_img_url']);
+                    $imgWhArr = unserialize($v['summary_img_wh']);
+                    foreach ($imgUrlArr as $imgK => $img) {
+                        $wh = explode(",", $imgWhArr[$imgK]);
+                        $imgArr[$imgK] = array('url' => $imgUrlArr[$imgK], 'w' => $wh[0], 'h' => $wh[1]);
 
                     }
                 }
                 $result[$k]['img'] = $imgArr;
                 $result[$k]['user'] = $this->getUserInfo($uqq);
-                if($v['cmtnum']){
-                    $comment = $ssLogic->getComment($uqq,$v['cellid']);
-                    foreach($comment as $k2=>$v2){
-                        $comment[$k2]['date'] = date("Y-m-d H:i",$v2['time']);
+                if ($v['cmtnum']) {
+                    $comment = $ssLogic->getComment($uqq, $v['cellid']);
+                    foreach ($comment as $k2 => $v2) {
+                        $comment[$k2]['date'] = date("Y-m-d H:i", $v2['time']);
                         $comment[$k2]['user'] = $this->getUserInfo($v2['fuin']);;
-                        if($v2['replynum']>0){
-                            $replys = $ssLogic->getReplys($v2['cellid'],$v2['commentid']);
-                            foreach($replys as $k3=>$v3){
-                                $replys[$k3]['date'] = date("Y-m-d H:i",$v3['time']);
+                        if ($v2['replynum'] > 0) {
+                            $replys = $ssLogic->getReplys($v2['cellid'], $v2['commentid']);
+                            foreach ($replys as $k3 => $v3) {
+                                $replys[$k3]['date'] = date("Y-m-d H:i", $v3['time']);
                                 $replys[$k3]['user'] = $this->getUserInfo($v3['fuin']);
                             }
                             $comment[$k2]['replys'] = $replys;
@@ -109,53 +119,55 @@ class HomeController extends AbstractController
         /*echo("<pre>");
         print_r($result);
         echo("</pre>");exit;*/
-        return $this->ajaxReturn($result);
+        return $this->ajaxReturn(array("result"=>$result,"isMore"=>$isMore,"nextPage"=>$page+1,"uin"=>$uqq));
 
     }
 
     /**
      * 点赞
      */
-    public function like(){
+    public function like()
+    {
 
         $uin = I('post.uin');
         $cellid = I('post.cellid');
         $c = I('post.c');
-        $ssLogic = D('Shuoshuo','Logic');
-        if(!$uin || !$cellid){
-            return $this->ajaxReturn(array("status"=>false,"msg"=>"参数错误"));
+        $ssLogic = D('Shuoshuo', 'Logic');
+        if (!$uin || !$cellid) {
+            return $this->ajaxReturn(array("status" => false, "msg" => "参数错误"));
         }
-        $ssRow = $ssLogic->getShuoshuoRow($uin,$cellid);
-        if(!$ssRow){
-            return $this->ajaxReturn(array("status"=>false,"msg"=>"数据异常"));
+        $ssRow = $ssLogic->getShuoshuoRow($uin, $cellid);
+        if (!$ssRow) {
+            return $this->ajaxReturn(array("status" => false, "msg" => "数据异常"));
         }
         $data = array(
-            "opuin"=>$uin,
-            "unikey"=>$ssRow['curlikekey'],
-            "curkey"=>$ssRow['curlikekey'],
-            "from"=>1,
-            "appid"=>311,
-            "typeid"=>0,
-            "abstime"=>time(),
-            "fid"=>$ssRow['cellid'],
-            "active"=>0,
-            "fupdate"=>1,
+            "opuin" => $uin,
+            "unikey" => $ssRow['curlikekey'],
+            "curkey" => $ssRow['curlikekey'],
+            "from" => 1,
+            "appid" => 311,
+            "typeid" => 0,
+            "abstime" => time(),
+            "fid" => $ssRow['cellid'],
+            "active" => 0,
+            "fupdate" => 1,
         );
-        if($c){
-            $url = "http://w.cnc.qzone.qq.com/cgi-bin/likes/internal_dolike_app?g_tk=".$this->qq['gtk'];
-        }else{
-            $url = "http://w.cnc.qzone.qq.com/cgi-bin/likes/internal_unlike_app?g_tk=".$this->qq['gtk'];
+        if ($c) {
+            $url = "http://w.cnc.qzone.qq.com/cgi-bin/likes/internal_dolike_app?g_tk=" . $this->qq['gtk'];
+        } else {
+            $url = "http://w.cnc.qzone.qq.com/cgi-bin/likes/internal_unlike_app?g_tk=" . $this->qq['gtk'];
         }
-        $res = $this->sendToQq($url,array(),$data);
+        $res = $this->sendToQq($url, array(), $data);
         //返回点赞者
-        return $this->ajaxReturn(array("status"=>true,"qq"=>$this->qq['qq']));
+        return $this->ajaxReturn(array("status" => true, "qq" => $this->qq['qq']));
 
     }
 
     /**
      * 评论
      */
-    public function commentSs(){
+    public function commentSs()
+    {
 
         /*
             这一块与前端交互起来非常麻烦，估计以后会忘记
@@ -196,56 +208,56 @@ class HomeController extends AbstractController
         $commentId = I('post.commentid');
         $content = I('post.content');
         $private = I('post.private');
-        $commentUin = $commentId?I('post.commentuin'):$this->qq['qq'];
-        $api = $commentId?"emotion_cgi_addreply_ugc":"emotion_cgi_addcomment_ugc";
-        $url = "http://taotao.qzone.qq.com/cgi-bin/".$api."?g_tk=".$this->qq['gtk2'];
-        if(!$uin || !$cid){
-            return $this->ajaxReturn(array("status"=>false,"msg"=>"参数错误"));
+        $commentUin = $commentId ? I('post.commentuin') : $this->qq['qq'];
+        $api = $commentId ? "emotion_cgi_addreply_ugc" : "emotion_cgi_addcomment_ugc";
+        $url = "http://taotao.qzone.qq.com/cgi-bin/" . $api . "?g_tk=" . $this->qq['gtk2'];
+        if (!$uin || !$cid) {
+            return $this->ajaxReturn(array("status" => false, "msg" => "参数错误"));
         }
-        if(!trim($content)){
-            return $this->ajaxReturn(array("status"=>false,"msg"=>"内容不能为空"));
+        if (!trim($content)) {
+            return $this->ajaxReturn(array("status" => false, "msg" => "内容不能为空"));
         }
-        $type = $commentId?"rep":"com";
+        $type = $commentId ? "rep" : "com";
         //是否为私密
-        $private = $private?$private:0;
+        $private = $private ? $private : 0;
         $data = array(
-            "uin"=>$this->qq['qq'],
-            "hostUin"=>$hostUin,
-            "topicId"=>$hostUin."_".$cid,
-            "content"=>$content,
-            "private"=>$private,
-            "commentUin"=>$commentUin,
-            "commentId"=>$commentId,
-            "with_fwd"=>0,
-            "to_tweet"=>0,
-            "to_tweet"=>0,
-            "hostuin"=>$this->qq['qq'],
-            "code_version"=>1,
-            "format"=>"fs",
+            "uin" => $this->qq['qq'],
+            "hostUin" => $hostUin,
+            "topicId" => $hostUin . "_" . $cid,
+            "content" => $content,
+            "private" => $private,
+            "commentUin" => $commentUin,
+            "commentId" => $commentId,
+            "with_fwd" => 0,
+            "to_tweet" => 0,
+            "to_tweet" => 0,
+            "hostuin" => $this->qq['qq'],
+            "code_version" => 1,
+            "format" => "fs",
 
         );
 
-        $res = $this->sendToQq($url,array(),$data);
+        $res = $this->sendToQq($url, array(), $data);
 
-        preg_match("/frameElement.callback\((.*)\);/",$res,$results);
-        $results = json_decode($results[1],true);
-        if($results['message']){
-            return $this->ajaxReturn(array("status"=>false,"msg"=>$results['message']));
-        }else{
+        preg_match("/frameElement.callback\((.*)\);/", $res, $results);
+        $results = json_decode($results[1], true);
+        if ($results['message']) {
+            return $this->ajaxReturn(array("status" => false, "msg" => $results['message']));
+        } else {
             $qq = $this->getUserInfo($this->qq['qq']);
             $v = array(
-                "uin"=>$uin,
-                "cid"=>$cid,
-                "commentid"=>$results['tid'],
-                "commentuin"=>$qq['qq'],
-                "content"=>$results['data']['content'],
-                "user"=>$qq['nickname'],
-                "hostUin"=>$hostUin,
-                "qq"=>$qq['qq'],
-                "type"=>$type,
-                "date"=>date("Y-m-d H:i:s",$results['data']['postTime']),
+                "uin" => $uin,
+                "cid" => $cid,
+                "commentid" => $results['tid'],
+                "commentuin" => $qq['qq'],
+                "content" => $results['data']['content'],
+                "user" => $qq['nickname'],
+                "hostUin" => $hostUin,
+                "qq" => $qq['qq'],
+                "type" => $type,
+                "date" => date("Y-m-d H:i:s", $results['data']['postTime']),
             );
-            return $this->ajaxReturn(array("status"=>true,"data"=>$v));
+            return $this->ajaxReturn(array("status" => true, "data" => $v));
         }
 
     }
@@ -253,17 +265,43 @@ class HomeController extends AbstractController
     /**
      * 解决qq空间图片防盗链
      */
-    public function showPic(){
+    public function showPic()
+    {
 
-        $picUrl =  I('get.picurl');
-        header("Content-Type: image/jpeg");
-        header("Referer:user.qzone.qq.com");
-        readfile($picUrl);
+        $url = I('get.picurl');
+        $dir = pathinfo($url);
+        $host = $dir['dirname'];
+        $refer = $host . '/';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_REFERER, $refer);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        $ext = strtolower(substr(strrchr($url, '.'), 1, 10));
+        $types = array(
+            'gif' => 'image/gif',
+            'jpeg' => 'image/jpeg',
+            'jpg' => 'image/jpeg',
+            'jpe' => 'image/jpeg',
+            'png' => 'image/png',
+        );
+        $type = $types[$ext] ? $types[$ext] : 'image/jpeg';
+        header("Content-type: " . $type);
+        echo $data;
+    }
 
+    public function iframe(){
+
+        $url = I('get.picurl');
+        echo "http://www.shuoshuo.me/home/home/showpic?picurl=".$url."'";exit;
+        echo "<img src='http://www.shuoshuo.me/home/home/showpic?picurl=".$url."'/>";
     }
 
 
-    public function sslist(){
+    public function sslist()
+    {
         $this->display('sslist');
     }
 
