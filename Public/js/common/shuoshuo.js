@@ -328,7 +328,6 @@ function dataToTpl(uin, page,type) {
 
 }
 
-
 //关闭评论
 function closeComment(z) {
 
@@ -344,7 +343,6 @@ function closeComment(z) {
     });
 }
 
-
 //添加点赞者头像
 function avatarShow(z, qq) {
     insertHtml = "<a href='http://user.qzone.qq.com/" + qq + "' class='pull-left' target='_blank'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&amp;dst_uin=" + qq + "&amp;src_uin=www.xietaotao.cn&amp;fid=blog&amp;spec=100' class='media-object likeAva'></a>";
@@ -357,6 +355,72 @@ function avatarHide(z, qq) {
     $(z).parent().next().find(".media a").eq(1).remove();
 }
 
+//批量点赞
+function batchLikeGo(z,c){
+    //c true 点赞 false 取消点赞
+    $(z).button('loading')
+    var v = $(".batchLikeV")
+    var uqq = $("#friendQq").val()
+    if(!uqq){
+        layer.msg('请选定一个好友', function () {
+            $(z).button('reset')
+        })
+    }
+    if(!v){
+        layer.msg('请选择一个时间节点', function (){
+            $(z).button('reset')
+        })
+    }
+    if(c){
+        $("#iframe").attr("src", "/home/console/batchlike?uqq=" + uqq + "&time="+v+"&c=1&r=" + new Date().getTime())
+    }else{
+        $("#iframe").attr("src", "/home/console/batchlike?uqq=" + uqq + "&time="+v+"&c=0&r=" + new Date().getTime())
+    }
+
+}
+
+//批量点赞完毕
+function batchLikeGoOver(){
+    layer.msg('操作完毕')
+    $(".batchLikeGo").button('reset')
+}
+
+
+//批量评论
+function batchCommentGo(z){
+    $(z).button('loading')
+    var uqq = $("#friendQq").val()
+    if(!uqq){
+        layer.msg('请选定一个好友', function () {
+            $(z).button('reset')
+        })
+    }
+    var v = $(".batchCommentV")
+    if(!v){
+        layer.msg('请选择一个时间节点', function (){
+            $(z).button('reset')
+        })
+    }
+    var batchCommentType = $("input[name='batchCommentType']:checked").val();
+    var content = ""
+    if(batchCommentType=="diy"){
+        content = $(".batchCommentDiy").val();
+        if($.trim(content)==""){
+            layer.msg('自定义内容不能为空', function () {
+                $(z).button('reset');return false;
+            })
+        }
+    }
+    var isPrivate = $(".batchCommentIsPrivate").is(':checked')
+    var private = isPrivate?1:0;
+    $("#iframe").attr("src", "/home/console/batchcomment?uqq=" + uqq + "&time="+v+"&content="+content+"private="+private+"&r=" + new Date().getTime())
+}
+
+//批量评论完毕
+function batchCommentGoOver(){
+    layer.msg('操作完毕')
+    $(".batchCommentGo").button('reset')
+}
 
 
 

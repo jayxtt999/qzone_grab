@@ -47,5 +47,12 @@ class ShuoshuoLogic extends \Think\Model{
 
     }
 
+    public function getShuoShuoAll($where){
+        $shuoshuo = M("friend_shuoshuo");
+        return $shuoshuo->where($where)->order("time desc")->select();
+
+    }
+
+
 
 }

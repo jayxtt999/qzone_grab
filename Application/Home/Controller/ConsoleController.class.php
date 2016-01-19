@@ -55,8 +55,6 @@ class ConsoleController extends AbstractController
         consoleShow("<script>parent.lodingSs()</script>");
         consoleShow("<script>parent.getShuoshuo(".$uqq.")</script>");
         exit;
-
-
     }
 
     /**
@@ -249,7 +247,153 @@ class ConsoleController extends AbstractController
         return true;
     }
 
+    public function batchLike(){
+        $this->display("index");
+        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+        $uqq = I('get.uqq');
+        $c = (int)I('get.c');
+        $time = I('get.time');
+        $ssLogic = D('Shuoshuo', 'Logic');
+        $where = array();
+        $where['uin'] = $uqq;
 
+        if($time){
+            switch ($time){
+                case "week":
+                    $time = time()-(7*24*60*60);
+                    break;
+                case "month":
+                    $time = time()-(30*24*60*60);
+                    break;
+                case "month6":
+                    $time = time()-(6*30*24*60*60);
+                    break;
+                case "year":
+                    $time = time()-(12*30*24*60*60);
+                    break;
+                case "all":
+                    $time = 0;
+                    break;
+
+            }
+
+
+        }
+
+        $where['_string'] = "time>".$time;
+        $ssAll = $ssLogic->getShuoshuoAll($where);
+        if($ssAll){
+            foreach($ssAll as $v){
+                $data = array(
+                    "opuin" => $uqq,
+                    "unikey" => $v['curlikekey'],
+                    "curkey" => $v['curlikekey'],
+                    "from" => 1,
+                    "appid" => 311,
+                    "typeid" => 0,
+                    "abstime" => time(),
+                    "fid" => $v['cellid'],
+                    "active" => 0,
+                    "fupdate" => 1,
+                );
+                if ($c) {
+                    $url = "http://w.cnc.qzone.qq.com/cgi-bin/likes/internal_dolike_app?g_tk=" . $this->qq['gtk'];
+                    $msg = "点赞";
+                } else {
+                    $url = "http://w.cnc.qzone.qq.com/cgi-bin/likes/internal_unlike_app?g_tk=" . $this->qq['gtk'];
+                    $msg = "取消点赞";
+
+                }
+                $res = $this->sendToQq($url, array(), $data);
+                consoleShow($msg.":".mb_substr($v['summary'],0,5)."..");
+            }
+
+        }else{
+            consoleShow("自动评论:没有相关信息");
+        }
+        consoleShow("<script>parent.batchLikeGoOver()</script>");
+        exit;
+    }
+
+    public function batchComment(){
+
+        $this->display("index");
+        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+        $uqq = I('get.uqq');
+        $time = I('get.time');
+        $content= I('get.content');
+        $private= I('get.private');
+        $ssLogic = D('Shuoshuo', 'Logic');
+        $where = array();
+        $where['uin'] = $uqq;
+        if($time){
+            switch ($time){
+                case "week":
+                    $time = time()-(7*24*60*60);
+                    break;
+                case "month":
+                    $time = time()-(30*24*60*60);
+                    break;
+                case "month6":
+                    $time = time()-(6*30*24*60*60);
+                    break;
+                case "year":
+                    $time = time()-(12*30*24*60*60);
+                    break;
+                case "all":
+                    $time = 0;
+                    break;
+
+            }
+        }
+        $where['_string'] = "time>".$time;
+        $ssAll = $ssLogic->getShuoshuoAll($where);
+
+        if($ssAll){
+            foreach($ssAll as $v){
+                $url = "http://taotao.qzone.qq.com/cgi-bin/emotion_cgi_addcomment_ugc?g_tk=" . $this->qq['gtk2'];
+
+                if(empty(trim($content))){
+                    //图灵机器人
+                    $url = "http://www.tuling123.com/openapi/api?key=d62295084e71a99f9ed5a5660d3ad05f&info=".$v['summary'];
+                    $r = json_decode(file_get_contents($url));
+                    $content = $r['text'];
+                }else{
+                    $content = mb_substr($content,0,150);
+                }
+
+                $data = array(
+                    "uin" => $this->qq['qq'],
+                    "hostUin" => $uqq,
+                    "topicId" => $uqq . "_" . $v['cellid'],
+                    "content" => $content,
+                    "private" => $private,
+                    "commentUin" => $this->qq['qq'],
+                    "with_fwd" => 0,
+                    "to_tweet" => 0,
+                    "to_tweet" => 0,
+                    "hostuin" => $this->qq['qq'],
+                    "code_version" => 1,
+                    "format" => "fs",
+                );
+                $res = $this->sendToQq($url, array(), $data);
+                preg_match("/frameElement.callback\((.*)\);/", $res, $results);
+                $results = json_decode($results[1], true);
+                if ($results['message']) {
+                    consoleShow("自动评论:".mb_substr($v['summary'],0,5)."失败，返回信息:".$results['message']);
+                }else{
+                    consoleShow("自动评论:".mb_substr($v['summary'],0,5)."成功");
+                }
+
+            }
+        }else{
+            consoleShow("自动评论:没有相关信息");
+        }
+        consoleShow("<script>parent.batchCommentGoOver()</script>");
+        exit;
+    }
 }
 
 
