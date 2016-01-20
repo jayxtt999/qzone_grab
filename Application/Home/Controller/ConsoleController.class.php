@@ -14,6 +14,13 @@ class ConsoleController extends AbstractController
 
     private $shuoshuoNum = 0;
 
+    public function init()
+    {
+        $this->display("index");
+        ini_set('memory_limit', '512M');
+        set_time_limit(0);
+    }
+
     public function index()
     {
         $this->display();
@@ -22,27 +29,29 @@ class ConsoleController extends AbstractController
 
     }
 
+    /**
+     * 获取数据
+     */
     public function getShuoShuoAll()
     {
-        $this->display("index");
-        ini_set('memory_limit', '512M');
-        set_time_limit(0);
+        $this->init();
         $uqq = I('get.uqq');
-        $uqq = 136787510;
+        $uqq = 435024179;
+        /*$uqq = 136787510;
         consoleShow("<script>parent.lodingSs()</script>");
-        consoleShow("<script>parent.getShuoshuo(".$uqq.")</script>");
-        exit;
+        consoleShow("<script>parent.getShuoshuo(" . $uqq . ")</script>");
+        exit;*/
 
         if (empty($uqq)) {
             consoleShow("请先选择好友..");
             exit;
         }
-        consoleShow("存储好友相关资料".$uqq."数据开始");
-         $user = M('user');
-         $this->getUserInfo($uqq);
-        consoleShow("存储好友相关资料".$uqq."数据完成");
+        consoleShow("存储好友相关资料" . $uqq . "数据开始");
+        $user = M('user');
+        $this->getUserInfo($uqq);
+        consoleShow("存储好友相关资料" . $uqq . "数据完成");
         session('uqq', $uqq);
-        consoleShow("获取".$uqq."说说数据开始");
+        consoleShow("获取" . $uqq . "说说数据开始");
         $res = $this->trampoline("getData", array("uqq" => $uqq, "gtk" => $this->qq['gtk'], "limit" => 0));
         if ($res) {
             //$shuoshuoAll = F("shuoshuo_$uqq");
@@ -51,9 +60,9 @@ class ConsoleController extends AbstractController
         } else {
             $msg = "获取失败，可能是没权限或者网络繁忙";
         }
-        consoleShow("获取".$uqq."说说数据结束,".$msg);
+        consoleShow("获取" . $uqq . "说说数据结束," . $msg);
         consoleShow("<script>parent.lodingSs()</script>");
-        consoleShow("<script>parent.getShuoshuo(".$uqq.")</script>");
+        consoleShow("<script>parent.getShuoshuo(" . $uqq . ")</script>");
         exit;
     }
 
@@ -62,7 +71,7 @@ class ConsoleController extends AbstractController
      * @param $params
      * @return mixed
      */
-    function trampoline($callback, $params)
+    public function trampoline($callback, $params)
     {
 
         $result = call_user_func(array(__CLASS__, $callback), $params);
@@ -80,41 +89,46 @@ class ConsoleController extends AbstractController
      * @param int $count
      * @return array|void
      */
-    function getData($params)
+    public function getData($params)
     {
 
         $uqq = $params['uqq'];
         $limit = $params['limit'];
         $gtk = $params['gtk'];
         //Todo 验证权限
-        $url="http://taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin=".$uqq."&inCharset=utf-8&outCharset=utf-8&hostUin=".$uqq."&notice=0&sort=0&pos=".$limit."&num=20&cgi_host=http%3A%2F%2Ftaotao.qq.com%2Fcgi-bin%2Femotion_cgi_msglist_v6&code_version=1&format=jsonp&need_private_comment=1&g_tk=".$gtk;
+        $url = "http://taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin=" . $uqq . "&inCharset=utf-8&outCharset=utf-8&hostUin=" . $uqq . "&notice=0&sort=0&pos=" . $limit . "&num=20&cgi_host=http%3A%2F%2Ftaotao.qq.com%2Fcgi-bin%2Femotion_cgi_msglist_v6&code_version=1&format=jsonp&need_private_comment=1&g_tk=" . $gtk;
         //有坑！！  这里不需要p_skey 不知道是什么鬼 0.0
-        $result = $this->sendToQq($url,array("p_skey"=>""));
+        $result = $this->sendToQq($url, array("p_skey" => ""));
         $result = $this->filterCallback($result);
-        $result = json_decode($result,true);
+        $result = json_decode($result, true);
+
+        echo "<pre>";
+        print_r($result);
+        echo "</pre>";
+        exit;
         if (!empty($result['message'])) {
             consoleShow($result['message']);
         }
         //好友是否隐藏说说
-        if ($result['total']>0 && !$result["msglist"]) {
+        if ($result['total'] > 0 && !$result["msglist"]) {
             consoleShow("####该好友隐藏了说说");
             return true;
         }
-        if($limit==0){
+        if ($limit == 0) {
             $this->shuoshuoNum = $result['total'];
         }
         $friendShuoShuo = M('friend_shuoshuo');
         $friendComment = M('friend_comment');
         $friendReplys = M('friend_replys');
 
-        foreach ($result["msglist"] as $v){
-            if($v['rt_certified']){
+        foreach ($result["msglist"] as $v) {
+            if ($v['rt_certified']) {
                 //转发不计
                 continue;
             }
-            consoleShow("处理:".$v['tid']."开始");
+            consoleShow("处理:" . $v['tid'] . "开始");
             $cellid = $v['tid'];
-            $curlikekey = "http://user.qzone.qq.com/".$uqq."/mood/".$cellid;
+            $curlikekey = "http://user.qzone.qq.com/" . $uqq . "/mood/" . $cellid;
 
             //判断是否需要更新评论数量及其点赞数量
             $uin = $v['uin'];
@@ -125,14 +139,14 @@ class ConsoleController extends AbstractController
 
             //获取赞信息
             //_stp 实际上是13位的时间戳 一般让请求不被浏览器缓存即可
-            $likeUrl="http://r.qzone.qq.com/cgi-bin/user/qz_opcnt2?_stp=".rand(1,999)."&unikey=".$curlikekey.".1&fupdate=1&g_tk=".$gtk;
+            $likeUrl = "http://r.qzone.qq.com/cgi-bin/user/qz_opcnt2?_stp=" . rand(1, 999) . "&unikey=" . $curlikekey . ".1&fupdate=1&g_tk=" . $gtk;
             $likeRes = $this->sendToQq($likeUrl);
             $likeRes = $this->filterCallback($likeRes);
-            $likeRes = json_decode($likeRes,true);
+            $likeRes = json_decode($likeRes, true);
 
             $likeNum = $likeRes['data'][0]['current']['likedata']['cnt'];
             $likemansVs = "";
-            if($likeNum>0){
+            if ($likeNum > 0) {
                 $likemansV = array();
                 $likemans = $likeRes['data'][0]['current']['likedata']['list'];
                 foreach ($likemans as $mans) {
@@ -141,41 +155,60 @@ class ConsoleController extends AbstractController
                 $likemansVs = implode(",", $likemansV);
             }
             $ilike = $likeRes['data'][0]['current']['likedata']['ilike'];
-            if($ilike){
-                $likemansVs = $this->qq['qq'].",".$likemansVs;
+            if ($v['video']) {
+                $videoArr = array();
+                foreach ($v['video'] as $videoV) {
+                    $videoArr[] = $videoV['url3'];
+                }
+                $video = serialize($videoArr);
+            } else {
+                $video = "";
             }
-            if ($row){
-                if(($row['likenum']!=$likeNum) || ($row['cmtnum']!=$v['cmtnum'])){
+            if ($v['story_info']) {
+                $storyInfo = serialize($v['story_info']['lbs']);
+            } else {
+                $storyInfo = "";
+            }
+            if ($ilike) {
+                $likemansVs = $this->qq['qq'] . "," . $likemansVs;
+            }
+            if ($row) {
+                if (($row['likenum'] != $likeNum) || ($row['cmtnum'] != $v['cmtnum'])) {
                     $upDateArr = array(
-                        'likenum'=>$likeNum,
-                        'cmtnum'=>$v['cmtnum'],
-                        'likemans'=>$likemansVs,
-                    );
+                        'likenum' => $likeNum,
+                        'cmtnum' => $v['cmtnum'],
+                        'likemans' => $likemansVs,
+                        'video' => $video,
+
+                );
                     $friendShuoShuo->where($where)->save($upDateArr);
                 }
 
-            }else{
+            } else {
                 $data = array();
                 $data['uin'] = $uin = $v['uin'];
                 $data['time'] = $v['created_time'];
                 $data['cellid'] = $cellid;
                 $data['likemans'] = $likemansVs;
-                $data['likenum'] = $likeNum?$likeNum: 0;
+                $data['likenum'] = $likeNum ? $likeNum : 0;
                 $data['curlikekey'] = $curlikekey;
                 //http://r.qzone.qq.com/cgi-bin/user/qz_opcnt2?_stp=1452151686481&unikey=http://user.qzone.qq.com/562809727/mood/7fcb8b21739c8c56963f0500
-                $data['operatemask'] = $v['rt_certified']?"98315":"516107";
+                $data['operatemask'] = $v['rt_certified'] ? "98315" : "516107";
                 $data['summary'] = $v['content'];
-                if($v['pic']){
+                if ($v['pic']) {
                     $picArr = array();
-                    foreach($v['pic'] as $picK=>$pic){
+                    foreach ($v['pic'] as $picK => $pic) {
                         $picArr['summary_img_url'][$picK] = $pic['url2'];
-                        $picArr['summary_img_wh'][$picK] = $pic['b_width'].",".$pic['b_height'];
+                        $picArr['summary_img_wh'][$picK] = $pic['b_width'] . "," . $pic['b_height'];
                     }
                     $data['summary_img_url'] = serialize($picArr['summary_img_url']);
                     $data['summary_img_wh'] = serialize($picArr['summary_img_wh']);
                 }
-                $data['timeline'] = date("m-d H:i",$v['created_time']);
+                $data['timeline'] = date("m-d H:i", $v['created_time']);
                 $data['cmtnum'] = $v['cmtnum'];
+                $data['source_name'] = $v['source_name'];
+                $data['video'] = $video;
+                $data['story_info'] = $storyInfo;
                 $r = $friendShuoShuo->add($data);
                 if ($r) {
                     consoleShow("##预存储:<a target='_blank' href='" . $data['curlikekey'] . "'>" . $data['cellid'] . "</a>成功");
@@ -187,7 +220,7 @@ class ConsoleController extends AbstractController
 
             // 存储评论
             if ($v['cmtnum'] > 0) {
-                consoleShow("####获取相关评论,数量：".$v['cmtnum']);
+                consoleShow("####获取相关评论,数量：" . $v['cmtnum']);
                 $comments = $v['commentlist'];
                 foreach ($comments as $v2) {
                     $data = array();
@@ -208,12 +241,12 @@ class ConsoleController extends AbstractController
                     unset($data['commentpic']);
                     unset($data['referid']);
                     // 存储回复
-                    if($v2['list_3']){
+                    if ($v2['list_3']) {
                         $replys = $v2['list_3'];
                         $replysNum = count($replys);
                     }
-                    if ($replysNum> 0) {
-                        consoleShow("####获取评论相关回复,数量:".$replysNum);
+                    if ($replysNum > 0) {
+                        consoleShow("####获取评论相关回复,数量:" . $replysNum);
                         $replys = $v2['replys'];
                         foreach ($replys as $v3) {
                             $replyId = $v3['tid'];
@@ -235,9 +268,11 @@ class ConsoleController extends AbstractController
             }
             unset($data);
             unset($where);
-            consoleShow("处理:".$cellid."结束");
+            consoleShow("处理:" . $cellid . "结束");
         }
-        if ($limit<$result["total"]) {
+        return true;
+
+        if ($limit < $result["total"]) {
             $limit += 20;
             $params["limit"] = $limit;
             return function () use ($params) {
@@ -247,10 +282,12 @@ class ConsoleController extends AbstractController
         return true;
     }
 
-    public function batchLike(){
-        $this->display("index");
-        ini_set('memory_limit', '512M');
-        set_time_limit(0);
+    /**
+     * 自动点赞
+     */
+    public function batchLike()
+    {
+        $this->init();
         $uqq = I('get.uqq');
         $c = (int)I('get.c');
         $time = I('get.time');
@@ -258,19 +295,19 @@ class ConsoleController extends AbstractController
         $where = array();
         $where['uin'] = $uqq;
 
-        if($time){
-            switch ($time){
+        if ($time) {
+            switch ($time) {
                 case "week":
-                    $time = time()-(7*24*60*60);
+                    $time = time() - (7 * 24 * 60 * 60);
                     break;
                 case "month":
-                    $time = time()-(30*24*60*60);
+                    $time = time() - (30 * 24 * 60 * 60);
                     break;
                 case "month6":
-                    $time = time()-(6*30*24*60*60);
+                    $time = time() - (6 * 30 * 24 * 60 * 60);
                     break;
                 case "year":
-                    $time = time()-(12*30*24*60*60);
+                    $time = time() - (12 * 30 * 24 * 60 * 60);
                     break;
                 case "all":
                     $time = 0;
@@ -281,10 +318,10 @@ class ConsoleController extends AbstractController
 
         }
 
-        $where['_string'] = "time>".$time;
+        $where['_string'] = "time>" . $time;
         $ssAll = $ssLogic->getShuoshuoAll($where);
-        if($ssAll){
-            foreach($ssAll as $v){
+        if ($ssAll) {
+            foreach ($ssAll as $v) {
                 $data = array(
                     "opuin" => $uqq,
                     "unikey" => $v['curlikekey'],
@@ -306,41 +343,43 @@ class ConsoleController extends AbstractController
 
                 }
                 $res = $this->sendToQq($url, array(), $data);
-                consoleShow($msg.":".mb_substr($v['summary'],0,5)."..");
+                consoleShow($msg . ":" . mb_substr($v['summary'], 0, 5) . "..");
             }
 
-        }else{
-            consoleShow("自动评论:没有相关信息");
+        } else {
+            consoleShow("自动点赞:没有相关信息,你可以尝试先获取数据");
         }
         consoleShow("<script>parent.batchLikeGoOver()</script>");
         exit;
     }
 
-    public function batchComment(){
+    /**
+     * 自动评论
+     */
+    public function batchComment()
+    {
 
-        $this->display("index");
-        ini_set('memory_limit', '512M');
-        set_time_limit(0);
+        $this->init();
         $uqq = I('get.uqq');
         $time = I('get.time');
-        $content= I('get.content');
-        $private= I('get.private');
+        $content = I('get.content');
+        $private = I('get.private');
         $ssLogic = D('Shuoshuo', 'Logic');
         $where = array();
         $where['uin'] = $uqq;
-        if($time){
-            switch ($time){
+        if ($time) {
+            switch ($time) {
                 case "week":
-                    $time = time()-(7*24*60*60);
+                    $time = time() - (7 * 24 * 60 * 60);
                     break;
                 case "month":
-                    $time = time()-(30*24*60*60);
+                    $time = time() - (30 * 24 * 60 * 60);
                     break;
                 case "month6":
-                    $time = time()-(6*30*24*60*60);
+                    $time = time() - (6 * 30 * 24 * 60 * 60);
                     break;
                 case "year":
-                    $time = time()-(12*30*24*60*60);
+                    $time = time() - (12 * 30 * 24 * 60 * 60);
                     break;
                 case "all":
                     $time = 0;
@@ -348,20 +387,20 @@ class ConsoleController extends AbstractController
 
             }
         }
-        $where['_string'] = "time>".$time;
+        $where['_string'] = "time>" . $time;
         $ssAll = $ssLogic->getShuoshuoAll($where);
 
-        if($ssAll){
-            foreach($ssAll as $v){
+        if ($ssAll) {
+            foreach ($ssAll as $v) {
                 $url = "http://taotao.qzone.qq.com/cgi-bin/emotion_cgi_addcomment_ugc?g_tk=" . $this->qq['gtk2'];
 
-                if(empty(trim($content))){
+                if (empty(trim($content))) {
                     //图灵机器人
-                    $url = "http://www.tuling123.com/openapi/api?key=d62295084e71a99f9ed5a5660d3ad05f&info=".$v['summary'];
+                    $url = "http://www.tuling123.com/openapi/api?key=d62295084e71a99f9ed5a5660d3ad05f&info=" . $v['summary'];
                     $r = json_decode(file_get_contents($url));
                     $content = $r['text'];
-                }else{
-                    $content = mb_substr($content,0,150);
+                } else {
+                    $content = mb_substr($content, 0, 150);
                 }
 
                 $data = array(
@@ -382,14 +421,14 @@ class ConsoleController extends AbstractController
                 preg_match("/frameElement.callback\((.*)\);/", $res, $results);
                 $results = json_decode($results[1], true);
                 if ($results['message']) {
-                    consoleShow("自动评论:".mb_substr($v['summary'],0,5)."失败，返回信息:".$results['message']);
-                }else{
-                    consoleShow("自动评论:".mb_substr($v['summary'],0,5)."成功");
+                    consoleShow("自动评论:" . mb_substr($v['summary'], 0, 5) . "失败，返回信息:" . $results['message']);
+                } else {
+                    consoleShow("自动评论:" . mb_substr($v['summary'], 0, 5) . "成功");
                 }
 
             }
-        }else{
-            consoleShow("自动评论:没有相关信息");
+        } else {
+            consoleShow("自动评论:没有相关信息，你可以尝试先获取数据");
         }
         consoleShow("<script>parent.batchCommentGoOver()</script>");
         exit;

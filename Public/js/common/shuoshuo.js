@@ -264,6 +264,29 @@ function dataToTpl(uin, page,type) {
                         }
                         html += "<div class='clearfix'><span class='btn commentShow'  data-uin='" + v.uin + "' data-cellid='" + cellid + "'><i class='fa  fa-comments-o'></i>评论(<em>" + v.cmtnum + "</em>)</span><span class='btn likes'  data-uin='" + v.uin + "' data-cellid='" + cellid + "'><i class='" + likeStyle + "'></i>(<em>" + v.likenum + "</em>)</span></div>";
 
+                        if (v.video && (v.video).length > 0){
+
+                            html += "<div class='clearfix'><div class='row mix-grid'>";
+                            $.each(v.video, function (videok, videov) {
+                                html += " <video controls='controls'  loop='loop' name='media'><source src='"+videov+"' type='video/mp4'></video>";
+                            })
+                            html += "</div></div>";
+
+                        }
+
+                        html += "<div class='clearfix'>";
+                        if (v.story_info){
+                            var story_info = v.story_info
+                            var lbs_idname = story_info.idname
+                            //var lbs_name = story_info.name
+                            //var lbs_pos_x = story_info.pos_x
+                            //var lbs_pos_y = story_info.pos_y
+                            html+="拍摄于&nbsp"+lbs_idname+"&nbsp&nbsp";
+                        }
+                        if (v.source_name){
+                            html+="来自&nbsp"+source_name;
+                        }
+                        html += "</div>"
                         if (v.likenum > 0) {
 
                             html += "<div class='clearfix'><span class='media'><a href='javascript:;' class='pull-left'><i class='fa fa-thumbs-up' style='font-size: 20px;line-height: 25px'></i></a>"

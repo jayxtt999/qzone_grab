@@ -49,18 +49,18 @@ class HomeController extends AbstractController
     {
 
         $uqq = I('post.uin');
-        $page = I('post.page')?I('post.page'):1;
+        $page = I('post.page') ? I('post.page') : 1;
         $uqq = 136787510;
         $shuoshuoAll = array();
         $friendShuoshuo = M('friend_shuoshuo');
         $ssLogic = D('Shuoshuo', 'Logic');
 
         $pageLimit = 1;//每次条数
-        $result = $friendShuoshuo->where("uin=" . $uqq)->page($page.','.$pageLimit)->select();
-        $count  = $friendShuoshuo->where("uin=" . $uqq)->count();// 总记录数
-        if($count>$page*$pageLimit){
+        $result = $friendShuoshuo->where("uin=" . $uqq)->page($page . ',' . $pageLimit)->select();
+        $count = $friendShuoshuo->where("uin=" . $uqq)->count();// 总记录数
+        if ($count > $page * $pageLimit) {
             $isMore = true;
-        }else{
+        } else {
             $isMore = false;
         }
         //29  5  1
@@ -91,8 +91,27 @@ class HomeController extends AbstractController
                         $imgArr[$imgK] = array('url' => $imgUrlArr[$imgK], 'w' => $wh[0], 'h' => $wh[1]);
 
                     }
+                    $result[$k]['img'] = $imgArr;
                 }
-                $result[$k]['img'] = $imgArr;
+                //是否有视频
+                if ($v['video']) {
+                    $videoArr = array();
+                    $videoHost = "http://180.153.208.230/";
+                    $video = unserialize($v['video']);
+                    foreach ($video as $v) {
+                        $videoArr[] = $videoHost . str_replace("http://", "", $v)."&ocid=1";
+                    }
+                    $result[$k]['video'] = $videoArr;
+                }
+
+                //设备
+                if ($v['source_name']) {
+                    $result[$k]['source_name'] = $v['source_name'];
+                }
+                //地理位置
+                if ($v['story_info']) {
+                    $result[$k]['story_info'] = unserialize($v['story_info']);
+                }
                 $result[$k]['user'] = $this->getUserInfo($uqq);
                 if ($v['cmtnum']) {
                     $comment = $ssLogic->getComment($uqq, $v['cellid']);
@@ -119,7 +138,7 @@ class HomeController extends AbstractController
         /*echo("<pre>");
         print_r($result);
         echo("</pre>");exit;*/
-        return $this->ajaxReturn(array("result"=>$result,"isMore"=>$isMore,"nextPage"=>$page+1,"uin"=>$uqq));
+        return $this->ajaxReturn(array("result" => $result, "isMore" => $isMore, "nextPage" => $page + 1, "uin" => $uqq));
 
     }
 
@@ -292,11 +311,13 @@ class HomeController extends AbstractController
         echo $data;
     }
 
-    public function iframe(){
+    public function iframe()
+    {
 
         $url = I('get.picurl');
-        echo "http://www.shuoshuo.me/home/home/showpic?picurl=".$url."'";exit;
-        echo "<img src='http://www.shuoshuo.me/home/home/showpic?picurl=".$url."'/>";
+        echo "http://www.shuoshuo.me/home/home/showpic?picurl=" . $url . "'";
+        exit;
+        echo "<img src='http://www.shuoshuo.me/home/home/showpic?picurl=" . $url . "'/>";
     }
 
 
