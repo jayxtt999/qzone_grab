@@ -63,45 +63,41 @@ class ShowController extends AbstractController {
      */
     public function Table(){
         ini_set('date.timezone','Asia/Shanghai');
-        $uqq = session('uqq');
-        $shuoshuoAll = F("shuoshuo_$uqq");
-        $shuoshuoAll = @array_reverse($shuoshuoAll);
+        $uqq = I("get.uqq");
+        if(!$uqq){
+            echo "请先选择好友";exit;
+        }
+        $ssLogic = D('Shuoshuo', 'Logic');
+        $shuoshuoAll = $ssLogic->getShuoShuoAll(array("uin"=>$uqq));
+        $shuoshuoAll = array_reverse($shuoshuoAll);
         $chartData = "";
         $max = array();
         $numAll = 0;
         $likeAll = 0;
-        $shuoshuoNum = count($shuoshuoAll)+1;
-        $shuoshuoOne = date('Y,m,d',$shuoshuoAll[0]['comm']['time']);
+        $shuoshuoNum = count($shuoshuoAll);
+        $shuoshuoOne = date('Y,m,d',$shuoshuoAll[0]['time']);
         foreach( $shuoshuoAll as $shuoshuo){
             //统计全部评论与赞数目
-            $numAll += @$shuoshuo['comment']['num'];
-            $likeAll += @$shuoshuo['like']['num'];
-            if(isset($shuoshuo[original])){
-                //转发不计
+            $numAll += $shuoshuo['cmtnum'];
+            $likeAll += $shuoshuo['likenum'];
+            $ymd = date('Y-m-d',$shuoshuo['time']);
+            if( $shuoshuo['likenum'] == 0 && $shuoshuo['cmtnum'] == 0){
                 continue;
             }
-            $ymd = date('Y-m-d',$shuoshuo['comm']['time']);
-            if(!@($shuoshuo['comment']['num'])){
-                $shuoshuo['comment']['num'] = 0;
-            }
-            if(!@($shuoshuo['like']['num'])){
-                $shuoshuo['like']['num'] = 0;
-            }
-            if( $shuoshuo['like']['num'] == 0 && $shuoshuo['comment']['num'] == 0){
-                continue;
-            }
-            $commentTop[$shuoshuo['comment']['num']] = @$shuoshuo['summary']['summary']."$$$".$shuoshuo['comm']['curlikekey'];
-            $max[] =  $shuoshuo['comment']['num'];
-            $max[] = $shuoshuo['like']['num'];
+            $commentTop[$shuoshuo['cmtnum']] = @$shuoshuo['summary']."$$$".$shuoshuo['curlikekey'];
+            $max[] =  $shuoshuo['cmtnum'];
+            $max[] = $shuoshuo['likenum'];
             //合并数据
-            $chartData.="{'date': '".$ymd."','italy': 1,'like':".$shuoshuo['like']['num'].",'comment':".$shuoshuo['comment']['num']."},";
+            $chartData.="{'date': '".$ymd."','italy': 1,'like':".$shuoshuo['likenum'].",'comment':".$shuoshuo['cmtnum']."},";
             //echo $chartData;exit();
         }
-        //计算 说说或者赞 中最大值 为显示最大值用
+        //计算 说说或者赞 中最大值 为前端显示最大y值用
         $pos = array_search(max($max), $max);
         $maxVal = $max[$pos];
-        //计算 评论前十
+        //评论前十 排序 翻转 截取
+        sort($commentTop);
         $top = array_reverse($commentTop);
+        $top = array_slice($top,1,10);
         $this->chartData = $chartData;
         $this->maxVal = $maxVal;
         $this->top = $top;

@@ -186,122 +186,152 @@
                         <div class="col-md-4">
 
                             <div class="portlet-body  form">
-                            <div class="form-body">
+                                <div class="form-body">
 
-                            <?php for($i=0;$i<count($groud);$i++){?>
-                            <div class="form-group ss">
-                                <label class="col-md-3 control-label"><?php echo $groud[$i]->gpname ?></label>
-                                <select class="form-control input-medium myfriend col-md-3">
-                                    <option value="0">==请选择一位好友==</option>
-                                    <?php foreach($data as $list){
+                                    <?php for($i=0;$i<count($groud);$i++){?>
+                                    <div class="form-group ss">
+                                        <label class="col-md-3 control-label"><?php echo $groud[$i]->gpname ?></label>
+                                        <select class="form-control input-medium myfriend col-md-3">
+                                            <option value="0">==请选择一位好友==</option>
+                                            <?php foreach($data as $list){
                                 if($list->groupid==$groud[$i]->gpid){
-                                    ?>
-                                    <option value="<?php echo $list->uin?>">
-                                        <?php
+                                            ?>
+                                            <option value="<?php echo $list->uin?>">
+                                                <?php
                                             $realname = $list->realname?"(".$list->realname.")":"";
-                                        echo $list->name.$realname."---".$list->uin
-                                        ?>
-                                    </option>
-                                    <?php } } ?>
-                                </select>
+                                                echo $list->name.$realname."---".$list->uin
+                                                ?>
+                                            </option>
+                                            <?php } } ?>
+                                        </select>
 
-                                <div class="clearfix"></div>
-                            </div>
-                            <?php } ?>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <?php } ?>
 
-                            <div class="form-group">
+                                    <div class="form-group">
 
 
-                                <label class="col-md-3 control-label"></label>
+                                        <label class="col-md-3 control-label"></label>
 
-                                <div class="col-md-3">
-                                    <div class="input-group pinshuoshuo input-medium" style="margin-left: -16px;">
-                                        <input type="text" id="friendQq" class="form-control " placeholder="选择一位好友">
+                                        <div class="col-md-3">
+                                            <div class="input-group pinshuoshuo input-medium"
+                                                 style="margin-left: -16px;">
+                                                <input type="text" id="friendQq" class="form-control "
+                                                       placeholder="选择一位好友">
                             <span class="input-group-btn">
 											<button class="btn blue loading findfriend" data-loading-text="Loading..."
                                                     type="button">Shuoshuo!
                                             </button>
 											</span>
+                                            </div>
+                                        </div>
+
                                     </div>
+
+                                    <div class="form-group" style="height:35px;">
+
+
+                                    </div>
+
+
+                                    <div class="form-group">
+
+                                        <label class="col-md-3 control-label">批量点赞</label>
+
+                                        <div class="col-md-9">
+
+                                            <select class="form-control" class="batchLikeV" style="margin-bottom: 5px">
+                                                <option value="0">-时间-</option>
+                                                <option value="week">一周内</option>
+                                                <option value="month">一个月内</option>
+                                                <option value="month6">半年内</option>
+                                                <option value="year">一年内</option>
+                                                <option value="all">全部</option>
+                                            </select>
+                                            <button type="button" class="btn btn-success loading batchLikeGo"
+                                                    data-loading-text="Loading..." onclick="batchLikeGo(this,1)">
+                                                <!--批量点赞-->
+                                                开始点赞
+                                            </button>
+
+                                            <button type="button" class="btn btn-blue loading batchLikeGo"
+                                                    data-loading-text="Loading..." onclick="batchLikeGo(this,0)">
+                                                <!--批量取消点赞-->
+                                                取消点赞
+                                            </button>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">批量评论</label>
+
+                                        <div class="col-md-9">
+
+                                            <div class="input-group">
+                                                <select class="form-control" class="batchCommentV"
+                                                        style="margin-bottom: 5px">
+                                                    <option value="0">-时间-</option>
+                                                    <option value="week">一周内</option>
+                                                    <option value="month">一个月内</option>
+                                                    <option value="month6">半年内</option>
+                                                    <option value="year">一年内</option>
+                                                    <option value="all">全部</option>
+                                                </select>
+                                            </div>
+                                            <div class="input-group">
+
+                                                <label><input type="radio" name="batchCommentType" value="diy"></label>
+                                                自定义内容
+                                                <textarea class="form-control batchCommentDiy" rows="3"
+                                                          placeholder="输入内容,不超过150字"></textarea>
+                                            </div>
+
+                                            <div class="input-group">
+
+                                                <label><input type="radio" name="batchCommentType" value="rebot"
+                                                              checked></label>
+                                                机器人
+
+                                            </div>
+                                            <div class="input-group">
+                                                <label>
+                                                    <input type="checkbox" class="batchCommentIsPrivate"> 是否为私密评论
+                                                </label>
+                                            </div>
+                                            <button class="btn blue loading batchCommentGo"
+                                                    onclick="batchCommentGo(this)" data-loading-text="Loading..."
+                                                    type="button">开始评论!
+                                            </button>
+
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+
+                                    <div class="form-group">
+
+                                        <label class="col-md-3 control-label">统计相关</label>
+
+                                        <div class="col-md-9">
+
+                                            <button type="button" class="btn btn-success loading countContent"
+                                                    data-loading-text="Loading..." onclick="countContent(this)"><!--内容统计-->
+                                                统计一
+                                            </button>
+
+                                            <button type="button" class="btn btn-blue loading emotionAnalysis"
+                                                    data-loading-text="Loading..." onclick="emotionAnalysis(this)"><!--情感分析-->
+                                                统计二
+                                            </button>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+
+
                                 </div>
-
-                            </div>
-
-                            <div class="form-group" style="height:35px;">
-
-
-                            </div>
-
-
-                            <div class="form-group">
-
-                                <label class="col-md-3 control-label">批量点赞</label>
-
-                                <div class="col-md-9">
-
-                                    <select class="form-control" class="batchLikeV" style="margin-bottom: 5px">
-                                        <option value="0">-时间-</option>
-                                        <option value="week">一周内</option>
-                                        <option value="month">一个月内</option>
-                                        <option value="month6">半年内</option>
-                                        <option value="year">一年内</option>
-                                        <option value="all">全部</option>
-                                    </select>
-                                    <button type="button" class="btn btn-success loading batchLikeGo"
-                                            data-loading-text="Loading..." onclick="batchLikeGo(this,1)"><!--批量点赞-->
-                                        开始点赞
-                                    </button>
-
-                                    <button type="button" class="btn btn-info loading batchLikeGo"
-                                            data-loading-text="Loading..." onclick="batchLikeGo(this,0)"><!--批量取消点赞-->
-                                        取消点赞
-                                    </button>
-                                </div>
-                                <div class="clearfix"></div>
-
-
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">批量评论</label>
-
-                                <div class="col-md-9">
-
-                                    <div class="input-group">
-                                    <select class="form-control" class="batchCommentV" style="margin-bottom: 5px">
-                                        <option value="0">-时间-</option>
-                                        <option value="week">一周内</option>
-                                        <option value="month">一个月内</option>
-                                        <option value="month6">半年内</option>
-                                        <option value="year">一年内</option>
-                                        <option value="all">全部</option>
-                                    </select>
-                                    </div>
-                                    <div class="input-group">
-
-                                         <label><input type="radio" name="batchCommentType"   value="diy" ></label>
-                                         自定义内容
-                                        <textarea class="form-control batchCommentDiy" rows="3" placeholder="输入内容,不超过150字"></textarea>
-                                    </div>
-
-                                    <div class="input-group">
-
-                                        <label><input type="radio" name="batchCommentType"  value="rebot" checked></label>
-                                        机器人
-
-                                    </div>
-                                    <div class="input-group">
-                                        <label>
-                                            <input type="checkbox" class="batchCommentIsPrivate"> 是否为私密评论
-                                        </label>
-                                    </div>
-                                    <button class="btn blue loading batchCommentGo" onclick="batchCommentGo(this)" data-loading-text="Loading..." type="button">开始评论!
-                                    </button>
-
-                                </div>
-
-                            </div>
-                            </div>
                             </div>
                         </div>
 

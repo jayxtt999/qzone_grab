@@ -11,8 +11,9 @@ jQuery(document).ready(function () {
     //好友列表
     $(".myfriend").select2()
     $(".myfriend").change(function () {
-        //$(".well").hide(1000)
         val = $(this).val();
+        $(".myfriend").select2("val", "0");
+        $(this).select2("val",val);
         $("#friendQq").val(val)
         $("#friendQq").attr("readonly", "readonly")
     })
@@ -36,12 +37,13 @@ jQuery(document).ready(function () {
         });
         $("#iframe").attr("src", "/home/console/getshuoshuoall?uqq=" + uqq + "&r=" + new Date().getTime())
     })
-
+    //显示评论
     $(".scroller").on("click", ".commentShow", function () {
         cellid = $(this).attr("data-cellid")
         $(".ic" + cellid).focus();
     })
 
+    //回复评论
     $(".scroller").on("click", ".repComment", function () {
 
         z = $(this)
@@ -87,7 +89,7 @@ jQuery(document).ready(function () {
 
     })
 
-
+    //点赞
     $(".scroller").on("click", ".likes", function () {
         z = this
         if ($(z).find("i").hasClass("fa-thumbs-o-up")) {
@@ -131,6 +133,7 @@ jQuery(document).ready(function () {
         })
     })
 
+    //直接回复说说
     $(".scroller").on("click", ".repSs", function () {
         z = $(this)
         cellid = $(this).attr("data-cellid")
@@ -164,6 +167,7 @@ jQuery(document).ready(function () {
         })
     })
 
+    //其它人评论
     $(".scroller").on("click", ".commentOther", function () {
         z = $(this)
         if (z.data("ison") == true && $(z).data("ison") != "undefined") {
@@ -188,24 +192,46 @@ jQuery(document).ready(function () {
         z.data("ison", true)
     })
 
+    //显示更多
     $(".loadMore").on("click", function () {
         var btn = $(this)
         btn.button('loading')
         uin = btn.attr("data-uin")
         page = btn.attr("data-page")
         type = 2;
-        getShuoshuoMore(uin, page,type)
+        getShuoshuoMore(uin, page, type)
     })
+
+    //显示地理位置
+    $(".scroller").on("click", ".showBaiduMap", function (){
+        lbs_name = $(this).attr("data-lbs_name")
+        lbs_pos_x = $(this).attr("data-lbs_pos_x")
+        lbs_pos_y = $(this).attr("data-lbs_pos_y")
+        layer.open({
+            type: 2,
+            title: '我的位置',
+            shadeClose: true,
+            shade: 0.7,
+            area: ['70%', '70%'],
+            content: 'http://map.baidu.com/?latlng='+lbs_pos_y+','+lbs_pos_x+'&title=我的位置&content='+lbs_name+'&autoOpen=true&output=html' //iframe的url
+        });
+    })
+
+
 });
 
 //初始参数
-
 var lodingSsOver = false;
-
+//判断初始化参数
 function lodingSs() {
     lodingSsOver = true;
 }
-//获取说说
+
+/**
+ * 获取说说
+ * @param uin
+ * @returns {boolean}
+ */
 function getShuoshuo(uin) {
     if (!lodingSsOver) {
         return false
@@ -219,33 +245,45 @@ function getShuoshuo(uin) {
     dataToTpl(uin, page,type)
 }
 
-//获取更多说说
-function getShuoshuoMore(uin, page,type) {
+/**
+ * 获取更多说说
+ * @param uin
+ * @param page
+ * @param type
+ * @returns {boolean}
+ */
+function getShuoshuoMore(uin, page, type) {
 
     if (!uin || !page) {
         layer.msg('参数错误', function () {
         })
         return false
     }
-    dataToTpl(uin, page,type)
+    dataToTpl(uin, page, type)
 }
 
+/**
+ * 输出模板
+ * @param uin
+ * @param page
+ * @param type
+ */
+function dataToTpl(uin, page, type) {
 
-function dataToTpl(uin, page,type) {
-
-    $.ajax({
-        "url": "/home/home/showShuoshuoList",
-        "dataType": "json",
-        "type": "post",
-        "data": {uin: uin, page: page},
-        "success": function (res) {
-            var html = "";
-            var d = res.result
-            var uinSup = res.uin
-            var isMore = res.isMore
-            var nextPage = res.nextPage
-            if (d && (d.length > 0)) {
-                $.each(d, function (n, v) {
+    try {
+        $.ajax({
+            "url": "/home/home/showShuoshuoList",
+            "dataType": "json",
+            "type": "post",
+            "data": {uin: uin, page: page},
+            "success": function (res) {
+                var html = "";
+                var d = res.result
+                var uinSup = res.uin
+                var isMore = res.isMore
+                var nextPage = res.nextPage
+                if (d && (d.length > 0)) {
+                    $.each(d, function (n, v) {
                         //拼接说说评论与回复
                         var uin = v.uin;
                         var cellid = v.cellid;
@@ -264,27 +302,28 @@ function dataToTpl(uin, page,type) {
                         }
                         html += "<div class='clearfix'><span class='btn commentShow'  data-uin='" + v.uin + "' data-cellid='" + cellid + "'><i class='fa  fa-comments-o'></i>评论(<em>" + v.cmtnum + "</em>)</span><span class='btn likes'  data-uin='" + v.uin + "' data-cellid='" + cellid + "'><i class='" + likeStyle + "'></i>(<em>" + v.likenum + "</em>)</span></div>";
 
-                        if (v.video && (v.video).length > 0){
+                        if (v.video && (v.video).length > 0) {
 
                             html += "<div class='clearfix'><div class='row mix-grid'>";
                             $.each(v.video, function (videok, videov) {
-                                html += " <video controls='controls'  loop='loop' name='media'><source src='"+videov+"' type='video/mp4'></video>";
+                                html += " <video controls='controls'  loop='loop' name='media'><source src='" + videov + "' type='video/mp4'></video>";
                             })
                             html += "</div></div>";
 
                         }
 
                         html += "<div class='clearfix'>";
-                        if (v.story_info){
+                        if (v.story_info) {
                             var story_info = v.story_info
                             var lbs_idname = story_info.idname
-                            //var lbs_name = story_info.name
-                            //var lbs_pos_x = story_info.pos_x
-                            //var lbs_pos_y = story_info.pos_y
-                            html+="拍摄于&nbsp"+lbs_idname+"&nbsp&nbsp";
+                            var lbs_name = story_info.name
+                            var lbs_pos_x = story_info.pos_x
+                            var lbs_pos_y = story_info.pos_y
+                            html += "拍摄于&nbsp<a href='javascript:;' class='showBaiduMap' data-lbs_name='"+lbs_name+"' data-lbs_pos_x='"+lbs_pos_x+"' data-lbs_pos_y='"+lbs_pos_y+"' >" + lbs_idname + "</a>&nbsp&nbsp";
+
                         }
-                        if (v.source_name){
-                            html+="来自&nbsp"+source_name;
+                        if (v.source_name) {
+                            html += "来自&nbsp" + v.source_name;
                         }
                         html += "</div>"
                         if (v.likenum > 0) {
@@ -320,38 +359,58 @@ function dataToTpl(uin, page,type) {
                         html += "<div class='chat-form'><div class='input-cont'><input class='form-control ic" + cellid + "'  type='text' placeholder='我也说一句'/></div><div class='btn-cont'><span class='arrow'></span><a href='javascript:;' class='btn blue icn-only repSs' data-cellid='" + cellid + "' data-uin='" + uin + "'><i class='fa fa-check icon-white'></i></a></div></div></div></div>";
 
                     });
-                $(".loadMore").attr("style","display:block");
+                    $(".loadMore").attr("style", "display:block");
 
-                if (isMore==true){
-                    $(".loadMore").text("LoadMore");
-                    $(".loadMore").removeClass("disabled");
-                    $(".loadMore").attr("data-uin", uinSup)
-                    $(".loadMore").attr("data-page",nextPage)
-                }else{
-                    $(".loadMore").text("没有更多了");
-                    $(".loadMore").addClass("disabled");
-                    $(".loadMore").attr("data-uin", uinSup)
-                    $(".loadMore").attr("data-page", 1)
+                    if (isMore == true) {
+                        $(".loadMore").text("LoadMore");
+                        $(".loadMore").removeClass("disabled");
+                        $(".loadMore").attr("data-uin", uinSup)
+                        $(".loadMore").attr("data-page", nextPage)
+                    } else {
+                        $(".loadMore").text("没有更多了");
+                        $(".loadMore").addClass("disabled");
+                        $(".loadMore").attr("data-uin", uinSup)
+                        $(".loadMore").attr("data-page", 1)
+                    }
+                    if (type == 1) {
+                        //init
+                        $(".scroller").html(html)
+                    } else {
+                        //addMore
+                        $(".scroller").append(html)
+                    }
+                    resetBtnStatus(type)
                 }
 
-                if(type==1){
-                    //init
-                    $(".scroller").html(html)
-                    $(".findfriend").button('reset')
-                }else{
-                    //addMore
-                    $(".scroller").append(html)
-                    $(".loadMore").button('reset')
-                }
-                Metronic.unblockUI('.scroller');
             }
-
-        }
-    })
+        })
+    } catch (e) {
+        resetBtnStatus(type)
+        console.log(e.message)
+    }
 
 }
 
-//关闭评论
+/**
+ * 还原按钮状态
+ * @param type
+ */
+function resetBtnStatus(type) {
+    if (type == 1) {
+        //init
+        $(".findfriend").button('reset')
+    } else {
+        //addMore
+        $(".loadMore").button('reset')
+    }
+    Metronic.unblockUI('.scroller');
+
+}
+
+/**
+ * 关闭评论
+ * @param z
+ */
 function closeComment(z) {
 
     layer.confirm('你要关闭评论吗？', {
@@ -366,86 +425,121 @@ function closeComment(z) {
     });
 }
 
-//添加点赞者头像
+/**
+ * 添加点赞者头像
+ * @param z
+ * @param qq
+ */
 function avatarShow(z, qq) {
     insertHtml = "<a href='http://user.qzone.qq.com/" + qq + "' class='pull-left' target='_blank'><img alt='' src='http://q.qlogo.cn/headimg_dl?bs=qq&amp;dst_uin=" + qq + "&amp;src_uin=www.xietaotao.cn&amp;fid=blog&amp;spec=100' class='media-object likeAva'></a>";
     $(z).parent().next().find(".media a").eq(0).after(insertHtml);
 
 }
 
-//移除点赞者头像
+/**
+ * 移除点赞者头像
+ * @param z
+ * @param qq
+ */
 function avatarHide(z, qq) {
     $(z).parent().next().find(".media a").eq(1).remove();
 }
 
-//批量点赞
-function batchLikeGo(z,c){
+/**
+ * 批量点赞
+ * @param z
+ * @param c
+ */
+function batchLikeGo(z, c) {
     //c true 点赞 false 取消点赞
     $(z).button('loading')
     var v = $(".batchLikeV")
     var uqq = $("#friendQq").val()
-    if(!uqq){
+    if (!uqq) {
         layer.msg('请选定一个好友', function () {
             $(z).button('reset')
         })
     }
-    if(!v){
-        layer.msg('请选择一个时间节点', function (){
+    if (!v) {
+        layer.msg('请选择一个时间节点', function () {
             $(z).button('reset')
         })
     }
-    if(c){
-        $("#iframe").attr("src", "/home/console/batchlike?uqq=" + uqq + "&time="+v+"&c=1&r=" + new Date().getTime())
-    }else{
-        $("#iframe").attr("src", "/home/console/batchlike?uqq=" + uqq + "&time="+v+"&c=0&r=" + new Date().getTime())
+    if (c) {
+        $("#iframe").attr("src", "/home/console/batchlike?uqq=" + uqq + "&time=" + v + "&c=1&r=" + new Date().getTime())
+    } else {
+        $("#iframe").attr("src", "/home/console/batchlike?uqq=" + uqq + "&time=" + v + "&c=0&r=" + new Date().getTime())
     }
 
 }
 
-//批量点赞完毕
-function batchLikeGoOver(){
+/**
+ * 批量点赞完毕
+ */
+function batchLikeGoOver() {
     layer.msg('操作完毕')
     $(".batchLikeGo").button('reset')
 }
 
-
-//批量评论
-function batchCommentGo(z){
+/**
+ * 批量评论
+ * @param z
+ */
+function batchCommentGo(z) {
     $(z).button('loading')
     var uqq = $("#friendQq").val()
-    if(!uqq){
+    if (!uqq) {
         layer.msg('请选定一个好友', function () {
             $(z).button('reset')
         })
     }
     var v = $(".batchCommentV")
-    if(!v){
-        layer.msg('请选择一个时间节点', function (){
+    if (!v) {
+        layer.msg('请选择一个时间节点', function () {
             $(z).button('reset')
         })
     }
     var batchCommentType = $("input[name='batchCommentType']:checked").val();
     var content = ""
-    if(batchCommentType=="diy"){
+    if (batchCommentType == "diy") {
         content = $(".batchCommentDiy").val();
-        if($.trim(content)==""){
+        if ($.trim(content) == "") {
             layer.msg('自定义内容不能为空', function () {
-                $(z).button('reset');return false;
+                $(z).button('reset');
+                return false;
             })
         }
     }
     var isPrivate = $(".batchCommentIsPrivate").is(':checked')
-    var private = isPrivate?1:0;
-    $("#iframe").attr("src", "/home/console/batchcomment?uqq=" + uqq + "&time="+v+"&content="+content+"private="+private+"&r=" + new Date().getTime())
+    var private = isPrivate ? 1 : 0;
+    $("#iframe").attr("src", "/home/console/batchcomment?uqq=" + uqq + "&time=" + v + "&content=" + content + "private=" + private + "&r=" + new Date().getTime())
 }
 
-//批量评论完毕
-function batchCommentGoOver(){
+/**
+ * 批量评论完毕
+ */
+function batchCommentGoOver() {
     layer.msg('操作完毕')
     $(".batchCommentGo").button('reset')
 }
 
 
+function countContent(){
+    var uqq = $("#friendQq").val()
+    if (!uqq) {
+        layer.msg('请选定一个好友', function () {
+            $(z).button('reset')
+        })
+    }
+    layer.open({
+        type : 2,
+        title: '统计线形图',
+        shadeClose: true,
+        area: ['70%', '70%'],
+        content: '/home/show/table/uqq/'+uqq
+    });
+
+}
 
 
 

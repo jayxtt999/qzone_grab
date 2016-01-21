@@ -50,7 +50,7 @@ class HomeController extends AbstractController
 
         $uqq = I('post.uin');
         $page = I('post.page') ? I('post.page') : 1;
-        $uqq = 136787510;
+        $uqq = 435024179;
         $shuoshuoAll = array();
         $friendShuoshuo = M('friend_shuoshuo');
         $ssLogic = D('Shuoshuo', 'Logic');
@@ -71,7 +71,7 @@ class HomeController extends AbstractController
                 //2种显示形式假设赞数量为10
                 //1：赞（10）
                 //2：张三,李四,王五等7人觉得很赞
-                if ($likemans && strpos($likemans, ",")) {
+                if ($likemans || strpos($likemans, ",")) {
                     $likemansArr = explode(",", $likemans);
                     $result[$k]['likemansArr'] = $likemansArr;
                     if (in_array($this->qq['qq'], $likemansArr)) {
@@ -79,7 +79,10 @@ class HomeController extends AbstractController
                     } else {
                         $result[$k]['islike'] = false;
                     }
-                    $result[$k]['likemansAndNum'] = $v['likenum'] - count($likemansArr);
+                    $likemansAndNum = $v['likenum'] - count($likemansArr);
+                    if($likemansAndNum>0){
+                        $result[$k]['likemansAndNum'] = $likemansAndNum;
+                    }
                 }
                 //是否有图片
                 if ($v['summary_img_url']) {
@@ -98,8 +101,8 @@ class HomeController extends AbstractController
                     $videoArr = array();
                     $videoHost = "http://180.153.208.230/";
                     $video = unserialize($v['video']);
-                    foreach ($video as $v) {
-                        $videoArr[] = $videoHost . str_replace("http://", "", $v)."&ocid=1";
+                    foreach ($video as $vvideo) {
+                        $videoArr[] = $videoHost . str_replace("http://", "", $vvideo)."&ocid=1";
                     }
                     $result[$k]['video'] = $videoArr;
                 }

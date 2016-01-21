@@ -91,7 +91,6 @@ class ConsoleController extends AbstractController
      */
     public function getData($params)
     {
-
         $uqq = $params['uqq'];
         $limit = $params['limit'];
         $gtk = $params['gtk'];
@@ -101,11 +100,6 @@ class ConsoleController extends AbstractController
         $result = $this->sendToQq($url, array("p_skey" => ""));
         $result = $this->filterCallback($result);
         $result = json_decode($result, true);
-
-        echo "<pre>";
-        print_r($result);
-        echo "</pre>";
-        exit;
         if (!empty($result['message'])) {
             consoleShow($result['message']);
         }
@@ -173,7 +167,7 @@ class ConsoleController extends AbstractController
                 $likemansVs = $this->qq['qq'] . "," . $likemansVs;
             }
             if ($row) {
-                if (($row['likenum'] != $likeNum) || ($row['cmtnum'] != $v['cmtnum'])) {
+                if (($row['likenum'] != $likeNum) || ($row['cmtnum'] != $v['cmtnum']) || $video) {
                     $upDateArr = array(
                         'likenum' => $likeNum,
                         'cmtnum' => $v['cmtnum'],
@@ -389,6 +383,7 @@ class ConsoleController extends AbstractController
         }
         $where['_string'] = "time>" . $time;
         $ssAll = $ssLogic->getShuoshuoAll($where);
+        consoleShow("自动评论开始");
 
         if ($ssAll) {
             foreach ($ssAll as $v) {
@@ -433,7 +428,96 @@ class ConsoleController extends AbstractController
         consoleShow("<script>parent.batchCommentGoOver()</script>");
         exit;
     }
+
+
+    public function Emotion(){
+
+        $this->init();
+        $uqq = I('get.uqq');
+        $ssLogic = D('Shuoshuo', 'Logic');
+        $shuoshuoAll = $ssLogic->getShuoshuoAll(array('uin'=>$uqq));
+
+        $chartData = "";
+        Vendor('QcloudApi.QcloudApi');
+        $service = \QcloudApi::load(\QcloudApi::MODULE_WENZHI, C("QcloudApi"));
+        $method = 'POST';
+        $service->setConfigRequestMethod($method);
+        $ratio = array();
+        $classAll = array();
+        foreach($shuoshuoAll as $k=>$v){
+
+            $content = iconv( "gb2312//IGNORE", "UTF-8" ,$v['summary']);
+            if(!$content){
+                continue;
+            }
+            //文本分类
+            $class = array();
+            $request = $service->TextClassify(array("content"=>$content));
+            if ($request === false) {
+
+                $error = $service->getError();
+                echo "Class Error code:" . $error->getCode() . ".\n";
+                echo "message:" . $error->getMessage() . ".\n";
+                echo "ext:" . var_export($error->getExt(), true) . ".\n";
+                var_dump($request);exit;
+            }else{
+                foreach($request['classes'] as $v2){
+                    if($v2['class_num']<10){
+                        $code = "0X0000000".$v2['class_num'];
+                    }else{
+                        $code = "0X000000".strtoupper(dechex($v2['class_num']));
+                    }
+                    if(!isset($this->class[$code])){
+                        $this->class[$code] = array("className"=>$v2['class'],"conf"=>0);
+                        //echo "Error:Not ID ".$code;
+                        //var_dump($v2);exit;
+                    }
+                    $this->class[$code]['conf'] += $v2['conf'];
+                }
+            }
+            //情感分析
+            $request = $service->TextSentiment(array("content"=>$content));
+            if ($request === false) {
+                $error = $service->getError();
+                echo "Sentiment Error code:" . $error->getCode() . ".\n";
+                echo "message:" . $error->getMessage() . ".\n";
+                echo "ext:" . var_export($error->getExt(), true) . ".\n";
+                var_dump($request);exit;
+
+            }else{
+                $chartData.="{'time': '".$v['time']."','positive':".$request['positive'].",'comment':\"".iconv( "gb2312//IGNORE", "UTF-8" ,$v['comment'])."\"},";
+            }
+            //正负面情绪比例  由于k是递增的,固用k记录条数 叠加 positive 正情绪比即为 k/$request[positive]
+            $ratio[] = $request['positive'];
+            //positive
+            /*echo "{'time': '".$v['time']."','positive':".$request['positive'].",'comment':\"".iconv( "gb2312//IGNORE", "UTF-8" ,$v['comment'])."\"},<br/>";
+            ob_flush();
+            flush();*/
+        }
+        $chartDataPid = "";
+        foreach($this->class as $v){
+            if($v['conf'] == 0){
+                continue;
+            }
+            $chartDataPid.="{'country': '".$v['className']."','value':".$v['conf']."},";
+        }
+        //正能量
+        $pe = number_format(array_sum($ratio)/count($ratio)*100,2);
+        //负能量
+        $ne = 100-$pe;
+        $this->assign("chartDataPid",$chartDataPid);
+        $this->assign("chartData",$chartData);
+        $this->assign("pe",$pe);
+        $this->assign("ne",$ne);
+        $this->display('emotion');
+
+
+    }
+
 }
+
+
+
 
 
 
