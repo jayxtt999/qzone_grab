@@ -174,7 +174,7 @@ class ConsoleController extends AbstractController
                         'likemans' => $likemansVs,
                         'video' => $video,
 
-                );
+                    );
                     $friendShuoShuo->where($where)->save($upDateArr);
                 }
 
@@ -430,87 +430,79 @@ class ConsoleController extends AbstractController
     }
 
 
-    public function Emotion(){
+    public function Emotion()
+    {
 
         $this->init();
         $uqq = I('get.uqq');
+        $uqq = 136787510;
+        $where = array('uin' => $uqq);
         $ssLogic = D('Shuoshuo', 'Logic');
-        $shuoshuoAll = $ssLogic->getShuoshuoAll(array('uin'=>$uqq));
-
-        $chartData = "";
+        $friendShuoShuo = M('friend_shuoshuo');
+        $shuoshuoAll = $ssLogic->getShuoshuoAll($where);
+        consoleShow("文本分类，情感分析开始");
         Vendor('QcloudApi.QcloudApi');
         $service = \QcloudApi::load(\QcloudApi::MODULE_WENZHI, C("QcloudApi"));
         $method = 'POST';
         $service->setConfigRequestMethod($method);
-        $ratio = array();
-        $classAll = array();
-        foreach($shuoshuoAll as $k=>$v){
-
-            $content = iconv( "gb2312//IGNORE", "UTF-8" ,$v['summary']);
-            if(!$content){
+        $classArr = $ssLogic::getTextClassArr();
+        foreach ($shuoshuoAll as $k => $v) {
+            $content = $v['summary'];
+            if (!$content) {
                 continue;
             }
-            //文本分类
-            $class = array();
-            $request = $service->TextClassify(array("content"=>$content));
-            if ($request === false) {
+            $where['cellid'] = $v['cellid'];
+            if (!$v['class_code']) {
+                //文本分类
+                $request = $service->TextClassify(array("content" => $content));
+                if ($request === false) {
+                    $error = $service->getError();
+                    consoleShow("Class Error code class_code:" . $error->getCode());
+                    consoleShow("message:" . $error->getMessage());
+                    consoleShow("ext:" . var_export($error->getExt(), true));
+                } else {
+                    $classCode = array();
+                    $classConf = array();
+                    foreach ($request['classes'] as $v2) {
+                        if ($v2['class_num'] < 10) {
+                            $code = "0X0000000" . $v2['class_num'];
+                        } else {
+                            $code = "0X000000" . strtoupper(dechex($v2['class_num']));
+                        }
+                        if (!isset($classArr[$code])) {
+                            consoleShow("未存在的分类:".$code);
+                        }
+                        $classCode[] = $code;
+                        $classConf[] = $v2['conf'];
+                    }
 
-                $error = $service->getError();
-                echo "Class Error code:" . $error->getCode() . ".\n";
-                echo "message:" . $error->getMessage() . ".\n";
-                echo "ext:" . var_export($error->getExt(), true) . ".\n";
-                var_dump($request);exit;
-            }else{
-                foreach($request['classes'] as $v2){
-                    if($v2['class_num']<10){
-                        $code = "0X0000000".$v2['class_num'];
-                    }else{
-                        $code = "0X000000".strtoupper(dechex($v2['class_num']));
-                    }
-                    if(!isset($this->class[$code])){
-                        $this->class[$code] = array("className"=>$v2['class'],"conf"=>0);
-                        //echo "Error:Not ID ".$code;
-                        //var_dump($v2);exit;
-                    }
-                    $this->class[$code]['conf'] += $v2['conf'];
+                    $upDateArr = array(
+                        'class_code' => implode(",",$classCode),
+                        'class_conf' => implode(",",$classConf),
+                    );
+                    $friendShuoShuo->where($where)->save($upDateArr);
+
                 }
             }
-            //情感分析
-            $request = $service->TextSentiment(array("content"=>$content));
-            if ($request === false) {
-                $error = $service->getError();
-                echo "Sentiment Error code:" . $error->getCode() . ".\n";
-                echo "message:" . $error->getMessage() . ".\n";
-                echo "ext:" . var_export($error->getExt(), true) . ".\n";
-                var_dump($request);exit;
-
-            }else{
-                $chartData.="{'time': '".$v['time']."','positive':".$request['positive'].",'comment':\"".iconv( "gb2312//IGNORE", "UTF-8" ,$v['comment'])."\"},";
+            if (!$v['positive']) {
+                //情感分析
+                $request = $service->TextSentiment(array("content" => $content));
+                if ($request === false) {
+                    $error = $service->getError();
+                    consoleShow("Class Error code:positive " . $error->getCode());
+                    consoleShow("message:" . $error->getMessage());
+                    consoleShow("ext:" . var_export($error->getExt(), true));
+                } else {
+                    $upDateArr = array(
+                        'positive' => round($request['positive'],4),
+                    );
+                    $friendShuoShuo->where($where)->save($upDateArr);
+                }
             }
-            //正负面情绪比例  由于k是递增的,固用k记录条数 叠加 positive 正情绪比即为 k/$request[positive]
-            $ratio[] = $request['positive'];
-            //positive
-            /*echo "{'time': '".$v['time']."','positive':".$request['positive'].",'comment':\"".iconv( "gb2312//IGNORE", "UTF-8" ,$v['comment'])."\"},<br/>";
-            ob_flush();
-            flush();*/
+            consoleShow("处理记录:" . mb_substr($content,0,15,'utf-8'));
         }
-        $chartDataPid = "";
-        foreach($this->class as $v){
-            if($v['conf'] == 0){
-                continue;
-            }
-            $chartDataPid.="{'country': '".$v['className']."','value':".$v['conf']."},";
-        }
-        //正能量
-        $pe = number_format(array_sum($ratio)/count($ratio)*100,2);
-        //负能量
-        $ne = 100-$pe;
-        $this->assign("chartDataPid",$chartDataPid);
-        $this->assign("chartData",$chartData);
-        $this->assign("pe",$pe);
-        $this->assign("ne",$ne);
-        $this->display('emotion');
-
+        consoleShow("文本分类，情感分析处理完毕");
+        consoleShow("<script>parent.emotionOver(" . $uqq . ")</script>");
 
     }
 

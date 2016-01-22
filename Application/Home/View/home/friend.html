@@ -154,8 +154,8 @@
             <!-- END STYLE CUSTOMIZER -->
             <!-- BEGIN PAGE HEADER-->
             <h3 class="page-title">
-                大厅
-                <small>个人中心</small>
+                好友
+                <small>简介</small>
             </h3>
             <div class="page-bar">
                 <ul class="page-breadcrumb">
@@ -178,11 +178,237 @@
 
             <div class="row">
 
+
                 <div class="col-md-12">
 
-                    
+                    <div class="col-md-9">
+
+                        <div class="col-md-4">
+
+                            <div class="portlet-body  form">
+                                <div class="form-body">
+
+                                    <?php for($i=0;$i<count($groud);$i++){?>
+                                    <div class="form-group ss">
+                                        <label class="col-md-3 control-label"><?php echo $groud[$i]->gpname ?></label>
+                                        <select class="form-control input-medium myfriend col-md-3">
+                                            <option value="0">==请选择一位好友==</option>
+                                            <?php foreach($data as $list){
+                                if($list->groupid==$groud[$i]->gpid){
+                                            ?>
+                                            <option value="<?php echo $list->uin?>">
+                                                <?php
+                                            $realname = $list->realname?"(".$list->realname.")":"";
+                                                echo $list->name.$realname."---".$list->uin
+                                                ?>
+                                            </option>
+                                            <?php } } ?>
+                                        </select>
+
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <?php } ?>
+
+                                    <div class="form-group">
 
 
+                                        <label class="col-md-3 control-label"></label>
+
+                                        <div class="col-md-3">
+                                            <div class="input-group pinshuoshuo input-medium"
+                                                 style="margin-left: -16px;">
+                                                <input type="text" id="friendQq" class="form-control "
+                                                       placeholder="选择一位好友">
+                            <span class="input-group-btn">
+											<button class="btn blue loading findfriend" data-loading-text="Loading..."
+                                                    type="button">Shuoshuo!
+                                            </button>
+											</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group" style="height:35px;">
+
+
+                                    </div>
+
+
+                                    <div class="form-group">
+
+                                        <label class="col-md-3 control-label">批量点赞</label>
+
+                                        <div class="col-md-9">
+
+                                            <select class="form-control" class="batchLikeV" style="margin-bottom: 5px">
+                                                <option value="0">-时间-</option>
+                                                <option value="week">一周内</option>
+                                                <option value="month">一个月内</option>
+                                                <option value="month6">半年内</option>
+                                                <option value="year">一年内</option>
+                                                <option value="all">全部</option>
+                                            </select>
+                                            <button type="button" class="btn btn-success loading batchLikeGo"
+                                                    data-loading-text="Loading..." onclick="batchLikeGo(this,1)">
+                                                <!--批量点赞-->
+                                                开始点赞
+                                            </button>
+
+                                            <button type="button" class="btn btn-blue loading batchLikeGo"
+                                                    data-loading-text="Loading..." onclick="batchLikeGo(this,0)">
+                                                <!--批量取消点赞-->
+                                                取消点赞
+                                            </button>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label">批量评论</label>
+
+                                        <div class="col-md-9">
+
+                                            <div class="input-group">
+                                                <select class="form-control" class="batchCommentV"
+                                                        style="margin-bottom: 5px">
+                                                    <option value="0">-时间-</option>
+                                                    <option value="week">一周内</option>
+                                                    <option value="month">一个月内</option>
+                                                    <option value="month6">半年内</option>
+                                                    <option value="year">一年内</option>
+                                                    <option value="all">全部</option>
+                                                </select>
+                                            </div>
+                                            <div class="input-group">
+
+                                                <label><input type="radio" name="batchCommentType" value="diy"></label>
+                                                自定义内容
+                                                <textarea class="form-control batchCommentDiy" rows="3"
+                                                          placeholder="输入内容,不超过150字"></textarea>
+                                            </div>
+
+                                            <div class="input-group">
+
+                                                <label><input type="radio" name="batchCommentType" value="rebot"
+                                                              checked></label>
+                                                机器人
+
+                                            </div>
+                                            <div class="input-group">
+                                                <label>
+                                                    <input type="checkbox" class="batchCommentIsPrivate"> 是否为私密评论
+                                                </label>
+                                            </div>
+                                            <button class="btn blue loading batchCommentGo"
+                                                    onclick="batchCommentGo(this)" data-loading-text="Loading..."
+                                                    type="button">开始评论!
+                                            </button>
+
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+
+                                    <div class="form-group">
+
+                                        <label class="col-md-3 control-label">统计相关</label>
+
+                                        <div class="col-md-9">
+
+                                            <button type="button" class="btn btn-success loading countContent"
+                                                    data-loading-text="Loading..." onclick="countContent(this)"><!--内容统计-->
+                                                评论&赞
+                                            </button>
+
+                                            <button type="button" class="btn btn-blue loading emotionAnalysis"
+                                                    data-loading-text="Loading..." onclick="emotionAnalysis(this)"><!--情感分析-->
+                                                分类&情绪曲线
+                                            </button>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-8">
+
+                            <div class="portlet">
+                                <div class="portlet-title line">
+                                    <div class="caption">
+                                        <i class="fa fa-comments"></i>Chats
+                                    </div>
+                                    <div class="tools">
+                                        <a href="" class="collapse">
+                                        </a>
+                                        <a href="#portlet-config" data-toggle="modal" class="config">
+                                        </a>
+                                        <a href="" class="reload">
+                                        </a>
+                                        <a href="" class="remove">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body" id="chats">
+                                    <!--
+                                                                    <div class="scroller" style="height: 600px;" data-always-visible="1" data-rail-visible1="1">
+                                    -->
+                                    <div class="scroller">
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <button class="btn blue btn-block loading loadMore" style="display: none" data-uin=""
+                                        data-page="1" data-loading-text="Loading..."></button>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <div class="pinconsole">
+
+                            <div class="portlet">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-gift"></i>Console
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+
+                                    <iframe id="iframe" src=""
+                                            style="background: #eee;color: #ffffff;font-size: 18px;width: 100%;height: 300px"
+                                            frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="yes"
+                                            allowtransparency="yes">
+                                    </iframe>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-12">
 
                     <div style="height: 2400px"></div>
 
@@ -290,6 +516,8 @@
 
 <script type="text/javascript" src="__PUBLIC__/assets/global/plugins/jquery-mixitup/jquery.mixitup.min.js"></script>
 <script src="__PUBLIC__/plug/lightbox2-master/js/lightbox.js" type="text/javascript"></script>
+
+<script src="__PUBLIC__/js/common/shuoshuo.js" type="text/javascript"></script>
 <script src="__PUBLIC__/plug/layer/layer.js" type="text/javascript"></script>
 </body>
 

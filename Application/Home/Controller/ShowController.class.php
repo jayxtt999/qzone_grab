@@ -5,60 +5,6 @@ class ShowController extends AbstractController {
     private $shuoshuo = array();
 
     /**
-     * 分类配置项
-     * @var array
-     */
-    private $class = array(
-
-        "0X00000000"=>array("className"=>"未知分类","conf"=>0),
-        "0X00000001"=>array("className"=>"旅游","conf"=>0),
-        "0X00000002"=>array("className"=>"游戏","conf"=>0),
-        "0X00000003"=>array("className"=>"人物","conf"=>0),
-        "0X00000004"=>array("className"=>"体育","conf"=>0),
-        "0X00000005"=>array("className"=>"音乐","conf"=>0),
-        "0X00000006"=>array("className"=>"影视","conf"=>0),
-        "0X00000007"=>array("className"=>"软件","conf"=>0),
-        "0X00000008"=>array("className"=>"文学","conf"=>0),
-        "0X00000009"=>array("className"=>"美食","conf"=>0),
-        "0X00000010"=>array("className"=>"动漫","conf"=>0),
-        "0X00000011"=>array("className"=>"教育","conf"=>0),
-        "0X00000012"=>array("className"=>"科技","conf"=>0),
-        "0X00000013"=>array("className"=>"军事","conf"=>0),
-        "0X00000014"=>array("className"=>"天气","conf"=>0),
-        "0X00000015"=>array("className"=>"广告","conf"=>0),
-        "0X00000016"=>array("className"=>"群体聚集","conf"=>0),
-        "0X00000017"=>array("className"=>"自然灾害","conf"=>0),
-        "0X00000018"=>array("className"=>"交通事故","conf"=>0),
-        "0X00000019"=>array("className"=>"金融安全","conf"=>0),
-        "0X00000021"=>array("className"=>"敏感政治","conf"=>0),
-        "0X00000022"=>array("className"=>"贪腐","conf"=>0),
-        "0X00000023"=>array("className"=>"非法组织","conf"=>0),
-        "0X00000024"=>array("className"=>"反动言论","conf"=>0),
-        "0X00000025"=>array("className"=>"先进事迹","conf"=>0),
-        "0X00000028"=>array("className"=>"心灵鸡汤","conf"=>0),
-        "0X000000A"=>array("className"=>"健康","conf"=>0),
-        "0X000000B"=>array("className"=>"医药","conf"=>0),
-        "0X000000C"=>array("className"=>"商铺","conf"=>0),
-        "0X000000D"=>array("className"=>"财经","conf"=>0),
-        "0X000000E"=>array("className"=>"汽车","conf"=>0),
-        "0X000000F"=>array("className"=>"房产","conf"=>0),
-        "0X000000G"=>array("className"=>"健康","conf"=>0),
-        "0X0000001A"=>array("className"=>"刑事犯罪","conf"=>0),
-        "0X0000001B"=>array("className"=>"暴力执法","conf"=>0),
-        "0X0000001C"=>array("className"=>"求职招聘","conf"=>0),
-        "0X0000001D"=>array("className"=>"食品安全","conf"=>0),
-        "0X0000001E"=>array("className"=>"环境污染","conf"=>0),
-        "0X0000001F"=>array("className"=>"疾病疫情","conf"=>0),
-        "0X0000002A"=>array("className"=>"其它政治类","conf"=>0),
-        "0X0000003D"=>array("className"=>"文化","conf"=>0),
-        "0X0000FFFF"=>array("className"=>"其他","conf"=>0),
-        "0X00000029"=>array("className"=>"其他社会类别","conf"=>0),
-        "0X0000002F"=>array("className"=>"幽默搞笑","conf"=>0),
-
-        );
-
-
-    /**
      * 显示列表
      */
     public function Table(){
@@ -113,76 +59,35 @@ class ShowController extends AbstractController {
      * 分类 && 情绪分析
      */
     public function Emotion(){
-        set_time_limit(0);
-        ini_set('memory_limit', '2048M');
+
         $uqq = session('uqq');
-        if($this->shuoshuo[$uqq]){
-            $strShuoshuo = $this->shuoshuo[$uqq];
-        }else{
-            $strShuoshuo = $this->getShuoshuoAll($uqq);
-        }
+        $uqq = 136787510;
+        $ssLogic = D('Shuoshuo', 'Logic');
+        $where = array('uin' => $uqq);
+        $shuoshuoAll = $ssLogic->getShuoshuoAll($where);
+        $shuoshuoAll = array_reverse($shuoshuoAll);
+
+        $classArr = $ssLogic::getTextClassArr();
         $chartData = "";
-        Vendor('QcloudApi.QcloudApi');
-        $service = \QcloudApi::load(\QcloudApi::MODULE_WENZHI, C("QcloudApi"));
-        $method = 'POST';
-        $service->setConfigRequestMethod($method);
-        $ratio = array();
-        $classAll = array();
-        foreach($strShuoshuo as $k=>$v){
-
-            $content = iconv( "gb2312//IGNORE", "UTF-8" ,$v['comment']);
-            if(!$content){
-                continue;
+        foreach($shuoshuoAll as $k=>$v){
+            $classCode = explode(",",$v['class_code']);
+            $classConf = explode(",",$v['class_conf']);
+            foreach($classCode as $key=>$classCodeV){
+                $classArr[$classCodeV]['conf'] += $classConf[$key];
             }
-            //文本分类
-            $class = array();
-            $request = $service->TextClassify(array("content"=>$content));
-            if ($request === false) {
-                $error = $service->getError();
-                echo "Class Error code:" . $error->getCode() . ".\n";
-                echo "message:" . $error->getMessage() . ".\n";
-                echo "ext:" . var_export($error->getExt(), true) . ".\n";
-                var_dump($request);exit;
-            }else{
-                foreach($request['classes'] as $v2){
-                    if($v2['class_num']<10){
-                        $code = "0X0000000".$v2['class_num'];
-                    }else{
-                        $code = "0X000000".strtoupper(dechex($v2['class_num']));
-                    }
-                    if(!isset($this->class[$code])){
-                        $this->class[$code] = array("className"=>$v2['class'],"conf"=>0);
-                        //echo "Error:Not ID ".$code;
-                        //var_dump($v2);exit;
-                    }
-                    $this->class[$code]['conf'] += $v2['conf'];
-                }
-            }
-            //情感分析
-            $request = $service->TextSentiment(array("content"=>$content));
-            if ($request === false) {
-                $error = $service->getError();
-                echo "Sentiment Error code:" . $error->getCode() . ".\n";
-                echo "message:" . $error->getMessage() . ".\n";
-                echo "ext:" . var_export($error->getExt(), true) . ".\n";
-                var_dump($request);exit;
-
-            }else{
-                $chartData.="{'time': '".$v['time']."','positive':".$request['positive'].",'comment':\"".iconv( "gb2312//IGNORE", "UTF-8" ,$v['comment'])."\"},";
-            }
+            $positive = $v['positive']?$v['positive']:0.5;
+            $v['summary'] = strip_tags(preg_replace('/\r|\n/', '', $v['summary']));
+            $time = date("Y/m/d",$v['time']);
+            $chartData.="{'time': '".$time."','positive':".$positive.",'comment':\"".$v['summary']."\"},";
             //正负面情绪比例  由于k是递增的,固用k记录条数 叠加 positive 正情绪比即为 k/$request[positive]
-            $ratio[] = $request['positive'];
-            //positive
-            /*echo "{'time': '".$v['time']."','positive':".$request['positive'].",'comment':\"".iconv( "gb2312//IGNORE", "UTF-8" ,$v['comment'])."\"},<br/>";
-            ob_flush();
-            flush();*/
+            $ratio[] = $v['positive'];
         }
         $chartDataPid = "";
-        foreach($this->class as $v){
-            if($v['conf'] == 0){
+        foreach($classArr as $v2){
+            if($v2['conf'] == 0){
                 continue;
             }
-            $chartDataPid.="{'country': '".$v['className']."','value':".$v['conf']."},";
+            $chartDataPid.="{'country': '".$v2['className']."','value':".$v2['conf']."},";
         }
         //正能量
         $pe = number_format(array_sum($ratio)/count($ratio)*100,2);
@@ -361,46 +266,5 @@ class ShowController extends AbstractController {
         return $ArrayData;
     }
 
-
-    /**
-     * 获取说说
-     * @param $uqq
-     * @return mixed
-     */
-    public function getShuoshuoAll($uqq){
-
-        if(is_array($this->shuoshuo[$uqq]) && !empty($this->shuoshuo[$uqq])){
-            return $this->shuoshuo[$uqq];
-        }else{
-            $shuoshuoAll = F("shuoshuo_$uqq");
-            $shuoshuoAll = @array_reverse($shuoshuoAll);
-            foreach( $shuoshuoAll as $k=>$v){
-                if(!isset($v['timeline']['timestr'])){
-                    //如果没有timeline.timestr
-                    if(!isset($v['comment']['comments'][0]['date'])){
-                        //如果comment.comments 也没有 取评论数据
-                        if(!isset($v['comm']['time'])){
-                            //没有办法了
-                            continue;
-                        }else{
-                            $this->shuoshuo[$uqq][$k]['time'] = date("Y/m/d",$v['comm']['time']);
-                        }
-                    }else{
-                        $this->shuoshuo[$uqq][$k]['time'] = date("Y/m/d",$v['comment']['comments'][0]['date']);
-                    }
-                }else{
-                    //如果为今年发布的说说
-                    if(!preg_match("/^\d{4}\/\d{2}\/\d{2}$/",$v['timeline']['timestr'],$match)){
-                        $this->shuoshuo[$uqq][$k]['time'] = date("Y",time())."/".$v['timeline']['timestr'];
-                    }else{
-                        $this->shuoshuo[$uqq][$k]['time'] = $v['timeline']['timestr'];
-                    }
-                }
-                $this->shuoshuo[$uqq][$k]['comment'] = iconv( "UTF-8", "gb2312//IGNORE" ,$v['summary']['summary']);
-            }
-            return $this->shuoshuo[$uqq];
-        }
-
-    }
 
 }

@@ -525,21 +525,47 @@ function batchCommentGoOver() {
 
 
 function countContent(){
+
     var uqq = $("#friendQq").val()
     if (!uqq) {
         layer.msg('请选定一个好友', function () {
             $(z).button('reset')
+            return false;
         })
     }
     layer.open({
         type : 2,
-        title: '统计线形图',
+        title: '评论与赞',
         shadeClose: true,
         area: ['70%', '70%'],
-        content: '/home/show/table/uqq/'+uqq
+        content: '/home/show/table/uqq/'+uqq+'?r='+ new Date().getTime()
     });
 
 }
 
+function emotionAnalysis(z){
+
+    var uqq = $("#friendQq").val()
+    if (!uqq) {
+        layer.msg('请选定一个好友', function () {
+            $(z).button('reset')
+            return false;
+        })
+    }
+    $("#iframe").attr("src", "/home/console/emotion?uqq=" + uqq + "&r=" + new Date().getTime())
+}
+
+
+function emotionOver(uqq){
+
+    layer.open({
+        type : 2,
+        title: '分类与情绪',
+        shadeClose: true,
+        area: ['70%', '70%'],
+        content: '/home/show/emotion/uqq/'+uqq+'?r='+ new Date().getTime()
+    });
+
+}
 
 

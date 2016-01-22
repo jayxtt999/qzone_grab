@@ -9,12 +9,17 @@ class HomeController extends AbstractController
     private $interval = 30;//自动赞,评论间隔时间 (分钟)
     private $autoCon = "【自动评论】";//小尾巴
 
+
+    public function index(){
+
+        $this->display();
+    }
+
     /**
      * 主页
      */
-    public function index()
+    public function friend()
     {
-
         $this->qq = is_array(session('qq')) ? session('qq') : $this->error("请重新登录", '/', 3);
         //获取好友列表
         $mfriend_list = F('mfriend_list' . $this->qq['qq']);
@@ -39,7 +44,7 @@ class HomeController extends AbstractController
         $this->assign("qq", $this->qq['qq']);
         $this->assign("groud", $gpnames);
         $this->assign("data", $datas);
-        $this->display('index');
+        $this->display();
     }
 
     /**
@@ -106,7 +111,6 @@ class HomeController extends AbstractController
                     }
                     $result[$k]['video'] = $videoArr;
                 }
-
                 //设备
                 if ($v['source_name']) {
                     $result[$k]['source_name'] = $v['source_name'];
@@ -115,6 +119,19 @@ class HomeController extends AbstractController
                 if ($v['story_info']) {
                     $result[$k]['story_info'] = unserialize($v['story_info']);
                 }
+                //EM表情 与 @
+                if(stripos($v['summary'],"[em]")>=0){
+                    /*$a = "我是无辜的[em]e148[/em]我也是无辜的[em]e148[/em]还有我";
+
+
+                    echo preg_replace("/\[em\](.*?)\[\/em\]/","<img alt='☺'  src='http://ctc.qzonestyle.gtimg.cn/qzone/em/".'$1'.".gif?max_age=2592000' style='width: 24px; height: 24px;'>",$a);
+
+
+                    exit;*/
+
+                    $result[$k]['summary'] = preg_replace("/\[em\](.*?)\[\/em\]/","<img alt='☺'  src='http://ctc.qzonestyle.gtimg.cn/qzone/em/".'$1'.".gif?max_age=2592000' style='width: 24px; height: 24px;'>",$v['summary'] );;
+                }
+
                 $result[$k]['user'] = $this->getUserInfo($uqq);
                 if ($v['cmtnum']) {
                     $comment = $ssLogic->getComment($uqq, $v['cellid']);
@@ -313,16 +330,6 @@ class HomeController extends AbstractController
         header("Content-type: " . $type);
         echo $data;
     }
-
-    public function iframe()
-    {
-
-        $url = I('get.picurl');
-        echo "http://www.shuoshuo.me/home/home/showpic?picurl=" . $url . "'";
-        exit;
-        echo "<img src='http://www.shuoshuo.me/home/home/showpic?picurl=" . $url . "'/>";
-    }
-
 
     public function sslist()
     {

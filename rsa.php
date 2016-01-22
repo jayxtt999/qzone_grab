@@ -161,6 +161,8 @@ class Rsa
 
 }
 
+
+
 //以下是一个简单的测试demo，如果不需要请删除
 $rsa = new Rsa('sslkey'); //sslkey为存放密钥的路径，将已有的密钥文件复制到该路径下，公钥名称为pub.key，私钥名称为priv.key
 //$rsa->createKey(); //创建一对密钥，如果密钥对已经存在，不需调用
