@@ -258,8 +258,7 @@ var Metronic = function () {
 
     // Handles scrollable contents using jQuery SlimScroll plugin.
     var handleScrollers = function () {
-        //滚动初始化
-        //Metronic.initSlimScroll('.scroller');
+        Metronic.initSlimScroll('.scroller');
     }
 
     // Handles Image Preview using jQuery Fancybox plugin
@@ -269,7 +268,6 @@ var Metronic = function () {
         }
 
         if ($(".fancybox-button").size() > 0) {
-            //影箱初始化
            /* $(".fancybox-button").fancybox({
                 groupAttr: 'data-rel',
                 prevEffect: 'none',
