@@ -8,7 +8,6 @@ class IndexController extends Controller
 
     private $tdCode;
 
-
     /**
      * 获取二维码
      */
@@ -17,7 +16,7 @@ class IndexController extends Controller
 
         $rand = $_GET['r'];
         $ch = curl_init("http://ptlogin2.qq.com/ptqrshow?appid=549000912&e=2&l=M&s=3&d=72&v=4&t=0." . $rand . "&daid=5");
-        $this->tdCode = tempnam('./temp', 'tdcode');
+        $this->tdCode = tempnam('/tmp', 'tdcode');
         curl_setopt($ch, CURLOPT_REFERER, '');
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->tdCode);
         session("tdCodeTmp", $this->tdCode);
@@ -54,7 +53,7 @@ class IndexController extends Controller
             return jsonObject(array("status" => 2, "msg" => "二维码认证中"));
         } else if (strpos($result, "http://ptlogin4.qzone.qq.com")) {
             //验证成功 获取相关cookie值
-            preg_match("/ptuiCB\('0','0','(.*)\'?/", $result, $res);
+            preg_match("/ptuiCB\('0','0','(.*?)\'/", $result, $res);
             $url = $res[1];
             preg_match("/&uin=(\d+)&service/", $url, $qq);
             $qq = $qq[1];
@@ -65,19 +64,32 @@ class IndexController extends Controller
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             $result = curl_exec($curl);
             curl_close($curl);
-            $result = explode("\r\n", file_get_contents($tdCodeTmp));
-            $uinRes = explode("	", $result[6]);
-            $sKeyRes = explode("	", $result[7]);
-            $ptczRes = explode("	", $result[16]);
-            $pUinRes = explode("	", $result[17]);
-            $pSkeyRes = explode("	", $result[18]);
-            $pt4TokenRes = explode("	", $result[19]);
+            $exp = IS_WIN?"\r\n":"\n";//linux 没有\r
+            $result = explode($exp, file_get_contents($tdCodeTmp));
+            //挂服务器不知道为毛少了ptcz 这玩意干嘛的？
+            if(count($result)==20){
+                //有ptcz
+                $uinRes = explode("	", $result[6]);
+                $sKeyRes = explode("	", $result[7]);
+                $ptczRes = explode("	", $result[16]);
+                $pUinRes = explode("	", $result[17]);
+                $pSkeyRes = explode("	", $result[18]);
+                $pt4TokenRes = explode("	", $result[19]);
+            }else{
+                //无ptcz
+                $uinRes = explode("	", $result[6]);
+                $sKeyRes = explode("	", $result[7]);
+                $pSkeyRes = "";
+                $pUinRes = explode("	", $result[16]);
+                $pSkeyRes = explode("	", $result[17]);
+                $pt4TokenRes = explode("	", $result[18]);
+            }
             $uin = $uinRes[6];
             $sKey = $sKeyRes[6];
             $pUin = $pUinRes[6];
             $pSkey = $pSkeyRes[6];
             $pt4Token = $pt4TokenRes[6];
-            $ptcz = $ptczRes[6];
+            $ptcz = $ptczRes?$ptczRes[6]:"";
             //根据sKey获取gtk
             $gtk = getGTK($sKey);
             $gtk2 = getGTK($pSkey);
