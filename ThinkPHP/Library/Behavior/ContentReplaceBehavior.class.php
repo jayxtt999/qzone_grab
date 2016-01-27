@@ -35,7 +35,8 @@ class ContentReplaceBehavior {
             '__SELF__'      =>  __SELF__,       // 当前页面地址
             '__CONTROLLER__'=>  __CONTROLLER__,
             '__URL__'       =>  __CONTROLLER__,
-            '__PUBLIC__'    =>  __ROOT__.'/Public',// 站点公共目录
+            //'__PUBLIC__'    =>  __ROOT__.'/Public',// 站点公共目录
+            '__PUBLIC__'    => 'http://naixtop2.b0.upaiyun.com/',// 站点公共目录
         );
         // 允许用户自定义模板的字符串替换
         if(is_array(C('TMPL_PARSE_STRING')) )
