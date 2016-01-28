@@ -36,7 +36,7 @@ class ConsoleController extends AbstractController
     {
         $this->init();
         $uqq = I('get.uqq');
-        $uqq = 435024179;
+        //$uqq = 435024179;
         /*$uqq = 136787510;
         consoleShow("<script>parent.lodingSs()</script>");
         consoleShow("<script>parent.getShuoshuo(" . $uqq . ")</script>");
@@ -435,7 +435,7 @@ class ConsoleController extends AbstractController
 
         $this->init();
         $uqq = I('get.uqq');
-        $uqq = 136787510;
+        //$uqq = 136787510;
         $where = array('uin' => $uqq);
         $ssLogic = D('Shuoshuo', 'Logic');
         $friendShuoShuo = M('friend_shuoshuo');

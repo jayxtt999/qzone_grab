@@ -61,7 +61,7 @@ class ShowController extends AbstractController {
     public function Emotion(){
 
         $uqq = session('uqq');
-        $uqq = 136787510;
+        //$uqq = 136787510;
         $ssLogic = D('Shuoshuo', 'Logic');
         $where = array('uin' => $uqq);
         $shuoshuoAll = $ssLogic->getShuoshuoAll($where);

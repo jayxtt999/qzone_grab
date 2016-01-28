@@ -66,8 +66,8 @@ class IndexController extends Controller
             curl_close($curl);
             $exp = IS_WIN?"\r\n":"\n";//linux 没有\r
             $result = explode($exp, file_get_contents($tdCodeTmp));
-            //挂服务器不知道为毛少了ptcz 这玩意干嘛的？
-            if(count($result)==20){
+            //挂服务器不知道为毛少了.qq.com	TRUE	/	FALSE	0	ptisp	ctc  这玩意干嘛的？
+            if(count($result)==21){
                 //有ptcz
                 $uinRes = explode("	", $result[6]);
                 $sKeyRes = explode("	", $result[7]);
@@ -79,7 +79,7 @@ class IndexController extends Controller
                 //无ptcz
                 $uinRes = explode("	", $result[6]);
                 $sKeyRes = explode("	", $result[7]);
-                $pSkeyRes = "";
+                $ptczRes = explode("	", $result[15]);
                 $pUinRes = explode("	", $result[16]);
                 $pSkeyRes = explode("	", $result[17]);
                 $pt4TokenRes = explode("	", $result[18]);
@@ -89,7 +89,7 @@ class IndexController extends Controller
             $pUin = $pUinRes[6];
             $pSkey = $pSkeyRes[6];
             $pt4Token = $pt4TokenRes[6];
-            $ptcz = $ptczRes?$ptczRes[6]:"";
+            $ptcz = $ptczRes[6];
             //根据sKey获取gtk
             $gtk = getGTK($sKey);
             $gtk2 = getGTK($pSkey);

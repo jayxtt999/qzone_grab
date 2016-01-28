@@ -55,7 +55,7 @@ class HomeController extends AbstractController
 
         $uqq = I('post.uin');
         $page = I('post.page') ? I('post.page') : 1;
-        $uqq = 435024179;
+        //$uqq = 435024179;
         $shuoshuoAll = array();
         $friendShuoshuo = M('friend_shuoshuo');
         $ssLogic = D('Shuoshuo', 'Logic');
