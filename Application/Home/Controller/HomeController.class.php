@@ -60,7 +60,7 @@ class HomeController extends AbstractController
         $friendShuoshuo = M('friend_shuoshuo');
         $ssLogic = D('Shuoshuo', 'Logic');
 
-        $pageLimit = 1;//每次条数
+        $pageLimit = 10;//每次条数
         $result = $friendShuoshuo->where("uin=" . $uqq)->page($page . ',' . $pageLimit)->select();
         $count = $friendShuoshuo->where("uin=" . $uqq)->count();// 总记录数
         if ($count > $page * $pageLimit) {
