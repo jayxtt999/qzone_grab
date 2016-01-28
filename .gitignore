@@ -1,3 +1,4 @@
 /Application/Common/Conf/config.php
 /Application/Runtime
 /Public/data
+/ThinkPHP/Library/Behavior/ContentReplaceBehavior.class.php
