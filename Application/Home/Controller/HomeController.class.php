@@ -6,12 +6,11 @@ use Think\Model;
 class HomeController extends AbstractController
 {
 
-    private $interval = 30;//自动赞,评论间隔时间 (分钟)
-    private $autoCon = "【自动评论】";//小尾巴
-
 
     public function index(){
+        //获取登录用户信息
 
+        $this->assign("qqInfo",$this->qqInfo);
         $this->display();
     }
 
@@ -20,7 +19,6 @@ class HomeController extends AbstractController
      */
     public function friend()
     {
-        $this->qq = is_array(session('qq')) ? session('qq') : $this->error("请重新登录", '/', 3);
         //获取好友列表
         $mfriend_list = F('mfriend_list' . $this->qq['qq']);
         $mfriend_list = null;

@@ -12,14 +12,14 @@ use Think\Controller;
 class AbstractController  extends Controller{
 
     protected $qq;
+    protected $qqInfo;
 
     function __construct()
     {
         parent::__construct();
-        if(!session("qq")){
-           $this->error("登录超时","/home/home/index");
-        }
-        $this->qq = session("qq");
+        $this->qq = is_array(session('qq')) ? session('qq') : $this->error("登录超时","/home/home/index");
+        $this->qqInfo =  $this->getUserInfo($this->qq['qq']);
+
     }
 
     /**
@@ -141,11 +141,6 @@ class AbstractController  extends Controller{
         return ($result);
 
     }
-
-
-
-
-
 
     /**
      * 获取qq用户信息
