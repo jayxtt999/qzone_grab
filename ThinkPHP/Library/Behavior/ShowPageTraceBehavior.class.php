@@ -14,7 +14,7 @@ use Think\Log;
  * 系统行为扩展：页面Trace显示输出
  */
 class ShowPageTraceBehavior {
-    protected $tracePageTabs =  array('BASE'=>'基本','FILE'=>'文件','INFO'=>'流程','ERR|NOTIC'=>'错误','SQL'=>'SQL','DEBUG'=>'调试');
+    protected $tracePageTabs =  array('BASE'=>'基本','FILE'=>'文件','INFO'=>'流程','ERR|NOTIC'=>'错误','SQL'=>'SQL','DEBUG'=>'调试','CODING'=>'源代码');
 
     // 行为扩展的执行入口必须是run
     public function run(&$params){
@@ -60,6 +60,11 @@ class ShowPageTraceBehavior {
                     break;
                 case 'FILE': // 文件信息
                     $trace[$title]  =   $info;
+                    break;
+                case 'CODING':
+                    $fileCodingPath = MODULE_PATH."Controller/".CONTROLLER_NAME."Controller.class.php";
+                    $fileCoding = file_get_contents($fileCodingPath);
+                    $trace[$title]  =   array(0=>$fileCoding);
                     break;
                 default:// 调试信息
                     $name       =   strtoupper($name);
