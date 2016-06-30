@@ -32,7 +32,6 @@ class IndexController extends Controller
      */
     public function tdCodeCheck()
     {
-
         //存储临时cookie
         $tdCodeTmp = session("tdCodeTmp");
         //13位时间戳

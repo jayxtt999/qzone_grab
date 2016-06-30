@@ -119,14 +119,6 @@ class HomeController extends AbstractController
                 }
                 //EM表情 与 @
                 if(stripos($v['summary'],"[em]")>=0){
-                    /*$a = "我是无辜的[em]e148[/em]我也是无辜的[em]e148[/em]还有我";
-
-
-                    echo preg_replace("/\[em\](.*?)\[\/em\]/","<img alt='☺'  src='http://ctc.qzonestyle.gtimg.cn/qzone/em/".'$1'.".gif?max_age=2592000' style='width: 24px; height: 24px;'>",$a);
-
-
-                    exit;*/
-
                     $result[$k]['summary'] = preg_replace("/\[em\](.*?)\[\/em\]/","<img alt='☺'  src='http://ctc.qzonestyle.gtimg.cn/qzone/em/".'$1'.".gif?max_age=2592000' style='width: 24px; height: 24px;'>",$v['summary'] );;
                 }
 
@@ -153,9 +145,7 @@ class HomeController extends AbstractController
                 flush();
             }
         }
-        /*echo("<pre>");
-        print_r($result);
-        echo("</pre>");exit;*/
+
         return $this->ajaxReturn(array("result" => $result, "isMore" => $isMore, "nextPage" => $page + 1, "uin" => $uqq));
 
     }

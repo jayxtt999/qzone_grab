@@ -4,6 +4,7 @@ return array(
     'DEFAULT_MODULE' => 'Index', //默认模块
     'URL_MODEL' => '2', //URL模式
     'SESSION_AUTO_START' => true, //是否开启session
+    'SHOW_PAGE_TRACE' => true, //是否开启session
 
     //QcloudApi
     'QcloudApi' => array(
