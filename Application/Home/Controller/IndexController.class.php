@@ -11,14 +11,26 @@ class IndexController extends Controller
     /**
      * 获取二维码
      */
-    public function ptqrShow()
+    public function ptqrShow($rand="")
     {
 
-        $rand = $_GET['r'];
-        $ch = curl_init("http://ptlogin2.qq.com/ptqrshow?appid=549000912&e=2&l=M&s=3&d=72&v=4&t=0." . $rand . "&daid=5");
+
+        $rand = $rand?$rand:rand(11111,99999);
+        $headers['Host'] = 'ptlogin2.qq.com';
         $this->tdCode = tempnam('/tmp', 'tdcode');
+        $ch = curl_init("http://xui.ptlogin2.qq.com/cgi-bin/xlogin?proxy_url=http%3A//qzs.qq.com/qzone/v6/portal/proxy.html&daid=5&&hide_title_bar=1&low_login=0&qlogin_auto_login=1&no_verifyimg=1&link_target=blank&appid=549000912&style=22&target=self&s_url=http%3A%2F%2Fqzs.qq.com%2Fqzone%2Fv5%2Floginsucc.html%3Fpara%3Dizone&pt_qr_app=手机QQ空间&pt_qr_link=http%3A//z.qzone.com/download.html&self_regurl=http%3A//qzs.qq.com/qzone/v6/reg/index.html&pt_qr_help_link=http%3A//z.qzone.com/download.html");
+
         curl_setopt($ch, CURLOPT_REFERER, '');
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->tdCode);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+        curl_close($ch);
+
+        $ch = curl_init("http://ptlogin2.qq.com/ptqrshow?appid=549000912&e=2&l=M&s=3&d=72&v=4&t=0." . $rand . "&daid=5");
+
+        curl_setopt($ch, CURLOPT_REFERER, '');
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $this->tdCode); // 发送初始Cookie
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+        // _qz_referrer=www.baidu.com;
         session("tdCodeTmp", $this->tdCode);
         $result = curl_exec($ch);
         curl_close($ch);
@@ -32,17 +44,23 @@ class IndexController extends Controller
      */
     public function tdCodeCheck()
     {
-        //存储临时cookie
         $tdCodeTmp = session("tdCodeTmp");
+        echo $tdCodeTmp;exit;
         //13位时间戳
         $microTime = explode(" ", microtime());
-        $url = "http://ptlogin2.qq.com/ptqrlogin?u1=http%3A%2F%2Fqzs.qq.com%2Fqzone%2Fv5%2Floginsucc.html%3Fpara%3Dizone&ptredirect=0&h=1&t=1&g=1&from_ui=1&ptlang=2052&action=0-0-" . $microTime[1] . ceil($microTime[0] * 1000) . "&js_ver=10141&js_type=1&login_sig=&pt_uistyle=32&aid=549000912&daid=5&";
+        $loginSig = "aTzJnwuZf*xigJ1b9aISeCD9Ei8d9OX*5H11nKdFrukDrg1ZEsjPNyPBPOIFtdFv";
+        $url = "http://ptlogin2.qq.com/ptqrlogin?u1=http%3A%2F%2Fqzs.qq.com%2Fqzone%2Fv5%2Floginsucc.html%3Fpara%3Dizone&ptredirect=0&h=1&t=1&g=1&from_ui=1&ptlang=2052&action=0-0-1474211532022&js_ver=10176&js_type=1&login_sig=".$loginSig."&pt_uistyle=40&aid=549000912&daid=5&";
         $curl = curl_init($url);
+        $headers['Host'] = 'ptlogin2.qq.com';
+        $headers['Accept'] = '*/*';
         curl_setopt($curl, CURLOPT_REFERER, '');
         curl_setopt($curl, CURLOPT_COOKIEFILE, $tdCodeTmp); // 发送初始Cookie
         curl_setopt($curl, CURLOPT_COOKIEJAR, $tdCodeTmp); //    存储cookie
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER,$headers);
+
         $result = curl_exec($curl);
+        print_r($result);exit;
         curl_close($curl);
         if (strpos($result, "'66'")) {
             return jsonObject(array("status" => 0, "msg" => "二维码未失效"));
@@ -120,6 +138,8 @@ class IndexController extends Controller
             }else{
                 return jsonObject(array("status" => 4, "msg" => "授权失败,请重试"));
             }
+        }else{
+            return jsonObject(array("status" => 4, "msg" => "接口已变更"));
         }
     }
 
